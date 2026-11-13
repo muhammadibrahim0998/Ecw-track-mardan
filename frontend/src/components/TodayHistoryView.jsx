@@ -986,10 +986,7 @@ export default function TodayHistoryView({
                 const cash = Number(s.cashPaid !== undefined ? s.cashPaid : (s.paymentMethod === 'CASH' ? total : 0));
                 const bank = Number(s.bankPaid !== undefined ? s.bankPaid : (s.paymentMethod === 'BANK' || s.paymentMethod === 'ONLINE' ? total : 0));
                 const due = Number(s.creditDue || s.dueAmount || (s.paymentMethod === 'CREDIT' ? total : 0));
-                let itms = (s.items && Array.isArray(s.items)) ? s.items.map(i => {
-                  const imgUrl = resolveProductImage(i.name || i.title, i.productId, i.image);
-                  return `<span style="display:inline-flex; align-items:center; gap:3px; margin-right:4px;"><img src="${imgUrl}" style="width:11px; height:11px; border-radius:2px; object-fit:cover; vertical-align:middle; border:1px solid #cbd5e1;" onerror="this.onerror=null; this.src='/egg2.png';" /> ${(i.name && i.name.toLowerCase() !== 'eggs') ? i.name : (i.title || 'Stock Item')} (x${i.quantity || 1})</span>`;
-                }).join('') : `<span style="display:inline-flex; align-items:center; gap:3px;"><img src="${resolveProductImage(s.itemsText || s.productName, s.productId, s.image)}" style="width:11px; height:11px; border-radius:2px; object-fit:cover; vertical-align:middle; border:1px solid #cbd5e1;" onerror="this.onerror=null; this.src='/egg2.png';" /> ${(s.itemsText && s.itemsText.toLowerCase() !== 'eggs stock') ? s.itemsText : (s.productName || 'Stock Items')}</span>`;
+                let itms = (s.items && Array.isArray(s.items)) ? s.items.map(i => i.quantity || 1).join(', ') : (s.quantity || 1);
                 const rawCat = s.category || (s.items && s.items[0]?.category) || 'Premium';
                 const cat = (rawCat && rawCat.toLowerCase() !== 'eggs' && rawCat.toLowerCase() !== 'egg') ? rawCat : 'Premium';
                 return `
@@ -2708,41 +2705,22 @@ export default function TodayHistoryView({
                               )}
                             </div>
                           </td>
-                          <td className="p-3 border border-slate-300">
-                            <div className="flex flex-wrap gap-1.5">
+                          <td className="p-3 border border-slate-300 text-center font-black text-black text-sm">
+                            <div className="flex items-center justify-center gap-1.5 flex-wrap">
                               {parsedItems.length > 0 ? (
-                                parsedItems.map((item, itemIdx) => {
-                                  const itemImg = resolveProductImage(item.name || item.title, item.productId, item.image);
-                                  return (
-                                    <span
-                                      key={itemIdx}
-                                      className="inline-flex items-center gap-1.5 bg-amber-50 text-black border border-amber-300 px-2 py-1 rounded-xl text-[11px] font-bold shadow-2xs group/itmpic"
-                                    >
-                                      <img
-                                        src={itemImg}
-                                        alt=""
-                                        onError={(e) => { e.target.onerror = null; e.target.src = '/egg2.png'; }}
-                                        className="w-5 h-5 rounded-md object-cover border border-amber-400 bg-white shrink-0 group-hover/itmpic:scale-110 transition-transform"
-                                      />
-                                      <span className="font-black text-black">{(item.name && item.name.toLowerCase() !== 'eggs' && item.name.toLowerCase() !== 'egg') ? item.name : (item.title || 'Stock Item')}</span>
-                                      <span className="bg-amber-300 text-black px-1.5 py-0.5 rounded text-[10px] font-black">
-                                        x{item.quantity || 1}
-                                      </span>
-                                    </span>
-                                  );
-                                })
-                              ) : (
-                                <div className="flex items-center gap-1.5">
-                                  <img
-                                    src={resolveProductImage(s.itemsText || s.productName, s.productId, s.image)}
-                                    alt=""
-                                    onError={(e) => { e.target.onerror = null; e.target.src = '/egg2.png'; }}
-                                    className="w-5 h-5 rounded-md object-cover border border-amber-400 bg-white shrink-0"
-                                  />
-                                  <span className="font-black text-black text-xs">
-                                    {(s.itemsText && s.itemsText.toLowerCase() !== 'eggs stock') ? s.itemsText : (s.productName || 'Stock Items')}
+                                parsedItems.map((item, itemIdx) => (
+                                  <span
+                                    key={itemIdx}
+                                    className="inline-flex items-center justify-center font-black text-xs text-black bg-amber-100 border border-amber-300 min-w-[24px] h-6 px-2 rounded-lg shadow-2xs"
+                                    title={(item.name && item.name.toLowerCase() !== 'eggs' && item.name.toLowerCase() !== 'egg') ? item.name : (item.title || 'Stock Item')}
+                                  >
+                                    {item.quantity || 1}
                                   </span>
-                                </div>
+                                ))
+                              ) : (
+                                <span className="font-black text-sm text-black">
+                                  {s.quantity || 1}
+                                </span>
                               )}
                             </div>
                           </td>
