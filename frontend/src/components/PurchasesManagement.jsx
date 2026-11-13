@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Truck, Plus, Search, Filter, Box, Banknote, CreditCard, AlertCircle, Image as ImageIcon, ExternalLink, ShieldCheck, X, FileSpreadsheet, ChevronDown, Printer, Share2, Eye, Edit2, Trash2, CheckCircle2, Building2, UploadCloud, Loader2, MoreVertical, Send, FileText, Calendar, ArrowRightLeft } from 'lucide-react';
+import { Truck, Plus, Search, Filter, Box, Banknote, CreditCard, AlertCircle, Image as ImageIcon, ExternalLink, ShieldCheck, X, FileSpreadsheet, ChevronDown, Printer, Share2, Eye, Edit2, Trash2, CheckCircle2, Building2, UploadCloud, Loader2, MoreVertical, Send, FileText, Calendar, ArrowRightLeft, Table, LayoutGrid } from 'lucide-react';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { useProducts } from '../contexts/ProductContext';
@@ -154,6 +154,7 @@ export function PurchasesManagement({ products: propProducts, shopId: propShopId
   const [selectedVendorName, setSelectedVendorName] = useState(null);
   const [transferLoading, setTransferLoading] = useState(false);
   const [selectedCategoryFilter, setSelectedCategoryFilter] = useState('ALL');
+  const [purchasesViewMode, setPurchasesViewMode] = useState('list');
 
   // 1-Click Fast Transfer Channel for Today Purchases (CASH <-> BANK)
   const handleTransferTodayPurchases = async (targetMethod) => {
@@ -1901,7 +1902,11 @@ export function PurchasesManagement({ products: propProducts, shopId: propShopId
           return (
             <div
               key={cat.key}
-              onClick={() => setSelectedCategoryFilter(prev => prev === cat.key ? 'ALL' : cat.key)}
+              onClick={() => {
+                setSelectedCategoryFilter(prev => prev === cat.key ? 'ALL' : cat.key);
+                const el = document.getElementById('purchases-records-section');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }}
               className={`bg-white border-2 rounded-2xl p-3.5 sm:p-4 shadow-sm flex flex-col justify-between cursor-pointer active:scale-95 transition-all bg-gradient-to-br ${cat.gradient} ${
                 isSelected
                   ? `${cat.activeBorder} scale-[1.01] shadow-md`
@@ -2343,7 +2348,239 @@ export function PurchasesManagement({ products: propProducts, shopId: propShopId
         </div>
       )}
 
-      {/* Purchases Grid */}
+      {/* Purchases Records Section Header & View Toggle (List vs Card) */}
+      <div id="purchases-records-section" className="bg-white border-2 border-slate-200 rounded-2xl p-4 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="flex items-center gap-2.5">
+          <div className="p-2 bg-emerald-100 rounded-xl text-emerald-800">
+            <Truck className="w-5 h-5" />
+          </div>
+          <div>
+            <h3 className="text-sm font-black text-slate-900 uppercase tracking-tight flex items-center gap-2">
+              <span>Purchases &amp; Restocks Records List</span>
+              {selectedCategoryFilter !== 'ALL' && (
+                <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
+                  {categoryStockSummary[selectedCategoryFilter]?.name}
+                </span>
+              )}
+            </h3>
+            <p className="text-[10px] font-bold text-slate-500 uppercase">
+              Showing {purchaseItems.length} purchased product entries
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 flex-wrap">
+          {selectedCategoryFilter !== 'ALL' && (
+            <button
+              type="button"
+              onClick={() => setSelectedCategoryFilter('ALL')}
+              className="px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 transition-all cursor-pointer flex items-center gap-1 active:scale-95"
+            >
+              <X className="w-3.5 h-3.5" />
+              <span>Show All</span>
+            </button>
+          )}
+
+          {/* View Mode Toggle */}
+          <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200 shrink-0">
+            <button
+              type="button"
+              onClick={() => setPurchasesViewMode('list')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider flex items-center gap-1.5 transition-all cursor-pointer ${
+                purchasesViewMode === 'list'
+                  ? 'bg-emerald-600 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+              }`}
+            >
+              <Table className="w-3.5 h-3.5" />
+              <span>List Table</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setPurchasesViewMode('cards')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider flex items-center gap-1.5 transition-all cursor-pointer ${
+                purchasesViewMode === 'cards'
+                  ? 'bg-emerald-600 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+              }`}
+            >
+              <LayoutGrid className="w-3.5 h-3.5" />
+              <span>Cards</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Empty State when no purchases match filter */}
+      {purchaseItems.length === 0 ? (
+        <div className="bg-white border-2 border-dashed border-slate-300 rounded-3xl p-10 text-center space-y-3">
+          <div className="w-12 h-12 bg-slate-100 text-slate-700 rounded-2xl flex items-center justify-center mx-auto text-xl">
+            📦
+          </div>
+          <h4 className="text-sm font-black text-slate-800 uppercase tracking-tight">
+            {selectedCategoryFilter !== 'ALL'
+              ? `No Purchases Found for ${categoryStockSummary[selectedCategoryFilter]?.name || 'Selected Category'}`
+              : 'No Purchases Recorded for this Period'}
+          </h4>
+          <p className="text-xs text-slate-500 font-bold max-w-md mx-auto">
+            {selectedCategoryFilter !== 'ALL'
+              ? `You have not recorded any purchases for ${categoryStockSummary[selectedCategoryFilter]?.name} yet. Click below to add a new purchase or restock.`
+              : 'Click below to record your first product purchase or restock.'}
+          </p>
+          {onAddProduct && (
+            <button
+              type="button"
+              onClick={onAddProduct}
+              className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white rounded-xl text-xs font-black uppercase tracking-wider transition-all shadow-md cursor-pointer"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>+ Purchase / Add Product</span>
+            </button>
+          )}
+        </div>
+      ) : purchasesViewMode === 'list' ? (
+        <div className="bg-white border-2 border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr className="bg-slate-100/80 text-[10px] font-black uppercase tracking-wider text-slate-600 border-b border-slate-200">
+                  <th className="p-3 text-center w-12">#</th>
+                  <th className="p-3">Product Name</th>
+                  <th className="p-3">Vendor / Farm</th>
+                  <th className="p-3 text-center">Quantity</th>
+                  <th className="p-3 text-right">Buy Cost</th>
+                  <th className="p-3 text-right">Total Cost</th>
+                  <th className="p-3 text-right">Paid</th>
+                  <th className="p-3 text-right">Credit (Due)</th>
+                  <th className="p-3 text-center">Status</th>
+                  <th className="p-3 text-center">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {purchaseItems.map((item, idx) => {
+                  const rawUnit = item.unitType || (
+                    (item.name || '').toLowerCase().includes('plus') ? 'Premium Plus' :
+                    (item.name || '').toLowerCase().includes('pro') ? 'Premium Pro' :
+                    (item.name || '').toLowerCase().includes('renewal') ? 'Renewal Licence' : 'Premium'
+                  );
+                  const unitLabel = rawUnit === 'peti' ? 'Premium' : rawUnit === 'tray' ? 'Premium Pro' : rawUnit === 'egg' ? 'Premium Plus' : rawUnit;
+                  const currentStock = Number(item.stock !== undefined ? item.stock : (
+                    unitLabel === 'Premium Pro' ? (item.trayQuantity || 0) :
+                    unitLabel === 'Premium Plus' ? (item.eggQuantity || 0) :
+                    (item.petiQuantity || item.eggQuantity || 0)
+                  ));
+                  const pMethod = String(item.paymentMethod || 'Cash').trim();
+                  const unitCost = Number(item.costPrice) > 0 ? Number(item.costPrice) : Number(item.price || 0);
+                  const costVal = Number(item.totalPurchaseCost) > 0
+                    ? Number(item.totalPurchaseCost)
+                    : (currentStock * unitCost);
+                  
+                  const isCreditMethod = pMethod.toLowerCase().includes('credit') || pMethod.toLowerCase().includes('due') || pMethod.toLowerCase().includes('partial');
+                  const hasExplicitDue = item.dueAmountToSupplier !== undefined && item.dueAmountToSupplier !== null && Number(item.dueAmountToSupplier) > 0;
+                  
+                  let dueBalanceAmount = 0;
+                  let paidAmount = 0;
+                  if (hasExplicitDue || isCreditMethod) {
+                    const rawDue = hasExplicitDue ? Number(item.dueAmountToSupplier) : costVal;
+                    dueBalanceAmount = Math.min(costVal, Math.max(0, rawDue));
+                    paidAmount = Math.max(0, costVal - dueBalanceAmount);
+                  } else {
+                    paidAmount = costVal;
+                    dueBalanceAmount = 0;
+                  }
+                  const hasDue = dueBalanceAmount > 0;
+
+                  return (
+                    <tr key={item._id || item.id || idx} className="hover:bg-slate-50 transition-colors">
+                      <td className="p-3 text-center font-black text-slate-400">#{idx + 1}</td>
+                      <td className="p-3">
+                        <div className="flex items-center gap-2">
+                          <span className="font-black text-slate-900 text-sm uppercase">{item.name}</span>
+                          <span className="text-[9px] font-black px-1.5 py-0.5 rounded-md bg-slate-100 text-slate-700 border border-slate-200 uppercase">
+                            {unitLabel}
+                          </span>
+                        </div>
+                        <span className="text-[10px] font-bold text-slate-400 block mt-0.5">
+                          {new Date(item.purchaseDate || item.createdAt || Date.now()).toLocaleDateString('en-PK')}
+                        </span>
+                      </td>
+                      <td className="p-3">
+                        <span className="font-bold text-teal-800 bg-teal-50 px-2 py-0.5 rounded-lg border border-teal-200 text-xs">
+                          {item.supplierName || 'Farm Vendor'}
+                        </span>
+                        {item.supplierPhone && (
+                          <span className="text-[10px] text-slate-500 font-bold block mt-0.5">📞 {item.supplierPhone}</span>
+                        )}
+                      </td>
+                      <td className="p-3 text-center">
+                        <span className="inline-block px-3 py-1 rounded-xl bg-amber-50 text-amber-900 border border-amber-200 font-black text-sm">
+                          {currentStock.toLocaleString('en-PK')}
+                        </span>
+                      </td>
+                      <td className="p-3 text-right font-black text-slate-700">
+                        Rs. {fmt(unitCost)}
+                      </td>
+                      <td className="p-3 text-right font-black text-slate-900">
+                        Rs. {fmt(costVal)}
+                      </td>
+                      <td className="p-3 text-right font-black text-emerald-700">
+                        Rs. {fmt(paidAmount)}
+                      </td>
+                      <td className="p-3 text-right font-black text-rose-600">
+                        {dueBalanceAmount > 0 ? `Rs. ${fmt(dueBalanceAmount)}` : 'Rs. 0'}
+                      </td>
+                      <td className="p-3 text-center">
+                        <span className={`px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider ${
+                          hasDue ? 'bg-rose-100 text-rose-700 border border-rose-200' : 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+                        }`}>
+                          {hasDue ? 'Credit Due' : 'Paid'}
+                        </span>
+                      </td>
+                      <td className="p-3 text-center">
+                        <div className="flex items-center justify-center gap-1">
+                          <button
+                            type="button"
+                            onClick={() => handlePrintSinglePurchase(item)}
+                            className="p-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-lg border border-emerald-200 transition-all cursor-pointer"
+                            title="Direct Print Receipt"
+                          >
+                            <Printer className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => onViewProduct ? onViewProduct(item) : (onEditProduct && onEditProduct(item))}
+                            className="p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg border border-slate-300 transition-all cursor-pointer"
+                            title="View Details"
+                          >
+                            <Eye className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleStartQuickEditPurchase(item)}
+                            className="p-1.5 bg-teal-600 hover:bg-teal-700 text-white rounded-lg transition-all cursor-pointer"
+                            title="Edit Purchase"
+                          >
+                            <Edit2 className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteClick(item)}
+                            className="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-lg border border-rose-200 transition-all cursor-pointer"
+                            title="Delete"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ) : (
+      /* Purchases Grid (Cards View) */
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {purchaseItems.map((item) => {
           const rawUnit = item.unitType || (
@@ -2537,15 +2774,15 @@ export function PurchasesManagement({ products: propProducts, shopId: propShopId
                 <div className="bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs space-y-1">
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-black text-gray-400 uppercase">Available Stock:</span>
-                    <span className="font-black text-amber-700">
-                      📦 {currentStock.toLocaleString('en-PK')} {unitLabel}
+                    <span className="font-black text-amber-700 text-sm">
+                      📦 {currentStock.toLocaleString('en-PK')}
                     </span>
                   </div>
                   {soldStock > 0 && (
                     <div className="flex items-center justify-between text-[9px] font-black pt-1 border-t border-gray-200 text-gray-500">
-                      <span>Purchased: {initialStock} {unitLabel}</span>
-                      <span className="text-rose-600 font-bold">Sold: -{soldStock} {unitLabel}</span>
-                      <span className="text-emerald-700 font-bold">In-Hand: {currentStock} {unitLabel}</span>
+                      <span>Purchased: {initialStock.toLocaleString('en-PK')}</span>
+                      <span className="text-rose-600 font-bold">Sold: -{soldStock.toLocaleString('en-PK')}</span>
+                      <span className="text-emerald-700 font-bold">In-Hand: {currentStock.toLocaleString('en-PK')}</span>
                     </div>
                   )}
                 </div>
@@ -2639,6 +2876,7 @@ export function PurchasesManagement({ products: propProducts, shopId: propShopId
           );
         })}
       </div>
+      )}
 
       {/* ─── VENDORS / SUPPLIERS DIRECTORY & SUMMARY LIST ─── */}
       <div className="bg-white border-2 border-slate-200 rounded-3xl p-5 shadow-lg space-y-4 text-slate-800">

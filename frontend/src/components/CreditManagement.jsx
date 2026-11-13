@@ -42,7 +42,7 @@ const formatCleanUnits = (val) => {
 };
 
 const getCleanPurchaseQuantity = (item) => {
-  if (!item) return '';
+  if (!item) return '0';
   const name = String(item.name || item.productName || '').trim().toLowerCase();
   const unit = String(item.unitType || item.unit || '').trim().toLowerCase();
   const qText = String(item.quantityText || '');
@@ -62,48 +62,49 @@ const getCleanPurchaseQuantity = (item) => {
       const match = qText.match(/([\d,]+(?:\.\d+)?)\s*(?:Premium Pro|Trays?|Pro)/i);
       if (match) {
         const val = parseFloat(match[1].replace(/,/g, ''));
-        return `${Number(val.toFixed(2))} Premium Pro`;
+        return `${Number(val.toFixed(2))}`;
       }
     } else if (targetType === 'plus') {
       const match = qText.match(/([\d,]+(?:\.\d+)?)\s*(?:Premium Plus|Eggs?|Plus)/i);
       if (match) {
         const val = parseFloat(match[1].replace(/,/g, ''));
-        return `${Number(val.toFixed(2))} Premium Plus`;
+        return `${Number(val.toFixed(2))}`;
       }
     } else if (targetType === 'renewal') {
       const match = qText.match(/([\d,]+(?:\.\d+)?)\s*(?:Renewal Licence|Licence)/i);
       if (match) {
         const val = parseFloat(match[1].replace(/,/g, ''));
-        return `${Number(val.toFixed(2))} Renewal Licence`;
+        return `${Number(val.toFixed(2))}`;
       }
     } else {
       const match = qText.match(/([\d,]+(?:\.\d+)?)\s*(?:Premium(?! Pro| Plus)|Petis?)/i);
       if (match) {
         const val = parseFloat(match[1].replace(/,/g, ''));
-        return `${Number(val.toFixed(2))} Premium`;
+        return `${Number(val.toFixed(2))}`;
       }
     }
 
     if (!qText.includes(',')) {
-      return formatCleanUnits(qText);
+      const singleNum = qText.match(/[\d,]+(?:\.\d+)?/);
+      if (singleNum) return singleNum[0];
     }
   }
 
   // 2. Direct field fallback based on targetType
   if (targetType === 'pro') {
     const qty = Number(item.trayQuantity || item.traysCount || item.stock || item.quantity || 0);
-    return `${qty} Premium Pro`;
+    return `${qty}`;
   }
   if (targetType === 'plus') {
     const qty = Number(item.eggQuantity || item.totalEggsCount || item.stock || item.quantity || 0);
-    return `${qty} Premium Plus`;
+    return `${qty}`;
   }
   if (targetType === 'renewal') {
     const qty = Number(item.stock || item.quantity || 0);
-    return `${qty} Renewal Licence`;
+    return `${qty}`;
   }
   const qty = Number(item.petiQuantity || item.petisPurchased || item.petisCount || item.stock || item.quantity || 0);
-  return `${qty} Premium`;
+  return `${qty}`;
 };
 
 export function CreditManagement({
