@@ -16450,31 +16450,65 @@ function StoreContent({ shopId }) {
 
               {/* Highlight Box: Price & Stock */}
               {(() => {
-                const totalEggs = Number(selectedItem.stock || selectedItem.eggQuantity || 0);
-                const tPerPeti = Number(selectedItem.traysPerPeti) || 12;
-                const ePerTray = Number(selectedItem.eggsPerTray) || 30;
-                const ePerPeti = Number(selectedItem.eggsPerPeti) || (tPerPeti * ePerTray) || 360;
+                const itemStock = Number(selectedItem.stock ?? selectedItem.quantity ?? selectedItem.eggQuantity ?? selectedItem.petiQuantity ?? 0);
                 const pPrice = Number(selectedItem.price) || 0;
-                const tPrice = selectedItem.trayPrice || (pPrice > 0 ? Math.round(pPrice / tPerPeti) : 0);
-                const ePrice = selectedItem.eggPrice || (pPrice > 0 ? Math.round((pPrice / ePerPeti) * 10) / 10 : 0);
 
-                let stockPetis = 0;
-                if (selectedItem.petiQuantity !== undefined && selectedItem.petiQuantity !== null && Number(selectedItem.petiQuantity) > 0) {
-                  stockPetis = Number(selectedItem.petiQuantity);
-                } else if (ePerPeti > 0) {
-                  const pVal = totalEggs / ePerPeti;
-                  stockPetis = pVal % 1 === 0 ? pVal : Number(pVal.toFixed(1));
-                }
+                const itemUnit = (() => {
+                  const u = String(selectedItem.unitType || selectedItem.unit || '').trim();
+                  if (u.toLowerCase() === 'peti') return 'Premium';
+                  if (u.toLowerCase() === 'tray') return 'Premium Pro';
+                  if (u.toLowerCase() === 'egg') return 'Premium Plus';
+                  if (u) return u;
+                  return selectedItem.name || 'Premium';
+                })();
 
-                let stockTrays = 0;
-                if (selectedItem.trayQuantity !== undefined && selectedItem.trayQuantity !== null && Number(selectedItem.trayQuantity) > 0) {
-                  stockTrays = Number(selectedItem.trayQuantity);
-                } else if (ePerTray > 0) {
-                  const tVal = totalEggs / ePerTray;
-                  stockTrays = tVal % 1 === 0 ? tVal : Number(tVal.toFixed(1));
-                }
+                const getUnitTheme = (nameOrUnit) => {
+                  const str = String(nameOrUnit || '').toLowerCase();
+                  if (str.includes('pro')) {
+                    return {
+                      bg: 'bg-sky-50/70',
+                      border: 'border-sky-200 hover:border-sky-400',
+                      text: 'text-sky-800',
+                      stockText: 'text-sky-900',
+                      subText: 'text-sky-700/80',
+                      divider: 'border-sky-200/90',
+                      icon: '🍱'
+                    };
+                  }
+                  if (str.includes('plus')) {
+                    return {
+                      bg: 'bg-emerald-50/70',
+                      border: 'border-emerald-200 hover:border-emerald-400',
+                      text: 'text-emerald-800',
+                      stockText: 'text-emerald-900',
+                      subText: 'text-emerald-700/80',
+                      divider: 'border-emerald-200/90',
+                      icon: '🥚'
+                    };
+                  }
+                  if (str.includes('licence') || str.includes('license')) {
+                    return {
+                      bg: 'bg-purple-50/70',
+                      border: 'border-purple-200 hover:border-purple-400',
+                      text: 'text-purple-800',
+                      stockText: 'text-purple-900',
+                      subText: 'text-purple-700/80',
+                      divider: 'border-purple-200/90',
+                      icon: '📜'
+                    };
+                  }
+                  return {
+                    bg: 'bg-amber-50/70',
+                    border: 'border-amber-200 hover:border-amber-400',
+                    text: 'text-amber-800',
+                    stockText: 'text-amber-900',
+                    subText: 'text-amber-700/80',
+                    divider: 'border-amber-200/90',
+                    icon: '📦'
+                  };
+                };
 
-                const stockEggs = totalEggs;
+                const cardTheme = getUnitTheme(itemUnit || selectedItem.name);
 
                 return (
                   <>
@@ -16482,72 +16516,47 @@ function StoreContent({ shopId }) {
                       <div>
                         <p className="text-[9px] text-slate-500 font-black uppercase tracking-wider">Price per unit</p>
                         <p className="text-xl font-black text-emerald-600 tracking-tight mt-0.5">
-                          {currency} {Number(selectedItem.price || 0).toLocaleString()}
+                          {currency} {pPrice.toLocaleString()}
                         </p>
                       </div>
                       <div className="text-right">
                         <p className="text-[9px] text-slate-500 font-black uppercase tracking-wider">Total Stock Status</p>
-                        <p className={`text-xs font-black px-2.5 py-1 rounded-lg inline-block mt-0.5 ${totalEggs <= 0
+                        <p className={`text-xs font-black px-2.5 py-1 rounded-lg inline-block mt-0.5 ${itemStock <= 0
                           ? 'bg-rose-50 text-rose-700 border border-rose-200'
-                          : (isAdminUser && totalEggs <= (Number(selectedItem.minStock) || 5))
+                          : (isAdminUser && itemStock <= (Number(selectedItem.minStock) || 5))
                             ? 'bg-amber-50 text-amber-800 border border-amber-200'
                             : 'bg-emerald-50 text-emerald-800 border border-emerald-200'
                           }`}>
-                          {totalEggs <= 0 ? 'Out of Stock' : `${stockPetis} Premium (${stockEggs.toLocaleString('en-PK')} Plus)`}
+                          {itemStock <= 0 ? 'Out of Stock' : `${itemStock.toLocaleString('en-PK')} ${itemUnit}`}
                         </p>
                       </div>
                     </div>
 
-                    {/* Units Breakdown Pills (Premium • Premium Pro • Premium Plus) with Available Stock */}
-                    <div className="grid grid-cols-3 gap-2 pt-0.5">
-                      {/* Premium Box */}
-                      <div className="bg-amber-50/70 border-2 border-amber-200 hover:border-amber-400 rounded-2xl p-2.5 text-center flex flex-col justify-between shadow-xs transition-all">
+                    {/* Single Product Unit Card */}
+                    <div className="pt-0.5">
+                      <div className={`${cardTheme.bg} border-2 ${cardTheme.border} rounded-2xl p-3 text-center flex flex-col justify-between shadow-xs transition-all`}>
                         <div>
-                          <span className="text-[9.5px] font-black text-amber-800 block uppercase tracking-wider">📦 1 Premium</span>
-                          <span className="text-xs sm:text-sm font-black text-slate-900 mt-0.5 block">{currency} {pPrice.toLocaleString()}</span>
-                        </div>
-                        <div className="mt-2 pt-1.5 border-t border-amber-200/90">
-                          <span className="text-[8px] font-black text-amber-700/80 uppercase block tracking-wider">Available Stock</span>
-                          <span className="text-[11px] sm:text-xs font-black text-amber-900 block mt-0.5 tracking-tight">
-                            {stockPetis.toLocaleString('en-PK')} Premium
+                          <span className={`text-[11px] font-black ${cardTheme.text} block uppercase tracking-wider`}>
+                            {cardTheme.icon} 1 {itemUnit}
+                          </span>
+                          <span className="text-sm sm:text-base font-black text-slate-900 mt-0.5 block">
+                            {currency} {pPrice.toLocaleString()}
                           </span>
                         </div>
-                      </div>
-
-                      {/* Premium Pro Box */}
-                      <div className="bg-sky-50/70 border-2 border-sky-200 hover:border-sky-400 rounded-2xl p-2.5 text-center flex flex-col justify-between shadow-xs transition-all">
-                        <div>
-                          <span className="text-[9.5px] font-black text-sky-800 block uppercase tracking-wider">🍱 1 Premium Pro</span>
-                          <span className="text-xs sm:text-sm font-black text-slate-900 mt-0.5 block">{currency} {tPrice.toLocaleString()}</span>
-                        </div>
-                        <div className="mt-2 pt-1.5 border-t border-sky-200/90">
-                          <span className="text-[8px] font-black text-sky-700/80 uppercase block tracking-wider">Available Stock</span>
-                          <span className="text-[11px] sm:text-xs font-black text-sky-900 block mt-0.5 tracking-tight">
-                            {stockTrays.toLocaleString('en-PK')} Premium Pro
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Premium Plus Box */}
-                      <div className="bg-emerald-50/70 border-2 border-emerald-200 hover:border-emerald-400 rounded-2xl p-2.5 text-center flex flex-col justify-between shadow-xs transition-all">
-                        <div>
-                          <span className="text-[9.5px] font-black text-emerald-800 block uppercase tracking-wider">🥚 1 Premium Plus</span>
-                          <span className="text-xs sm:text-sm font-black text-slate-900 mt-0.5 block">{currency} {ePrice}</span>
-                        </div>
-                        <div className="mt-2 pt-1.5 border-t border-emerald-200/90">
-                          <span className="text-[8px] font-black text-emerald-700/80 uppercase block tracking-wider">Available Stock</span>
-                          <span className="text-[11px] sm:text-xs font-black text-emerald-900 block mt-0.5 tracking-tight">
-                            {stockEggs.toLocaleString('en-PK')} Premium Plus
+                        <div className={`mt-2 pt-1.5 border-t ${cardTheme.divider}`}>
+                          <span className={`text-[8.5px] font-black ${cardTheme.subText} uppercase block tracking-wider`}>Available Stock</span>
+                          <span className={`text-xs sm:text-sm font-black ${cardTheme.stockText} block mt-0.5 tracking-tight`}>
+                            {itemStock.toLocaleString('en-PK')} {itemUnit}
                           </span>
                         </div>
                       </div>
                     </div>
 
                     {/* Low Stock Alert (Admin Only) */}
-                    {(isAdminUser && totalEggs > 0 && (totalEggs <= (Number(selectedItem.minStock) || 5) || totalEggs <= 5)) && (
+                    {(isAdminUser && itemStock > 0 && (itemStock <= (Number(selectedItem.minStock) || 5) || itemStock <= 5)) && (
                       <div className="p-2.5 bg-red-600 border border-red-400 rounded-xl text-white font-black text-[11px] uppercase flex items-center justify-center gap-1.5 shadow-sm animate-pulse">
                         <AlertTriangle className="w-3.5 h-3.5 text-white" />
-                        <span>⚠️ Low Stock: Only {totalEggs} Plus left in stock!</span>
+                        <span>⚠️ Low Stock: Only {itemStock} {itemUnit} left in stock!</span>
                       </div>
                     )}
                   </>
