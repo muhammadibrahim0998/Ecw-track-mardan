@@ -2698,6 +2698,52 @@ function StoreContent({ shopId }) {
     await handleDeleteCustomerGroup(targetCust);
   };
 
+  const getUnitTheme = (nameOrUnit) => {
+    const str = String(nameOrUnit || '').toLowerCase();
+    if (str.includes('pro')) {
+      return {
+        bg: 'bg-sky-50/70',
+        border: 'border-sky-200 hover:border-sky-400',
+        text: 'text-sky-800',
+        stockText: 'text-sky-900',
+        subText: 'text-sky-700/80',
+        divider: 'border-sky-200/90',
+        icon: '🍱'
+      };
+    }
+    if (str.includes('plus')) {
+      return {
+        bg: 'bg-emerald-50/70',
+        border: 'border-emerald-200 hover:border-emerald-400',
+        text: 'text-emerald-800',
+        stockText: 'text-emerald-900',
+        subText: 'text-emerald-700/80',
+        divider: 'border-emerald-200/90',
+        icon: '🥚'
+      };
+    }
+    if (str.includes('licence') || str.includes('license')) {
+      return {
+        bg: 'bg-purple-50/70',
+        border: 'border-purple-200 hover:border-purple-400',
+        text: 'text-purple-800',
+        stockText: 'text-purple-900',
+        subText: 'text-purple-700/80',
+        divider: 'border-purple-200/90',
+        icon: '📜'
+      };
+    }
+    return {
+      bg: 'bg-amber-50/70',
+      border: 'border-amber-200 hover:border-amber-400',
+      text: 'text-amber-800',
+      stockText: 'text-amber-900',
+      subText: 'text-amber-700/80',
+      divider: 'border-amber-200/90',
+      icon: '📦'
+    };
+  };
+
   const getProductUnitPrice = (product, unit = 'tray') => {
     if (!product) return 0;
     const basePrice = Number(product.price) || 0;
@@ -5941,28 +5987,48 @@ function StoreContent({ shopId }) {
     });
 
     let totalPurchasesCost = 0;
-    let totalPurchasesEggs = 0;
+    const productPurchasesSummary = [];
+    const productPurchasesMap = {};
 
     filteredPurchases.forEach(p => {
-      const e = Number(p.eggQuantity || 0);
-      const peti = Number(p.petiQuantity || 0);
-      const tray = Number(p.trayQuantity || 0);
-      const stock = Number(p.stock !== undefined ? p.stock : 0);
-      let totalItemEggs = 0;
-      if (peti > 0 || tray > 0 || e > 0) {
-        totalItemEggs = Math.max(stock, (peti * 360) + (tray * 30) + (e > 0 && peti === 0 && tray === 0 ? e : 0));
-      } else {
-        totalItemEggs = stock;
-      }
-      totalPurchasesEggs += totalItemEggs;
+      const prodName = (p.name || 'Item').trim();
+      const unit = (() => {
+        const u = String(p.unitType || p.unit || '').trim();
+        if (u.toLowerCase() === 'peti') return 'Premium';
+        if (u.toLowerCase() === 'tray') return 'Premium Pro';
+        if (u.toLowerCase() === 'egg') return 'Premium Plus';
+        if (u) return u;
+        return prodName;
+      })();
 
       const cost = Number(p.totalPurchaseCost || p.purchaseCost || p.totalCost) ||
-        (Number(p.costPrice || 0) * (totalItemEggs / (p.unitType === 'peti' ? 360 : p.unitType === 'tray' ? 30 : 1)));
+        (Number(p.costPrice || 0) * (Number(p.stock !== undefined ? p.stock : (p.quantity || 1))));
       totalPurchasesCost += Math.round(cost);
+
+      let qty = 0;
+      if (Number(p.costPrice) > 0 && cost > 0) {
+        qty = Math.round(cost / Number(p.costPrice));
+      } else {
+        qty = Number(p.stock !== undefined ? p.stock : (p.quantity || p.stockQuantity || p.petiQuantity || p.trayQuantity || p.eggQuantity || 0));
+      }
+
+      const key = `${prodName}_${unit}`.toLowerCase();
+      if (!productPurchasesMap[key]) {
+        productPurchasesMap[key] = {
+          name: prodName,
+          unit: unit,
+          qty: 0,
+          cost: 0
+        };
+        productPurchasesSummary.push(productPurchasesMap[key]);
+      }
+      productPurchasesMap[key].qty += qty;
+      productPurchasesMap[key].cost += Math.round(cost);
     });
 
-    const totalPurchasesPetis = Number((totalPurchasesEggs / 360).toFixed(1));
-    const totalPurchasesTrays = Math.round(totalPurchasesEggs / 30);
+    const purchasesDetailText = productPurchasesSummary.length > 0
+      ? productPurchasesSummary.map(x => `${x.qty.toLocaleString('en-PK')} ${x.unit}`).join(' • ')
+      : '0 Restocks';
 
     // 4. Filter Expenses for active timeframe / date range
     const filteredExpenses = (expensesList || []).filter(e => {
@@ -5990,17 +6056,40 @@ function StoreContent({ shopId }) {
     });
 
     let totalDamagedLoss = 0;
-    let totalDamagedEggs = 0;
+    const damagedSummary = [];
+    const damagedMap = {};
+
     filteredDamaged.forEach(d => {
       const loss = Number(d.totalLoss) > 0
         ? Number(d.totalLoss)
         : (Number(d.lossAmount) || (Number(d.quantity || d.deductedEggs || 0) * (Number(d.unitPrice) || 0)) || 0);
-      const eggs = Number(d.deductedEggs) > 0
-        ? Number(d.deductedEggs)
-        : (Number(d.eggQuantity || 0) + (Number(d.petiQuantity || 0) * 360) + (Number(d.trayQuantity || 0) * 30) || Number(d.quantity) || 0);
       totalDamagedLoss += loss;
-      totalDamagedEggs += eggs;
+
+      const unit = (() => {
+        const u = String(d.unitType || '').trim();
+        if (u.toLowerCase() === 'peti') return 'Premium';
+        if (u.toLowerCase() === 'tray') return 'Premium Pro';
+        if (u.toLowerCase() === 'egg') return 'Premium Plus';
+        if (u) return u;
+        return d.productName || 'Units';
+      })();
+
+      const qty = Number(d.quantity || d.petiQuantity || d.trayQuantity || d.eggQuantity || d.deductedEggs || 0);
+      const key = `${d.productName || 'Item'}_${unit}`.toLowerCase();
+      if (!damagedMap[key]) {
+        damagedMap[key] = {
+          productName: d.productName || 'Item',
+          unit: unit,
+          qty: 0
+        };
+        damagedSummary.push(damagedMap[key]);
+      }
+      damagedMap[key].qty += qty;
     });
+
+    const damagedDetailText = damagedSummary.length > 0
+      ? damagedSummary.map(x => `${x.qty.toLocaleString('en-PK')} ${x.unit}`).join(', ')
+      : '0 Damaged';
 
     // Gross Sales Revenue (pure realized sales from invoices & orders)
     // Fuel expense is tracked separately in Card 2 and as an operating cost in net profit, NOT deducted from sales
@@ -6019,12 +6108,16 @@ function StoreContent({ shopId }) {
       filteredFuelCount: filteredFuelExpenses.length,
       filteredFuelExpenses,
       totalPurchasesCost,
-      totalPurchasesPetis,
-      totalPurchasesTrays,
-      totalPurchasesEggs,
+      totalPurchasesPetis: 0,
+      totalPurchasesTrays: 0,
+      totalPurchasesEggs: 0,
+      productPurchasesSummary,
+      purchasesDetailText,
       totalExpenses,
       totalDamagedLoss,
-      totalDamagedEggs,
+      totalDamagedEggs: 0,
+      damagedSummary,
+      damagedDetailText,
       finalNetProfit,
       todaySalesTotal,
       todayProfitTotal,
@@ -6433,12 +6526,12 @@ function StoreContent({ shopId }) {
     // Income Statement Breakdown Table
     const breakdownData = [
       ['1', '(+) Total Sales Revenue Earned', `${profitReportStats.filteredSalesCount} Sales Invoices`, `+ Rs. ${(profitReportStats.totalRevenue || 0).toLocaleString('en-PK')}`],
-      ['2', '(-) Purchased Products / Restocks Cost', `${profitReportStats.totalPurchasesPetis} Premium • ${profitReportStats.totalPurchasesTrays} Premium Pro • ${profitReportStats.totalPurchasesEggs.toLocaleString('en-PK')} Premium Plus`, `- Rs. ${(profitReportStats.totalPurchasesCost || 0).toLocaleString('en-PK')}`],
+      ['2', '(-) Purchased Products / Restocks Cost', profitReportStats.purchasesDetailText || '0 Restocks', `- Rs. ${(profitReportStats.totalPurchasesCost || 0).toLocaleString('en-PK')}`],
       ['3', '(-) Shop Operational Expenses (Bills, Rent, Misc)', `${profitReportStats.filteredExpensesCount} Expense Logs`, `- Rs. ${(profitReportStats.totalExpenses || 0).toLocaleString('en-PK')}`],
       ...((profitReportStats.totalFuelExpense || 0) > 0 ? [
         ['3b', '(-) Vehicle & Transport Fuel Expenses', `${profitReportStats.filteredFuelCount || 0} Fuel Logs`, `- Rs. ${(profitReportStats.totalFuelExpense || 0).toLocaleString('en-PK')}`]
       ] : []),
-      ['4', '(-) Damaged / Broken Stock Inventory Loss', `${profitReportStats.filteredDamagedCount} Logs (${profitReportStats.totalDamagedEggs} Premium Plus)`, `- Rs. ${(profitReportStats.totalDamagedLoss || 0).toLocaleString('en-PK')}`],
+      ['4', '(-) Damaged / Broken Stock Inventory Loss', `${profitReportStats.filteredDamagedCount} Logs (${profitReportStats.damagedDetailText})`, `- Rs. ${(profitReportStats.totalDamagedLoss || 0).toLocaleString('en-PK')}`],
       ['5', '(=) FINAL PURE REALIZED NET PROFIT', 'Pure Realized Cash Balance', `Rs. ${(profitReportStats.finalNetProfit || 0).toLocaleString('en-PK')}`]
     ];
 
@@ -6654,12 +6747,12 @@ function StoreContent({ shopId }) {
       message += `━━━━━━━━━━━━━━━━━━━━\n`;
       message += `📊 *2. NET PROFIT RECONCILIATION:*\n`;
       message += `(+) Total Sales: Rs. ${(profitReportStats.totalRevenue || 0).toLocaleString('en-PK')}\n`;
-      message += `(-) Purchases Cost: Rs. ${(profitReportStats.totalPurchasesCost || 0).toLocaleString('en-PK')} (${profitReportStats.totalPurchasesPetis} Premium • ${profitReportStats.totalPurchasesTrays} Premium Pro • ${profitReportStats.totalPurchasesEggs} Premium Plus)\n`;
+      message += `(-) Purchases Cost: Rs. ${(profitReportStats.totalPurchasesCost || 0).toLocaleString('en-PK')} (${profitReportStats.purchasesDetailText})\n`;
       message += `(-) Shop Expenses: Rs. ${(profitReportStats.totalExpenses || 0).toLocaleString('en-PK')}\n`;
       if ((profitReportStats.totalFuelExpense || 0) > 0) {
         message += `(-) Vehicle Fuel Expenses: Rs. ${(profitReportStats.totalFuelExpense || 0).toLocaleString('en-PK')} (${profitReportStats.filteredFuelCount || 0} Logs)\n`;
       }
-      message += `(-) Damaged Stock Loss: Rs. ${(profitReportStats.totalDamagedLoss || 0).toLocaleString('en-PK')} (${profitReportStats.totalDamagedEggs} Premium Plus)\n`;
+      message += `(-) Damaged Stock Loss: Rs. ${(profitReportStats.totalDamagedLoss || 0).toLocaleString('en-PK')} (${profitReportStats.damagedDetailText})\n`;
       message += `━━━━━━━━━━━━━━━━━━━━\n`;
       message += `💵 *(=) FINAL PURE REALIZED NET PROFIT: Rs. ${(profitReportStats.finalNetProfit || 0).toLocaleString('en-PK')}*\n`;
       message += `━━━━━━━━━━━━━━━━━━━━\n`;
@@ -6915,7 +7008,7 @@ function StoreContent({ shopId }) {
                 <tr>
                   <td style="text-align:center; font-weight:bold;">2</td>
                   <td><strong style="color:#0284c7;">(-) Purchased Products / Restocks Cost</strong></td>
-                  <td style="text-align:center;">${profitReportStats.totalPurchasesPetis} Premium • ${profitReportStats.totalPurchasesTrays} Premium Pro • ${profitReportStats.totalPurchasesEggs.toLocaleString('en-PK')} Premium Plus</td>
+                  <td style="text-align:center;">${profitReportStats.purchasesDetailText}</td>
                   <td style="text-align:center;">${profitReportStats.filteredPurchasesCount} Restocks</td>
                   <td style="text-align:right; font-weight:bold; color:#0284c7;">- Rs. ${(profitReportStats.totalPurchasesCost || 0).toLocaleString('en-PK')}</td>
                 </tr>
@@ -6939,7 +7032,7 @@ function StoreContent({ shopId }) {
                   <td style="text-align:center; font-weight:bold;">4</td>
                   <td><strong style="color:#d97706;">(-) Damaged Stock / Inventory Loss</strong></td>
                   <td style="text-align:center;">Waste &amp; Breakage</td>
-                  <td style="text-align:center;">${profitReportStats.filteredDamagedCount} Logs (${profitReportStats.totalDamagedEggs} Premium Plus)</td>
+                  <td style="text-align:center;">${profitReportStats.filteredDamagedCount} Logs (${profitReportStats.damagedDetailText})</td>
                   <td style="text-align:right; font-weight:bold; color:#d97706;">- Rs. ${(profitReportStats.totalDamagedLoss || 0).toLocaleString('en-PK')}</td>
                 </tr>
               </tbody>
@@ -7176,7 +7269,7 @@ function StoreContent({ shopId }) {
               <td style="text-align: center; border: 1px solid #cbd5e1; font-weight: bold; padding: 7px;">2</td>
               <td style="border: 1px solid #cbd5e1; font-weight: bold; color: #0284c7; padding: 7px;">(-) Purchased Products Cost</td>
               <td style="border: 1px solid #cbd5e1; text-align: center; font-weight: bold; color: #0284c7; padding: 7px;">Restocks</td>
-              <td style="border: 1px solid #cbd5e1; text-align: center; padding: 7px;">${profitReportStats.totalPurchasesPetis} Premium • ${profitReportStats.totalPurchasesTrays} Premium Pro • ${profitReportStats.totalPurchasesEggs} Premium Plus</td>
+              <td style="border: 1px solid #cbd5e1; text-align: center; padding: 7px;">${profitReportStats.purchasesDetailText}</td>
               <td style="text-align: right; border: 1px solid #cbd5e1; font-weight: 900; color: #0284c7; padding: 7px;">- RS ${Number(profitReportStats.totalPurchasesCost || 0).toLocaleString()}</td>
             </tr>
             <tr>
@@ -7190,7 +7283,7 @@ function StoreContent({ shopId }) {
               <td style="text-align: center; border: 1px solid #cbd5e1; font-weight: bold; padding: 7px;">4</td>
               <td style="border: 1px solid #cbd5e1; font-weight: bold; color: #d97706; padding: 7px;">(-) Damaged Stock Losses</td>
               <td style="border: 1px solid #cbd5e1; text-align: center; font-weight: bold; color: #d97706; padding: 7px;">Stock Damage</td>
-              <td style="border: 1px solid #cbd5e1; text-align: center; padding: 7px;">${profitReportStats.filteredDamagedCount} Logs (${profitReportStats.totalDamagedEggs} Premium Plus)</td>
+              <td style="border: 1px solid #cbd5e1; text-align: center; padding: 7px;">${profitReportStats.filteredDamagedCount} Logs (${profitReportStats.damagedDetailText})</td>
               <td style="text-align: right; border: 1px solid #cbd5e1; font-weight: 900; color: #d97706; padding: 7px;">- RS ${Number(profitReportStats.totalDamagedLoss || 0).toLocaleString()}</td>
             </tr>
             <tr style="height: 10px;"><td colspan="5" style="border:none;"></td></tr>
@@ -14103,7 +14196,7 @@ function StoreContent({ shopId }) {
                           Pure Realized Net Profit Statement
                         </h2>
                         <p className="text-slate-400 text-[10.5px] font-medium leading-none mt-0.5 hidden sm:block truncate">
-                          Revenue minus Purchases (Premium • Premium Pro • Premium Plus), Expenses &amp; Damaged Stock Losses.
+                          Revenue minus Purchases, Expenses &amp; Damaged Stock Losses.
                         </p>
                       </div>
                     </div>
@@ -14332,15 +14425,20 @@ function StoreContent({ shopId }) {
                         </div>
                         <div className="mt-2.5 pt-2 border-t border-blue-50 space-y-1">
                           <div className="flex flex-wrap gap-1 text-[9px] font-black">
-                            <span className="px-1.5 py-0.5 bg-amber-50 text-amber-800 border border-amber-200 rounded">
-                              📦 {profitReportStats.totalPurchasesPetis} Prem
-                            </span>
-                            <span className="px-1.5 py-0.5 bg-cyan-50 text-cyan-800 border border-cyan-200 rounded">
-                              🍱 {profitReportStats.totalPurchasesTrays} Pro
-                            </span>
-                            <span className="px-1.5 py-0.5 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded">
-                              🥚 {profitReportStats.totalPurchasesEggs.toLocaleString('en-PK')} Plus
-                            </span>
+                            {profitReportStats.productPurchasesSummary && profitReportStats.productPurchasesSummary.length > 0 ? (
+                              profitReportStats.productPurchasesSummary.map((item, idx) => {
+                                const theme = getUnitTheme(item.unit || item.name);
+                                return (
+                                  <span key={idx} className={`px-1.5 py-0.5 ${theme.bg} ${theme.text} border ${theme.border} rounded`}>
+                                    {theme.icon} {item.qty.toLocaleString('en-PK')} {item.unit}
+                                  </span>
+                                );
+                              })
+                            ) : (
+                              <span className="px-1.5 py-0.5 bg-slate-50 text-slate-600 border border-slate-200 rounded">
+                                0 Restocks
+                              </span>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -14390,7 +14488,7 @@ function StoreContent({ shopId }) {
                           </h4>
                         </div>
                         <div className="mt-3 pt-2 border-t border-gray-100 text-[10px] font-bold text-amber-800 flex items-center justify-between">
-                          <span>{profitReportStats.filteredDamagedCount} Logs ({profitReportStats.totalDamagedEggs} Premium Plus)</span>
+                          <span>{profitReportStats.filteredDamagedCount} Logs ({profitReportStats.damagedDetailText})</span>
                           <span className="text-amber-700 font-bold text-[9.5px]">Open &rarr;</span>
                         </div>
                       </div>
@@ -14488,15 +14586,20 @@ function StoreContent({ shopId }) {
                           </span>
                         </div>
                         <div className="flex flex-wrap gap-1 text-[9px] font-black">
-                          <span className="px-1.5 py-0.5 bg-amber-50 text-amber-800 border border-amber-200 rounded">
-                            📦 {profitReportStats.totalPurchasesPetis} Premium
-                          </span>
-                          <span className="px-1.5 py-0.5 bg-cyan-50 text-cyan-800 border border-cyan-200 rounded">
-                            🍱 {profitReportStats.totalPurchasesTrays} Premium Pro
-                          </span>
-                          <span className="px-1.5 py-0.5 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded">
-                            🥚 {profitReportStats.totalPurchasesEggs.toLocaleString('en-PK')} Premium Plus
-                          </span>
+                          {profitReportStats.productPurchasesSummary && profitReportStats.productPurchasesSummary.length > 0 ? (
+                            profitReportStats.productPurchasesSummary.map((item, idx) => {
+                              const theme = getUnitTheme(item.unit || item.name);
+                              return (
+                                <span key={idx} className={`px-1.5 py-0.5 ${theme.bg} ${theme.text} border ${theme.border} rounded`}>
+                                  {theme.icon} {item.qty.toLocaleString('en-PK')} {item.unit}
+                                </span>
+                              );
+                            })
+                          ) : (
+                            <span className="px-1.5 py-0.5 bg-slate-50 text-slate-600 border border-slate-200 rounded">
+                              0 Restocks
+                            </span>
+                          )}
                         </div>
                         <div className="flex items-center justify-between pt-1 border-t border-blue-200/60">
                           <span className="text-[11px] font-bold text-gray-600">
@@ -14577,7 +14680,7 @@ function StoreContent({ shopId }) {
                         </div>
                         <div className="flex items-center justify-between pt-1 border-t border-amber-200/60">
                           <span className="text-[11px] font-bold text-gray-600">
-                            {profitReportStats.filteredDamagedCount} Logs ({profitReportStats.totalDamagedEggs} Premium Plus)
+                            {profitReportStats.filteredDamagedCount} Logs ({profitReportStats.damagedDetailText})
                           </span>
                           <span className="text-base font-black text-amber-700">
                             - {currency} {Number(profitReportStats.totalDamagedLoss || 0).toLocaleString('en-PK')}
@@ -14652,16 +14755,21 @@ function StoreContent({ shopId }) {
                               </div>
                             </td>
                             <td className="p-3.5 text-center">
-                              <div className="inline-flex items-center gap-1">
-                                <span className="px-2 py-0.5 bg-amber-50 text-amber-800 border border-amber-200 rounded text-[9px] font-black">
-                                  📦 {profitReportStats.totalPurchasesPetis} Premium
-                                </span>
-                                <span className="px-2 py-0.5 bg-cyan-50 text-cyan-800 border border-cyan-200 rounded text-[9px] font-black">
-                                  🍱 {profitReportStats.totalPurchasesTrays} Premium Pro
-                                </span>
-                                <span className="px-2 py-0.5 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded text-[9px] font-black">
-                                  🥚 {profitReportStats.totalPurchasesEggs.toLocaleString('en-PK')} Premium Plus
-                                </span>
+                              <div className="inline-flex items-center gap-1 flex-wrap justify-center">
+                                {profitReportStats.productPurchasesSummary && profitReportStats.productPurchasesSummary.length > 0 ? (
+                                  profitReportStats.productPurchasesSummary.map((item, idx) => {
+                                    const theme = getUnitTheme(item.unit || item.name);
+                                    return (
+                                      <span key={idx} className={`px-2 py-0.5 ${theme.bg} ${theme.text} border ${theme.border} rounded text-[9px] font-black`}>
+                                        {theme.icon} {item.qty.toLocaleString('en-PK')} {item.unit}
+                                      </span>
+                                    );
+                                  })
+                                ) : (
+                                  <span className="px-2 py-0.5 bg-slate-50 text-slate-600 border border-slate-200 rounded text-[9px] font-black">
+                                    0 Restocks
+                                  </span>
+                                )}
                               </div>
                             </td>
                             <td className="p-3.5 text-center text-gray-600">
@@ -14733,7 +14841,7 @@ function StoreContent({ shopId }) {
                               </span>
                             </td>
                             <td className="p-3.5 text-center text-gray-600">
-                              {profitReportStats.filteredDamagedCount} Logs ({profitReportStats.totalDamagedEggs} Premium Plus)
+                              {profitReportStats.filteredDamagedCount} Logs ({profitReportStats.damagedDetailText})
                             </td>
                             <td className="p-3.5 text-right text-amber-700 font-black text-sm">
                               - {currency} {Number(profitReportStats.totalDamagedLoss || 0).toLocaleString('en-PK')}
@@ -16461,52 +16569,6 @@ function StoreContent({ shopId }) {
                   if (u) return u;
                   return selectedItem.name || 'Premium';
                 })();
-
-                const getUnitTheme = (nameOrUnit) => {
-                  const str = String(nameOrUnit || '').toLowerCase();
-                  if (str.includes('pro')) {
-                    return {
-                      bg: 'bg-sky-50/70',
-                      border: 'border-sky-200 hover:border-sky-400',
-                      text: 'text-sky-800',
-                      stockText: 'text-sky-900',
-                      subText: 'text-sky-700/80',
-                      divider: 'border-sky-200/90',
-                      icon: '🍱'
-                    };
-                  }
-                  if (str.includes('plus')) {
-                    return {
-                      bg: 'bg-emerald-50/70',
-                      border: 'border-emerald-200 hover:border-emerald-400',
-                      text: 'text-emerald-800',
-                      stockText: 'text-emerald-900',
-                      subText: 'text-emerald-700/80',
-                      divider: 'border-emerald-200/90',
-                      icon: '🥚'
-                    };
-                  }
-                  if (str.includes('licence') || str.includes('license')) {
-                    return {
-                      bg: 'bg-purple-50/70',
-                      border: 'border-purple-200 hover:border-purple-400',
-                      text: 'text-purple-800',
-                      stockText: 'text-purple-900',
-                      subText: 'text-purple-700/80',
-                      divider: 'border-purple-200/90',
-                      icon: '📜'
-                    };
-                  }
-                  return {
-                    bg: 'bg-amber-50/70',
-                    border: 'border-amber-200 hover:border-amber-400',
-                    text: 'text-amber-800',
-                    stockText: 'text-amber-900',
-                    subText: 'text-amber-700/80',
-                    divider: 'border-amber-200/90',
-                    icon: '📦'
-                  };
-                };
 
                 const cardTheme = getUnitTheme(itemUnit || selectedItem.name);
 
