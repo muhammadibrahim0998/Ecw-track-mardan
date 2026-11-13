@@ -805,7 +805,7 @@ export default function SoldProductsHistoryView({
                     </td>
                     <td>${item.category}</td>
                     <td>${item.customerName}</td>
-                    <td class="text-right font-bold">${item.unitType === 'tray' || item.unitType === 'trays' || item.unitType === 'premium pro' ? `${item.quantity} Pro` : item.unitType === 'egg' || item.unitType === 'eggs' || item.unitType === 'piece' || item.unitType === 'premium plus' ? `${item.quantity} Plus` : `${item.petis || item.quantity} Prem`}</td>
+                    <td class="text-right font-bold">${item.quantity != null ? item.quantity : (item.petis || 1)}</td>
                     <td class="text-right">${item.unitPrice > 0 ? `${currency} ${fmtNum(item.unitPrice)}` : '—'}</td>
                     <td class="text-right font-black" style="color:#047857;">${currency} ${fmtNum(item.totalAmount)}</td>
                   </tr>
@@ -1471,21 +1471,8 @@ export default function SoldProductsHistoryView({
                           )}
                         </div>
                       </td>
-                      <td className="p-3 border border-slate-300 text-right">
-                        <div className="font-black text-amber-900 text-xs">
-                          {item.unitType === 'tray' || item.unitType === 'trays' || item.unitType === 'premium pro' || item.unitType === 'premium_pro'
-                            ? `${item.quantity} Premium Pro`
-                            : item.unitType === 'egg' || item.unitType === 'eggs' || item.unitType === 'piece' || item.unitType === 'premium plus' || item.unitType === 'premium_plus'
-                              ? `${item.quantity} Premium Plus`
-                              : `${item.petis || item.quantity} Premium`}
-                        </div>
-                        <div className="text-[10px] font-semibold text-slate-500 mt-0.5">
-                          {item.unitType === 'tray' || item.unitType === 'trays' || item.unitType === 'premium pro' || item.unitType === 'premium_pro'
-                            ? `(${item.petis} Prem • ${item.eggs.toLocaleString('en-PK')} Plus)`
-                            : item.unitType === 'egg' || item.unitType === 'eggs' || item.unitType === 'piece' || item.unitType === 'premium plus' || item.unitType === 'premium_plus'
-                              ? `(${item.petis} Prem • ${item.trays} Pro)`
-                              : `(${item.trays} Pro • ${item.eggs.toLocaleString('en-PK')} Plus)`}
-                        </div>
+                      <td className="p-3 border border-slate-300 text-center font-black text-amber-900 text-sm">
+                        {item.quantity != null ? item.quantity : (item.petis || 1)}
                       </td>
                       <td className="p-3 border border-slate-300 text-right font-bold text-blue-700">
                         {item.unitPrice > 0 ? `${currency} ${item.unitPrice.toLocaleString('en-PK')}` : '—'}

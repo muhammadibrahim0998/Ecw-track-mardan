@@ -32,6 +32,36 @@ import {
 } from 'lucide-react';
 import { getImageUrl } from '../utils/imageHelper.js';
 
+const getPurchaseQtyDigit = (p) => {
+  if (!p) return 0;
+  if (p.quantityText) {
+    const qText = String(p.quantityText);
+    const pName = String(p.name || p.productName || '').toLowerCase();
+    const pUnit = String(p.unitType || p.unit || '').toLowerCase();
+    if (pName.includes('pro') || pUnit.includes('pro') || pUnit.includes('tray')) {
+      const match = qText.match(/([\d,]+(?:\.\d+)?)\s*(?:Premium Pro|Trays?|Pro)/i);
+      if (match) return parseFloat(match[1].replace(/,/g, ''));
+    } else if (pName.includes('plus') || pUnit.includes('plus') || pUnit.includes('egg')) {
+      const match = qText.match(/([\d,]+(?:\.\d+)?)\s*(?:Premium Plus|Eggs?|Plus)/i);
+      if (match) return parseFloat(match[1].replace(/,/g, ''));
+    } else {
+      const match = qText.match(/([\d,]+(?:\.\d+)?)\s*(?:Premium(?! Pro| Plus)|Petis?)/i);
+      if (match) return parseFloat(match[1].replace(/,/g, ''));
+    }
+    const firstNum = qText.match(/^([\d,]+(?:\.\d+)?)/);
+    if (firstNum) return parseFloat(firstNum[1].replace(/,/g, ''));
+  }
+  const pName = String(p.name || p.productName || '').toLowerCase();
+  const pUnit = String(p.unitType || p.unit || '').toLowerCase();
+  if (pName.includes('pro') || pUnit.includes('pro') || pUnit.includes('tray')) {
+    return Number(p.trayQuantity || p.stock || p.quantity || 0);
+  }
+  if (pName.includes('plus') || pUnit.includes('plus') || pUnit.includes('egg')) {
+    return Number(p.eggQuantity || p.stock || p.quantity || 0);
+  }
+  return Number(p.petiQuantity || p.stock || p.quantity || 0);
+};
+
 export default function TodayHistoryView({
   shopId = '1',
   shop = null,
@@ -1188,7 +1218,7 @@ export default function TodayHistoryView({
                     </td>
                     <td><span style="background:#f1f5f9; color:#0f172a; padding:1px 3px; border-radius:2px; font-weight:800; font-size:6.5px; border:1px solid #cbd5e1;">${p.category || 'General'}</span></td>
                     <td>${p.supplier || p.supplierName || 'Farm Supplier'}</td>
-                    <td>${p.petiQuantity || p.stock || 0} Premium</td>
+                    <td class="text-center font-bold">${getPurchaseQtyDigit(p) || p.stock || p.quantity || 0}</td>
                     <td class="text-right font-bold">${p.cashPaid ? `${currency} ${fmtNum(p.cashPaid)}` : '—'}</td>
                     <td class="text-right font-bold" style="color:#b91c1c;">${p.dueAmount ? `${currency} ${fmtNum(p.dueAmount)}` : '—'}</td>
                     <td class="text-right font-black">${currency} ${fmtNum(p.totalPurchaseCost || p.costPrice || 0)}</td>
@@ -2186,7 +2216,7 @@ export default function TodayHistoryView({
                 {currency} {todayFinancialResult.grossSale.toLocaleString('en-PK')}
               </div>
               <div className="flex items-center justify-between text-[10px] font-black text-black mt-0.5">
-                <span>{salesTotals.count} Bills • {salesTotals.petis} Premium</span>
+                <span>{salesTotals.count} {salesTotals.count === 1 ? 'Bill' : 'Bills'}</span>
                 <span className="text-[9px] font-black uppercase bg-emerald-100 hover:bg-emerald-200 text-emerald-950 px-2 py-0.5 rounded-lg border-t border-t-white border-b-2 border-b-emerald-600 shadow-2xs">View List</span>
               </div>
             </button>
@@ -2267,7 +2297,7 @@ export default function TodayHistoryView({
                 {currency} {todayFinancialResult.damLoss.toLocaleString('en-PK')}
               </div>
               <div className="flex items-center justify-between text-[10px] font-black text-black mt-0.5">
-                <span>{damagedTotals.eggs.toLocaleString('en-PK')} Premium Plus ({damagedTotals.petis} Prem)</span>
+                <span>{damagedTotals.count || 0} {damagedTotals.count === 1 ? 'Damaged Log' : 'Damaged Logs'}</span>
                 <span className="text-[9px] font-black uppercase bg-amber-100 hover:bg-amber-200 text-amber-950 px-2 py-0.5 rounded-lg border-t border-t-white border-b-2 border-b-amber-700 shadow-2xs">View List</span>
               </div>
             </button>
@@ -2437,7 +2467,7 @@ export default function TodayHistoryView({
                 </span>
               </div>
               <span className="text-black text-sm sm:text-base font-black mt-1 block">
-                {currency} {purchaseTotals.cost.toLocaleString('en-PK')} ({purchaseTotals.petis} Prem)
+                {currency} {purchaseTotals.cost.toLocaleString('en-PK')}
               </span>
               <span className="text-[9px] text-black font-bold block mt-0.5">
                 Click to view supplier stock receipts
@@ -3118,7 +3148,7 @@ export default function TodayHistoryView({
                             </span>
                           </td>
                           <td className="p-3 border border-slate-300 font-black text-black">{p.supplier || p.supplierName || 'Farm'}</td>
-                          <td className="p-3 border border-slate-300 font-bold text-black">{p.petiQuantity || p.stock || 0} Premium</td>
+                          <td className="p-3 border border-slate-300 text-center font-bold text-black">{getPurchaseQtyDigit(p) || p.stock || p.quantity || 0}</td>
                           <td className="p-3 border border-slate-300 text-right font-black text-black">
                             {Number(p.cashPaid || 0) > 0 ? (
                               <span>{currency} {Number(p.cashPaid).toLocaleString('en-PK')}</span>
@@ -3157,7 +3187,7 @@ export default function TodayHistoryView({
               <div className="flex items-center gap-2">
                 <span className="text-black text-[11px] font-black uppercase">Total Stock Cost:</span>
                 <span className="bg-slate-900 text-white text-sm font-black px-3.5 py-1 rounded-xl shadow-xs">
-                  {currency} {purchaseTotals.cost.toLocaleString('en-PK')} ({purchaseTotals.petis} Premium)
+                  {currency} {purchaseTotals.cost.toLocaleString('en-PK')}
                 </span>
               </div>
             </div>
