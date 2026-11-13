@@ -366,18 +366,23 @@ export function VendorPaymentLedger({ shopId: propShopId }) {
       const pNameLower = String(p.productName || p.rawProductName || '').toLowerCase();
       const pUnitLower = String(p.unitType || p.unit || '').toLowerCase();
       let cleanQtyStr = '';
+      let cleanQtyDigit = 1;
 
       if (pNameLower.includes('plus') || pUnitLower.includes('plus') || pUnitLower.includes('egg')) {
         const qty = rawEggs > 0 ? rawEggs : (p.stock || p.quantity || 1);
+        cleanQtyDigit = qty;
         cleanQtyStr = `${Number(qty).toLocaleString('en-PK')} Premium Plus`;
       } else if (pNameLower.includes('pro') || pUnitLower.includes('pro') || pUnitLower.includes('tray')) {
         const qty = rawTrays > 0 ? rawTrays : (p.stock || p.quantity || 1);
+        cleanQtyDigit = qty;
         cleanQtyStr = `${qty} Premium Pro`;
       } else if (pNameLower.includes('renewal') || pUnitLower.includes('renewal')) {
         const qty = p.stock || p.quantity || 1;
+        cleanQtyDigit = qty;
         cleanQtyStr = `${qty} Renewal Licence`;
       } else {
         const qty = rawPetis > 0 ? rawPetis : (p.stock || p.quantity || 1);
+        cleanQtyDigit = qty;
         cleanQtyStr = `${qty} Premium`;
       }
 
@@ -390,6 +395,7 @@ export function VendorPaymentLedger({ shopId: propShopId }) {
         productName: formatProductNameDisplay(p.productName || p.rawProductName || 'Stock'),
         category: formatCategoryDisplay(p.category),
         cleanQuantityDisplay: cleanQtyStr,
+        quantityDigit: cleanQtyDigit,
         petisPurchased: petisCount,
         petisCount: petisCount,
         traysCount: traysCount,
@@ -640,7 +646,7 @@ export function VendorPaymentLedger({ shopId: propShopId }) {
       s.category,
       s.productName,
       `${formatDateTime(s.date).dateStr} ${formatDateTime(s.date).timeStr}`.trim(),
-      s.cleanQuantityDisplay || `${s.petisPurchased} Prem`,
+      s.quantityDigit != null ? s.quantityDigit : (s.cleanQuantityDisplay || '-'),
       s.paymentMethod || 'CASH',
       `Rs. ${fmt(s.cashPaid)}`,
       `Rs. ${fmt(s.bankPaid)}`,
@@ -1195,7 +1201,7 @@ export function VendorPaymentLedger({ shopId: propShopId }) {
                       </td>
                       <td className="py-2 px-2 text-center whitespace-nowrap font-black text-orange-800 border border-gray-300">
                         <div className="font-black text-orange-800 text-[11px]">
-                          {txn.cleanQuantityDisplay || (txn.petisPurchased > 0 ? `${txn.petisPurchased} Prem` : '-')}
+                          {txn.quantityDigit != null ? txn.quantityDigit : (txn.cleanQuantityDisplay || '-')}
                         </div>
                       </td>
                       <td className="py-2 px-2 text-center whitespace-nowrap border border-gray-300">
@@ -1390,7 +1396,7 @@ export function VendorPaymentLedger({ shopId: propShopId }) {
                                   <span className="font-black text-zinc-900 text-[11px]" title={formatProductNameDisplay(b.productName)}>{formatProductNameDisplay(b.productName)}</span>
                                 </td>
                                 <td className="py-2 px-3 text-center font-black text-orange-800 border border-gray-300">
-                                  <div>{b.cleanQuantityDisplay || (b.petisPurchased > 0 ? `${b.petisPurchased} Prem` : '-')}</div>
+                                  <div>{b.quantityDigit != null ? b.quantityDigit : (b.cleanQuantityDisplay || '-')}</div>
                                 </td>
                                 <td className="py-2 px-3 text-center whitespace-nowrap border border-gray-300">
                                   {b.paymentMethod === 'BANK' ? (

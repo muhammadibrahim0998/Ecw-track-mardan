@@ -12300,7 +12300,7 @@ function StoreContent({ shopId }) {
                           {currency} {Number(overallSalesReportStats.totalRevenue || 0).toLocaleString('en-PK')}
                         </h4>
                         <span className="text-[10px] font-bold text-gray-400 uppercase mt-1 block">
-                          {overallSalesReportStats.totalBills} Bills • {overallSalesReportStats.totalPetis} Petis ({Number(overallSalesReportStats.totalEggs || 0).toLocaleString('en-PK')} Eggs)
+                          {overallSalesReportStats.totalBills} {overallSalesReportStats.totalBills === 1 ? 'Bill' : 'Bills'}
                         </span>
                       </div>
                     </div>
@@ -12320,7 +12320,7 @@ function StoreContent({ shopId }) {
                             ? 'bg-emerald-700 text-white border-emerald-800'
                             : 'bg-white text-slate-800 border-slate-300'
                             }`}>
-                            {isTodayReportActive ? '● TODAY FILTER ACTIVE • ' : ''}{todayMasterMetrics.todaySalesCount} Invoices &bull; {todayMasterMetrics.todaySalesPetis} Petis ({todayMasterMetrics.todaySalesEggs.toLocaleString('en-PK')} Eggs)
+                            {isTodayReportActive ? '● TODAY FILTER ACTIVE • ' : ''}{todayMasterMetrics.todaySalesCount} {todayMasterMetrics.todaySalesCount === 1 ? 'Invoice' : 'Invoices'}
                           </span>
                         </div>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -12664,11 +12664,11 @@ function StoreContent({ shopId }) {
                                           const itemName = it.rawProductName || it.name || it.title || 'Product';
                                           const qty = Number(it.quantity) || 1;
                                           const unit = (it.unitLabel || it.unit || '').trim();
-                                          const existing = customerItems.find(x => x.name === itemName && x.unit.toLowerCase() === unit.toLowerCase());
+                                          const existing = customerItems.find(x => x.name.toLowerCase() === itemName.toLowerCase());
                                           if (existing) {
                                             existing.quantity += qty;
                                           } else {
-                                            customerItems.push({ name: itemName, quantity: qty, unit });
+                                            customerItems.push({ name: itemName, quantity: qty });
                                           }
 
                                           const u = unit.toLowerCase();
@@ -12695,13 +12695,9 @@ function StoreContent({ shopId }) {
                                             <span className="text-gray-400 font-bold uppercase text-[9.5px]">Items Bought:</span>
                                             <div className="flex flex-wrap gap-1 justify-end max-w-[200px]">
                                               {customerItems.map((it, itIdx) => {
-                                                const u = String(it.unit || '').toLowerCase();
-                                                const isPeti = u.includes('peti');
-                                                const isTray = u.includes('tray');
                                                 return (
-                                                  <span key={itIdx} className={`px-1.5 py-0.5 rounded text-[8.5px] font-bold border ${isPeti ? 'bg-amber-50 text-amber-900 border-amber-200' : isTray ? 'bg-blue-50 text-blue-900 border-blue-200' : 'bg-emerald-50 text-emerald-900 border-emerald-200'
-                                                    }`}>
-                                                    {it.name} (x{it.quantity} {it.unit})
+                                                  <span key={itIdx} className="px-1.5 py-0.5 rounded text-[8.5px] font-bold border bg-gray-50 text-gray-800 border-gray-300">
+                                                    {it.name} (x{it.quantity})
                                                   </span>
                                                 );
                                               })}
@@ -13110,11 +13106,11 @@ function StoreContent({ shopId }) {
                                                 const rawUnit = (it.unitLabel || it.unit || 'peti').trim().toLowerCase();
                                                 const unit = rawUnit.includes('peti') ? 'Peti' : (rawUnit.includes('tray') ? 'Tray' : 'Egg');
 
-                                                const existing = customerItems.find(x => x.name.toLowerCase() === itemName.toLowerCase() && x.unit.toLowerCase() === unit.toLowerCase());
+                                                const existing = customerItems.find(x => x.name.toLowerCase() === itemName.toLowerCase());
                                                 if (existing) {
                                                   existing.quantity += qty;
                                                 } else {
-                                                  customerItems.push({ name: itemName, quantity: qty, unit });
+                                                  customerItems.push({ name: itemName, quantity: qty });
                                                 }
 
                                                 const u = unit.toLowerCase();
@@ -13141,11 +13137,11 @@ function StoreContent({ shopId }) {
                                                     const pUnitRaw = (match[3] || 'Peti').toLowerCase();
                                                     const pUnit = pUnitRaw.includes('peti') ? 'Peti' : (pUnitRaw.includes('tray') ? 'Tray' : 'Egg');
 
-                                                    const existing = customerItems.find(x => x.name.toLowerCase() === pName.toLowerCase() && x.unit.toLowerCase() === pUnit.toLowerCase());
+                                                    const existing = customerItems.find(x => x.name.toLowerCase() === pName.toLowerCase());
                                                     if (existing) {
                                                       existing.quantity += pQty;
                                                     } else {
-                                                      customerItems.push({ name: pName, quantity: pQty, unit: pUnit });
+                                                      customerItems.push({ name: pName, quantity: pQty });
                                                     }
                                                     if (pUnit === 'Peti') { totalPetis += pQty; totalEggsCount += pQty * 360; }
                                                     else if (pUnit === 'Tray') { totalTrays += pQty; totalEggsCount += pQty * 30; }
@@ -13163,17 +13159,17 @@ function StoreContent({ shopId }) {
                                                 if (pBought > 0) {
                                                   totalPetis += pBought;
                                                   totalEggsCount += pBought * 360;
-                                                  customerItems.push({ name: fallbackName, quantity: pBought, unit: 'Peti' });
+                                                  customerItems.push({ name: fallbackName, quantity: pBought });
                                                 } else if (eBought > 0) {
                                                   const petisFromEggs = Number((eBought / 360).toFixed(1));
                                                   if (petisFromEggs >= 1) {
                                                     totalPetis += petisFromEggs;
                                                     totalEggsCount += eBought;
-                                                    customerItems.push({ name: fallbackName, quantity: petisFromEggs, unit: 'Peti' });
+                                                    customerItems.push({ name: fallbackName, quantity: petisFromEggs });
                                                   } else {
                                                     totalLooseEggs += eBought;
                                                     totalEggsCount += eBought;
-                                                    customerItems.push({ name: fallbackName, quantity: eBought, unit: 'Egg' });
+                                                    customerItems.push({ name: fallbackName, quantity: eBought });
                                                   }
                                                 }
                                               }
@@ -13184,7 +13180,7 @@ function StoreContent({ shopId }) {
                                                 const calcPetis = Math.max(1, Number((totAmt / 1050).toFixed(1)));
                                                 totalPetis += calcPetis;
                                                 totalEggsCount += Math.round(calcPetis * 360);
-                                                customerItems.push({ name: 'Eggs', quantity: calcPetis, unit: 'Peti' });
+                                                customerItems.push({ name: 'Product', quantity: calcPetis });
                                               }
                                             });
 
@@ -13194,7 +13190,7 @@ function StoreContent({ shopId }) {
                                               const calcPetis = Math.max(1, Number((spent / 1050).toFixed(1)));
                                               totalPetis += calcPetis;
                                               totalEggsCount += Math.round(calcPetis * 360);
-                                              customerItems.push({ name: 'Eggs', quantity: calcPetis, unit: 'Peti' });
+                                              customerItems.push({ name: 'Product', quantity: calcPetis });
                                             }
 
                                             if (customerItems.length === 0) {
@@ -13216,11 +13212,11 @@ function StoreContent({ shopId }) {
                                                     <span
                                                       key={itIdx}
                                                       className="inline-flex items-center gap-0.5 px-1 py-0.5 rounded text-[7.5px] font-bold bg-gray-50 text-gray-800 border border-gray-300"
-                                                      title={`${it.name} (Qty: ${it.quantity} ${it.unit})`}
+                                                      title={`${it.name} (Qty: ${it.quantity})`}
                                                     >
-                                                      <span className="truncate max-w-[55px] font-bold">{it.name}</span>
+                                                      <span className="truncate max-w-[65px] font-bold">{it.name}</span>
                                                       <span className="font-black px-0.5 rounded text-[6.5px] bg-gray-200 text-gray-900">
-                                                        x{it.quantity} {it.unit || ''}
+                                                        x{it.quantity}
                                                       </span>
                                                     </span>
                                                   ))}
