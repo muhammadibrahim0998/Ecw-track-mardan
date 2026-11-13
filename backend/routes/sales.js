@@ -1054,12 +1054,35 @@ const createSaleRecord = async (req, res, explicitPaymentData = {}) => {
           if (product) {
             const qty = Number(item.quantity) || 1;
             const uType = String(item.unitLabel || item.unit || item.unitType || product.unitType || 'peti').toLowerCase();
+            const prodName = String(product.name || item.name || '').toLowerCase();
+            const prodCat = String(product.category || item.category || '').toLowerCase();
+            const prodUnit = String(product.unitType || '').toLowerCase();
             const tPerP = Number(product.traysPerPeti) || 12;
             const ePerT = Number(product.eggsPerTray) || 30;
             const ePerP = tPerP * ePerT || 360;
 
+            const isDedicatedUnit = 
+              uType.includes('premium') || 
+              uType.includes('pro') || 
+              uType.includes('plus') || 
+              uType.includes('renewal') || 
+              uType.includes('licence') || 
+              uType.includes('license') ||
+              prodName.includes('premium') ||
+              prodName.includes('pro') ||
+              prodName.includes('renewal') ||
+              prodCat.includes('premium') ||
+              prodCat.includes('pro') ||
+              prodCat.includes('renewal') ||
+              prodUnit.includes('premium') ||
+              prodUnit.includes('pro') ||
+              prodUnit.includes('renewal') ||
+              prodUnit.includes('licence');
+
             let stockToDeduct = 0;
-            if (Number(item.totalEggs) > 0) {
+            if (isDedicatedUnit) {
+              stockToDeduct = qty;
+            } else if (Number(item.totalEggs) > 0) {
               stockToDeduct = Number(item.totalEggs);
             } else if (uType.includes('peti')) {
               stockToDeduct = qty * ePerP;
@@ -1069,9 +1092,10 @@ const createSaleRecord = async (req, res, explicitPaymentData = {}) => {
               stockToDeduct = qty;
             }
 
-            const newStock = Math.max(0, (Number(product.stock) || 0) - stockToDeduct);
-            const newPetis = Math.max(0, Number((newStock / ePerP).toFixed(2)));
-            const newTrays = Math.max(0, Math.round(newStock / ePerT));
+            const currentStock = Number(product.stock !== undefined ? product.stock : (product.eggQuantity || product.petiQuantity || 0));
+            const newStock = Math.max(0, currentStock - stockToDeduct);
+            const newPetis = isDedicatedUnit ? newStock : Math.max(0, Number((newStock / ePerP).toFixed(2)));
+            const newTrays = isDedicatedUnit ? newStock : Math.max(0, Math.round(newStock / ePerT));
             
             const itemUpdate = {
               stock: newStock,
@@ -1693,16 +1717,29 @@ router.delete('/:id', authenticate, requireShopAdmin, async (req, res) => {
             const product = await Item.findById(pId);
             if (product) {
               const qty = Number(item.quantity) || 1;
-              const stockToAdd = Number(item.totalEggs) > 0 ? Number(item.totalEggs) : qty;
-              const newStock = (Number(product.stock) || 0) + stockToAdd;
-              const updateObj = { stock: newStock, lastUpdated: new Date().toISOString().split('T')[0] };
-              if (product.unitType === 'peti') {
-                updateObj.petiQuantity = (Number(product.petiQuantity) || 0) + qty;
-              } else if (product.unitType === 'tray') {
-                updateObj.trayQuantity = (Number(product.trayQuantity) || 0) + qty;
-              } else if (product.unitType === 'egg') {
-                updateObj.eggQuantity = newStock;
-              }
+              const uType = String(item.unitLabel || item.unit || item.unitType || product.unitType || 'peti').toLowerCase();
+              const prodName = String(product.name || item.name || '').toLowerCase();
+              const isDedicatedUnit = 
+                uType.includes('premium') || 
+                uType.includes('pro') || 
+                uType.includes('plus') || 
+                uType.includes('renewal') || 
+                uType.includes('licence') || 
+                uType.includes('license') ||
+                prodName.includes('premium') ||
+                prodName.includes('pro') ||
+                prodName.includes('renewal');
+
+              const stockToAdd = isDedicatedUnit ? qty : (Number(item.totalEggs) > 0 ? Number(item.totalEggs) : qty);
+              const currentStock = Number(product.stock !== undefined ? product.stock : (product.eggQuantity || product.petiQuantity || 0));
+              const newStock = currentStock + stockToAdd;
+              const updateObj = { 
+                stock: newStock, 
+                petiQuantity: isDedicatedUnit ? newStock : ((Number(product.petiQuantity) || 0) + qty),
+                trayQuantity: isDedicatedUnit ? newStock : ((Number(product.trayQuantity) || 0) + qty),
+                eggQuantity: newStock,
+                lastUpdated: new Date().toISOString().split('T')[0] 
+              };
               await Item.findByIdAndUpdate(product.id, updateObj);
             }
           } catch (e) { }

@@ -153,6 +153,7 @@ export function PurchasesManagement({ products: propProducts, shopId: propShopId
   // Dedicated Vendor Invoices List Modal State ("zanla list")
   const [selectedVendorName, setSelectedVendorName] = useState(null);
   const [transferLoading, setTransferLoading] = useState(false);
+  const [selectedCategoryFilter, setSelectedCategoryFilter] = useState('ALL');
 
   // 1-Click Fast Transfer Channel for Today Purchases (CASH <-> BANK)
   const handleTransferTodayPurchases = async (targetMethod) => {
@@ -527,6 +528,121 @@ export function PurchasesManagement({ products: propProducts, shopId: propShopId
       .filter(p => !activeShopId || !p.shopId || String(p.shopId?._id || p.shopId) === String(activeShopId));
   }, [propProducts, contextProducts, apiProducts, deletedIds, editedItemsMap, activeShopId]);
 
+  const getCategoryStockKey = (name, unit, cat) => {
+    const n = String(name || '').toLowerCase();
+    const u = String(unit || '').toLowerCase();
+    const c = String(cat || '').toLowerCase();
+    if (n.includes('renewal') || u.includes('renewal') || c.includes('renewal') || u.includes('licence') || u.includes('license')) return 'renewal';
+    if (n.includes('plus') || u.includes('plus') || c.includes('plus') || u === 'egg' || u === 'eggs') return 'premiumPlus';
+    if (n.includes('pro') || u.includes('pro') || c.includes('pro') || u === 'tray' || u === 'trays') return 'premiumPro';
+    return 'premium';
+  };
+
+  // 4 Dedicated Category Dynamic Stock Metrics (Premium, Premium Pro, Premium Plus, Renewal Licence)
+  const categoryStockSummary = useMemo(() => {
+    const summary = {
+      premium: {
+        key: 'premium',
+        name: 'Premium',
+        inHand: 0,
+        purchased: 0,
+        sold: 0,
+        icon: '📦',
+        border: 'border-amber-200 hover:border-amber-400',
+        activeBorder: 'border-amber-500 ring-2 ring-amber-400/50',
+        badgeBg: 'bg-amber-100 text-amber-800 border-amber-300',
+        gradient: 'from-amber-50/70 via-white to-amber-100/30',
+        textColor: 'text-amber-950',
+        accentColor: 'text-amber-600',
+      },
+      premiumPro: {
+        key: 'premiumPro',
+        name: 'Premium Pro',
+        inHand: 0,
+        purchased: 0,
+        sold: 0,
+        icon: '🍱',
+        border: 'border-blue-200 hover:border-blue-400',
+        activeBorder: 'border-blue-500 ring-2 ring-blue-400/50',
+        badgeBg: 'bg-blue-100 text-blue-800 border-blue-300',
+        gradient: 'from-blue-50/70 via-white to-blue-100/30',
+        textColor: 'text-blue-950',
+        accentColor: 'text-blue-600',
+      },
+      premiumPlus: {
+        key: 'premiumPlus',
+        name: 'Premium Plus',
+        inHand: 0,
+        purchased: 0,
+        sold: 0,
+        icon: '🥚',
+        border: 'border-emerald-200 hover:border-emerald-400',
+        activeBorder: 'border-emerald-500 ring-2 ring-emerald-400/50',
+        badgeBg: 'bg-emerald-100 text-emerald-800 border-emerald-300',
+        gradient: 'from-emerald-50/70 via-white to-emerald-100/30',
+        textColor: 'text-emerald-950',
+        accentColor: 'text-emerald-600',
+      },
+      renewal: {
+        key: 'renewal',
+        name: 'Renewal Licence',
+        inHand: 0,
+        purchased: 0,
+        sold: 0,
+        icon: '🔑',
+        border: 'border-purple-200 hover:border-purple-400',
+        activeBorder: 'border-purple-500 ring-2 ring-purple-400/50',
+        badgeBg: 'bg-purple-100 text-purple-800 border-purple-300',
+        gradient: 'from-purple-50/70 via-white to-purple-100/30',
+        textColor: 'text-purple-950',
+        accentColor: 'text-purple-600',
+      },
+    };
+
+    // Tally in-hand available stock and initial purchase amounts from products
+    (products || []).forEach(p => {
+      const catKey = getCategoryStockKey(p.name, p.unitType, p.category);
+      const stockVal = Number(p.stock !== undefined && p.stock !== null ? p.stock : (
+        catKey === 'premiumPro' ? (p.trayQuantity || 0) :
+        catKey === 'premiumPlus' ? (p.eggQuantity || 0) :
+        (p.petiQuantity || p.stock || 0)
+      ));
+      summary[catKey].inHand += stockVal;
+
+      const initVal = Math.max(stockVal, Number(p.initialStock || (
+        catKey === 'premiumPro' ? (p.trayQuantity || 0) :
+        catKey === 'premiumPlus' ? (p.eggQuantity || 0) :
+        (p.petiQuantity || p.stock || 0)
+      )));
+      summary[catKey].purchased += initVal;
+    });
+
+    // Tally sold stock from sales
+    const salesList = productCtx?.sales || [];
+    salesList.forEach(s => {
+      let sItems = [];
+      if (Array.isArray(s.items)) sItems = s.items;
+      else if (typeof s.items === 'string') {
+        try { sItems = JSON.parse(s.items); } catch (_) {}
+      }
+      sItems.forEach(item => {
+        const catKey = getCategoryStockKey(item.name || item.rawProductName, item.unitLabel || item.unit, item.category);
+        const qty = Number(item.quantity) || 1;
+        summary[catKey].sold += qty;
+      });
+    });
+
+    Object.keys(summary).forEach(k => {
+      if (summary[k].sold > 0) {
+        summary[k].purchased = Math.max(summary[k].purchased, summary[k].inHand + summary[k].sold);
+      } else {
+        summary[k].sold = Math.max(0, summary[k].purchased - summary[k].inHand);
+      }
+    });
+
+    return summary;
+  }, [products, productCtx?.sales]);
+
   // Timeframe date filtering logic
   const filteredByTimeframeProducts = useMemo(() => {
     return products.filter((p) => {
@@ -538,13 +654,17 @@ export function PurchasesManagement({ products: propProducts, shopId: propShopId
   const purchaseItems = useMemo(() => {
     return filteredByTimeframeProducts.filter((p) => {
       if (!isPurchaseInPaymentChannel(p, purchasePaymentFilter)) return false;
+      if (selectedCategoryFilter !== 'ALL') {
+        const catKey = getCategoryStockKey(p.name, p.unitType, p.category);
+        if (catKey !== selectedCategoryFilter) return false;
+      }
       const matchesSearch =
         p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (p.supplierName && p.supplierName.toLowerCase().includes(searchTerm.toLowerCase()));
 
       return matchesSearch;
     });
-  }, [filteredByTimeframeProducts, searchTerm, purchasePaymentFilter]);
+  }, [filteredByTimeframeProducts, searchTerm, purchasePaymentFilter, selectedCategoryFilter]);
 
   // Aggregate vendors from purchase items
   const aggregatedVendors = useMemo(() => {
@@ -1760,8 +1880,63 @@ export function PurchasesManagement({ products: propProducts, shopId: propShopId
                 Active: {getPurchasePeriodLabel()}
               </span>
             )}
+            {selectedCategoryFilter !== 'ALL' && (
+              <button
+                onClick={() => setSelectedCategoryFilter('ALL')}
+                className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-amber-50 text-amber-800 border border-amber-300 hover:bg-amber-100 flex items-center gap-1 cursor-pointer transition-all active:scale-95 whitespace-nowrap"
+                title="Click to clear category filter"
+              >
+                <span>Category: {categoryStockSummary[selectedCategoryFilter]?.name}</span>
+                <X className="w-2.5 h-2.5" />
+              </button>
+            )}
           </div>
         </div>
+      </div>
+
+      {/* 4 Dedicated Dynamic Category Stock Cards: Premium, Premium Pro, Premium Plus, Renewal Licence */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {Object.values(categoryStockSummary).map((cat) => {
+          const isSelected = selectedCategoryFilter === cat.key;
+          return (
+            <div
+              key={cat.key}
+              onClick={() => setSelectedCategoryFilter(prev => prev === cat.key ? 'ALL' : cat.key)}
+              className={`bg-white border-2 rounded-2xl p-3.5 sm:p-4 shadow-sm flex flex-col justify-between cursor-pointer active:scale-95 transition-all bg-gradient-to-br ${cat.gradient} ${
+                isSelected
+                  ? `${cat.activeBorder} scale-[1.01] shadow-md`
+                  : `${cat.border}`
+              }`}
+              title={`Click to filter purchases by ${cat.name}`}
+            >
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <span className="text-base select-none">{cat.icon}</span>
+                    <span className={`text-[10px] sm:text-xs font-black uppercase tracking-wider truncate ${cat.textColor}`}>
+                      {cat.name}
+                    </span>
+                  </div>
+                  <span className={`text-[9px] font-black px-1.5 py-0.5 rounded-md border uppercase tracking-wider ${cat.badgeBg}`}>
+                    {isSelected ? 'ACTIVE' : 'STOCK'}
+                  </span>
+                </div>
+                <h4 className={`text-xl sm:text-2xl font-black tracking-tight ${cat.textColor}`}>
+                  {Number(cat.inHand).toLocaleString('en-PK')}{' '}
+                  <span className={`text-xs sm:text-sm font-bold ${cat.accentColor}`}>Units</span>
+                </h4>
+                <div className="mt-2 pt-2 border-t border-slate-200/70 flex items-center justify-between text-[10px] font-bold">
+                  <span className="text-emerald-700 font-black">
+                    +{Number(cat.purchased).toLocaleString('en-PK')} <span className="text-slate-400 font-semibold text-[9px]">Buy</span>
+                  </span>
+                  <span className="text-rose-600 font-black">
+                    -{Number(cat.sold).toLocaleString('en-PK')} <span className="text-slate-400 font-semibold text-[9px]">Sold</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       {/* Top 5 Dynamic Stat Cards (Cash & Bank Separated) */}
