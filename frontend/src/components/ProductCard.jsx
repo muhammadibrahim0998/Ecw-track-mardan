@@ -94,7 +94,7 @@ export function ProductCard({ product, onEdit, onDelete, onView }) {
           
           {/* Explicit Unit Pricing Breakdown */}
           {(() => {
-            const price = Number(product.price) || Number(product.costPrice) || 0;
+            const price = Number(product.price) || 0;
             const unit = product.unitType || 'Premium';
             const isSingleUnit = (product.traysPerPeti === 1 && product.eggsPerTray === 1) || unit === 'Renewal Licence';
 

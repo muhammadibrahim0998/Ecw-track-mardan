@@ -2700,7 +2700,7 @@ function StoreContent({ shopId }) {
 
   const getProductUnitPrice = (product, unit = 'tray') => {
     if (!product) return 0;
-    const basePrice = Number(product.price) || Number(product.costPrice) || 0;
+    const basePrice = Number(product.price) || 0;
     const isSingleUnit = (product.traysPerPeti === 1 && product.eggsPerTray === 1) || 
       product.unitType === 'Renewal Licence' ||
       product.unitType === 'Premium' ||
@@ -10291,7 +10291,7 @@ function StoreContent({ shopId }) {
 
                           const singlePrice = (product.price !== undefined && Number(product.price) > 0)
                             ? Number(product.price)
-                            : (Number(product.costPrice) || 0);
+                            : 0;
 
                           const unitKey = (prodUnit === 'Premium') ? 'peti'
                             : (prodUnit === 'Premium Pro') ? 'tray'
@@ -10334,9 +10334,15 @@ function StoreContent({ shopId }) {
                                 </div>
                                 <div className="min-w-0 flex-1">
                                   <h4 className="font-black text-gray-900 text-xs uppercase tracking-tight truncate">{product.name}</h4>
-                                  <p className="text-emerald-700 font-extrabold text-[11px] mt-0.5">
-                                    {currency} {singlePrice.toLocaleString()} <span className="text-[9px] font-normal text-gray-400">/ {prodUnit}</span>
-                                  </p>
+                                  {singlePrice > 0 ? (
+                                    <p className="text-emerald-700 font-extrabold text-[11px] mt-0.5">
+                                      {currency} {singlePrice.toLocaleString()} <span className="text-[9px] font-normal text-gray-400">/ {prodUnit}</span>
+                                    </p>
+                                  ) : (
+                                    <p className="text-gray-400 font-bold text-[10px] mt-0.5 uppercase tracking-wide">
+                                      Rate: Enter on Bill
+                                    </p>
+                                  )}
                                   {isOutOfStock ? (
                                     <span className="text-[9px] font-black uppercase text-red-600 bg-red-100 border border-red-200 px-2 py-0.5 rounded-md inline-flex items-center gap-1 mt-0.5 animate-pulse">
                                       <Lock className="w-2.5 h-2.5" /> Out of Stock (0 Stock - Locked)
@@ -10382,13 +10388,17 @@ function StoreContent({ shopId }) {
                                             ? 'bg-purple-50 hover:bg-purple-100 text-purple-900 border border-purple-300 cursor-pointer active:scale-95 shadow-xs'
                                             : 'bg-blue-50 hover:bg-blue-100 text-blue-900 border border-blue-300 cursor-pointer active:scale-95 shadow-xs'
                                       }`}
-                                    title={!isActionAllowed('walkin') ? 'Billing locked by Super Admin' : `Add 1 ${product.name} (${currency} ${singlePrice})`}
+                                    title={!isActionAllowed('walkin') ? 'Billing locked by Super Admin' : `Add 1 ${product.name} to Bill`}
                                   >
                                     <span className="flex items-center gap-1.5">
                                       <span>{getProdIcon(prodUnit)}</span>
                                       <span>{product.name}</span>
                                     </span>
-                                    <span className="text-[11px] font-extrabold">{currency} {singlePrice.toLocaleString()}</span>
+                                    {singlePrice > 0 ? (
+                                      <span className="text-[11px] font-extrabold text-emerald-950">{currency} {singlePrice.toLocaleString()}</span>
+                                    ) : (
+                                      <span className="text-[10px] font-bold text-emerald-700 uppercase">+ Add to Bill</span>
+                                    )}
                                   </button>
                                 </div>
                               )}
