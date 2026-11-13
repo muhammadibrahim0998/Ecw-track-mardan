@@ -5992,31 +5992,25 @@ function StoreContent({ shopId }) {
 
     filteredPurchases.forEach(p => {
       const prodName = (p.name || 'Item').trim();
-      const unit = (() => {
-        const u = String(p.unitType || p.unit || '').trim();
-        if (u.toLowerCase() === 'peti') return 'Premium';
-        if (u.toLowerCase() === 'tray') return 'Premium Pro';
-        if (u.toLowerCase() === 'egg') return 'Premium Plus';
-        if (u) return u;
-        return prodName;
+      const catName = (() => {
+        const n = String(prodName || p.category || '').toLowerCase();
+        if (n.includes('renewal')) return 'Renewal Licence';
+        if (n.includes('plus')) return 'Premium Plus';
+        if (n.includes('pro')) return 'Premium Pro';
+        return 'Premium';
       })();
 
       const cost = Number(p.totalPurchaseCost || p.purchaseCost || p.totalCost) ||
         (Number(p.costPrice || 0) * (Number(p.stock !== undefined ? p.stock : (p.quantity || 1))));
       totalPurchasesCost += Math.round(cost);
 
-      let qty = 0;
-      if (Number(p.costPrice) > 0 && cost > 0) {
-        qty = Math.round(cost / Number(p.costPrice));
-      } else {
-        qty = Number(p.stock !== undefined ? p.stock : (p.quantity || p.stockQuantity || p.petiQuantity || p.trayQuantity || p.eggQuantity || 0));
-      }
+      const qty = Number(p.quantity != null ? p.quantity : (p.stock != null ? p.stock : (p.stockQuantity || (Number(p.costPrice) > 0 && cost > 0 ? Math.round(cost / Number(p.costPrice)) : 1))));
 
-      const key = `${prodName}_${unit}`.toLowerCase();
+      const key = catName.toLowerCase();
       if (!productPurchasesMap[key]) {
         productPurchasesMap[key] = {
-          name: prodName,
-          unit: unit,
+          name: catName,
+          unit: catName,
           qty: 0,
           cost: 0
         };
@@ -6065,21 +6059,20 @@ function StoreContent({ shopId }) {
         : (Number(d.lossAmount) || (Number(d.quantity || d.deductedEggs || 0) * (Number(d.unitPrice) || 0)) || 0);
       totalDamagedLoss += loss;
 
-      const unit = (() => {
-        const u = String(d.unitType || '').trim();
-        if (u.toLowerCase() === 'peti') return 'Premium';
-        if (u.toLowerCase() === 'tray') return 'Premium Pro';
-        if (u.toLowerCase() === 'egg') return 'Premium Plus';
-        if (u) return u;
-        return d.productName || 'Units';
+      const catName = (() => {
+        const n = String(d.productName || d.category || '').toLowerCase();
+        if (n.includes('renewal')) return 'Renewal Licence';
+        if (n.includes('plus')) return 'Premium Plus';
+        if (n.includes('pro')) return 'Premium Pro';
+        return 'Premium';
       })();
 
-      const qty = Number(d.quantity || d.petiQuantity || d.trayQuantity || d.eggQuantity || d.deductedEggs || 0);
-      const key = `${d.productName || 'Item'}_${unit}`.toLowerCase();
+      const qty = Number(d.quantity != null ? d.quantity : (d.eggQuantity || d.petiQuantity || d.trayQuantity || d.deductedEggs || 1));
+      const key = catName.toLowerCase();
       if (!damagedMap[key]) {
         damagedMap[key] = {
-          productName: d.productName || 'Item',
-          unit: unit,
+          productName: catName,
+          unit: catName,
           qty: 0
         };
         damagedSummary.push(damagedMap[key]);
@@ -17375,7 +17368,7 @@ function StoreContent({ shopId }) {
                       <option value="">-- Select Catalog Item (Optional) --</option>
                       {(items || []).map(i => (
                         <option key={i._id || i.id} value={i._id || i.id}>
-                          {i.name} (Stock: {(Number(i.petiQuantity) || 0).toFixed(1)} Prem / {i.eggQuantity || i.stock || 0} Plus)
+                          {i.name} (Stock: {Number(i.stock ?? i.quantity ?? 0)})
                         </option>
                       ))}
                       <option value="CUSTOM">Custom Product Name</option>
@@ -17661,7 +17654,7 @@ function StoreContent({ shopId }) {
                       <option value="">-- Select Catalog Item (Optional) --</option>
                       {(items || []).map(i => (
                         <option key={i._id || i.id} value={i._id || i.id}>
-                          {i.name} (Stock: {(Number(i.petiQuantity) || 0).toFixed(1)} Prem / {i.eggQuantity || i.stock || 0} Plus)
+                          {i.name} (Stock: {Number(i.stock ?? i.quantity ?? 0)})
                         </option>
                       ))}
                       <option value="CUSTOM">Custom Product Name</option>

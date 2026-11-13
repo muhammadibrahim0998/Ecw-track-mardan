@@ -23,7 +23,8 @@ import {
   Clock,
   Sparkles,
   ImageIcon,
-  Trash2
+  Trash2,
+  ShieldCheck
 } from 'lucide-react';
 import { getImageUrl } from '../utils/imageHelper.js';
 
@@ -39,6 +40,23 @@ const formatProductNameDisplay = (name) => {
     .replace(/\bpetis?\b/gi, 'Premium')
     .replace(/\btrays?\b/gi, 'Premium Pro')
     .replace(/\beggs?\b/gi, 'Premium Plus');
+};
+
+const getItemCategory = (item) => {
+  const name = String(item?.productName || item?.name || item?.rawProductName || '').toLowerCase();
+  const unit = String(item?.unitType || item?.unit || '').toLowerCase();
+  const cat = String(item?.category || '').toLowerCase();
+
+  if (name.includes('renewal') || unit.includes('renewal') || cat.includes('renewal') || unit.includes('licence') || unit.includes('license')) {
+    return 'Renewal Licence';
+  }
+  if (name.includes('plus') || unit.includes('plus') || cat.includes('plus') || unit === 'egg' || unit === 'eggs') {
+    return 'Premium Plus';
+  }
+  if (name.includes('pro') || unit.includes('pro') || cat.includes('pro') || unit === 'tray' || unit === 'trays') {
+    return 'Premium Pro';
+  }
+  return 'Premium';
 };
 
 export default function SoldProductsHistoryView({
@@ -193,7 +211,7 @@ export default function SoldProductsHistoryView({
         saleItems.forEach((itm, itmIdx) => {
           const prodName = itm.name || itm.title || itm.productName || sale.productName || 'Stock Item';
           const rawCat = itm.category || sale.category || 'Premium';
-          const cat = (rawCat && rawCat.toLowerCase() !== 'eggs' && rawCat.toLowerCase() !== 'egg') ? rawCat : 'Premium';
+          const cat = getItemCategory({ ...itm, productName: prodName, category: rawCat });
           const qty = Number(itm.quantity || itm.qty || 1);
           const unitType = String(itm.unitType || itm.unit || 'peti').toLowerCase();
 
@@ -357,33 +375,34 @@ export default function SoldProductsHistoryView({
 
   // ─── Available Categories List ───
   const availableCategories = useMemo(() => {
-    const set = new Set();
-    allSoldItems.forEach(i => {
-      if (i.category) set.add(i.category);
-    });
-    return Array.from(set);
-  }, [allSoldItems]);
+    return ['Premium', 'Premium Pro', 'Premium Plus', 'Renewal Licence'];
+  }, []);
 
   // ─── Aggregated Metrics ───
   const metrics = useMemo(() => {
     let totalRevenue = 0;
-    let totalPetis = 0;
-    let totalTrays = 0;
-    let totalEggs = 0;
+    let premiumSold = 0;
+    let premiumProSold = 0;
+    let premiumPlusSold = 0;
+    let renewalSold = 0;
     let totalItemsCount = filteredSoldItems.length;
 
     filteredSoldItems.forEach(i => {
-      totalRevenue += i.totalAmount;
-      totalPetis += Number(i.petis || 0);
-      totalTrays += Number(i.trays || 0);
-      totalEggs += Number(i.eggs || 0);
+      totalRevenue += Number(i.totalAmount || 0);
+      const cat = getItemCategory(i);
+      const qty = Number(i.quantity != null ? i.quantity : (i.petis || 1));
+      if (cat === 'Renewal Licence') renewalSold += qty;
+      else if (cat === 'Premium Plus') premiumPlusSold += qty;
+      else if (cat === 'Premium Pro') premiumProSold += qty;
+      else premiumSold += qty;
     });
 
     return {
       totalRevenue,
-      totalPetis: Number(totalPetis.toFixed(2)),
-      totalTrays: Number(totalTrays.toFixed(2)),
-      totalEggs,
+      premiumSold,
+      premiumProSold,
+      premiumPlusSold,
+      renewalSold,
       totalItemsCount
     };
   }, [filteredSoldItems]);
@@ -394,12 +413,14 @@ export default function SoldProductsHistoryView({
 
     filteredSoldItems.forEach(i => {
       const displayName = formatProductNameDisplay(i.productName);
-      const key = `${displayName}__${i.category}`;
+      const cat = getItemCategory(i);
+      const key = `${displayName}__${cat}`;
       if (!groups[key]) {
         groups[key] = {
           productName: displayName,
-          category: i.category,
+          category: cat,
           image: i.image || '/logo1.jpeg',
+          totalQuantity: 0,
           totalPetis: 0,
           totalTrays: 0,
           totalEggs: 0,
@@ -411,6 +432,8 @@ export default function SoldProductsHistoryView({
       if ((!groups[key].image || groups[key].image === '/logo1.jpeg' || groups[key].image === '/egg2.png') && (i.image && i.image !== '/egg2.png')) {
         groups[key].image = i.image;
       }
+      const itemQty = Number(i.quantity != null ? i.quantity : (i.petis || 1));
+      groups[key].totalQuantity += itemQty;
       groups[key].totalPetis += Number(i.petis || 0);
       groups[key].totalTrays += Number(i.trays || 0);
       groups[key].totalEggs += Number(i.eggs || 0);
@@ -420,9 +443,10 @@ export default function SoldProductsHistoryView({
     });
 
     return Object.values(groups).map(g => {
-      const avgPrice = g.prices.length > 0 ? (g.prices.reduce((a, b) => a + b, 0) / g.prices.length) : (g.totalPetis > 0 ? g.totalRevenue / g.totalPetis : 0);
+      const avgPrice = g.prices.length > 0 ? (g.prices.reduce((a, b) => a + b, 0) / g.prices.length) : (g.totalQuantity > 0 ? g.totalRevenue / g.totalQuantity : 0);
       return {
         ...g,
+        totalQuantity: g.totalQuantity,
         totalPetis: Number(g.totalPetis.toFixed(2)),
         totalTrays: Number(g.totalTrays.toFixed(2)),
         avgPrice: Math.round(avgPrice)
@@ -435,19 +459,21 @@ export default function SoldProductsHistoryView({
     const groups = {};
 
     filteredSoldItems.forEach(i => {
-      const rawCat = i.category || 'Premium';
-      const cat = (rawCat && rawCat.toLowerCase() !== 'eggs' && rawCat.toLowerCase() !== 'egg') ? rawCat : 'Premium';
+      const cat = getItemCategory(i);
       if (!groups[cat]) {
         groups[cat] = {
           name: cat,
           totalRevenue: 0,
+          totalQuantity: 0,
           totalPetis: 0,
           totalTrays: 0,
           totalEggs: 0,
           count: 0
         };
       }
+      const itemQty = Number(i.quantity != null ? i.quantity : (i.petis || 1));
       groups[cat].totalRevenue += i.totalAmount;
+      groups[cat].totalQuantity += itemQty;
       groups[cat].totalPetis += Number(i.petis || 0);
       groups[cat].totalTrays += Number(i.trays || 0);
       groups[cat].totalEggs += Number(i.eggs || 0);
@@ -460,23 +486,28 @@ export default function SoldProductsHistoryView({
   // ─── Cumulative Preserved Metrics (Total records kept until deleted by shop admin) ───
   const cumulativePreservedMetrics = useMemo(() => {
     let totalRevenue = 0;
-    let totalPetis = 0;
-    let totalTrays = 0;
-    let totalEggs = 0;
+    let premiumSold = 0;
+    let premiumProSold = 0;
+    let premiumPlusSold = 0;
+    let renewalSold = 0;
     let totalCount = allSoldItems.length;
 
     allSoldItems.forEach(i => {
       totalRevenue += Number(i.totalAmount || 0);
-      totalPetis += Number(i.petis || 0);
-      totalTrays += Number(i.trays || 0);
-      totalEggs += Number(i.eggs || 0);
+      const cat = getItemCategory(i);
+      const qty = Number(i.quantity != null ? i.quantity : (i.petis || 1));
+      if (cat === 'Renewal Licence') renewalSold += qty;
+      else if (cat === 'Premium Plus') premiumPlusSold += qty;
+      else if (cat === 'Premium Pro') premiumProSold += qty;
+      else premiumSold += qty;
     });
 
     return {
       totalRevenue,
-      totalPetis: Number(totalPetis.toFixed(2)),
-      totalTrays: Number(totalTrays.toFixed(2)),
-      totalEggs,
+      premiumSold,
+      premiumProSold,
+      premiumPlusSold,
+      renewalSold,
       totalCount
     };
   }, [allSoldItems]);
@@ -716,19 +747,19 @@ export default function SoldProductsHistoryView({
             </div>
             <div class="kpi-box">
               <div class="kpi-lbl">Total Premium Sold</div>
-              <div class="kpi-val" style="color:#0f172a;">${fmtNum(metrics.totalPetis)} Premium</div>
+              <div class="kpi-val" style="color:#b45309;">${fmtNum(metrics.premiumSold)} Units</div>
             </div>
             <div class="kpi-box">
               <div class="kpi-lbl">Total Premium Pro Sold</div>
-              <div class="kpi-val" style="color:#1d4ed8;">${fmtNum(metrics.totalTrays)} Premium Pro</div>
+              <div class="kpi-val" style="color:#1d4ed8;">${fmtNum(metrics.premiumProSold)} Units</div>
             </div>
             <div class="kpi-box">
               <div class="kpi-lbl">Total Premium Plus Sold</div>
-              <div class="kpi-val" style="color:#0f172a;">${fmtNum(metrics.totalEggs)} Premium Plus</div>
+              <div class="kpi-val" style="color:#047857;">${fmtNum(metrics.premiumPlusSold)} Units</div>
             </div>
             <div class="kpi-box">
-              <div class="kpi-lbl">Unique Products Sold</div>
-              <div class="kpi-val" style="color:#2563eb;">${productWiseSummary.length} Products</div>
+              <div class="kpi-lbl">Total Renewal Licence Sold</div>
+              <div class="kpi-val" style="color:#7e22ce;">${fmtNum(metrics.renewalSold)} Units</div>
             </div>
           </div>
 
@@ -742,10 +773,8 @@ export default function SoldProductsHistoryView({
               <tr>
                 <th style="width:20px;">#</th>
                 <th>Product Name</th>
-                <th style="width:65px;">Category</th>
-                <th class="text-right" style="width:55px;">Premium Sold</th>
-                <th class="text-right" style="width:55px;">Premium Pro Sold</th>
-                <th class="text-right" style="width:55px;">Premium Plus Sold</th>
+                <th style="width:75px;">Category</th>
+                <th class="text-center" style="width:65px;">Quantity Sold</th>
                 <th class="text-right" style="width:60px;">Avg Rate</th>
                 <th class="text-right" style="width:75px;">Total Revenue</th>
               </tr>
@@ -761,9 +790,7 @@ export default function SoldProductsHistoryView({
                     </div>
                   </td>
                   <td>${p.category}</td>
-                  <td class="text-right font-bold">${fmtNum(p.totalPetis)} Prem</td>
-                  <td class="text-right font-bold" style="color:#1d4ed8;">${fmtNum(p.totalTrays)} Pro</td>
-                  <td class="text-right">${fmtNum(p.totalEggs)} Plus</td>
+                  <td class="text-center font-bold">${p.totalQuantity}</td>
                   <td class="text-right">${currency} ${fmtNum(p.avgPrice)}</td>
                   <td class="text-right font-black" style="color:#047857;">${currency} ${fmtNum(p.totalRevenue)}</td>
                 </tr>
@@ -835,9 +862,11 @@ export default function SoldProductsHistoryView({
     csv += `Branch,${shopName}\n`;
     csv += `Timeframe,${timeframe}\n`;
     csv += `Total Sold Revenue,${metrics.totalRevenue}\n`;
-    csv += `Total Premium Sold,${metrics.totalPetis}\n`;
-    csv += `Total Premium Pro Sold,${metrics.totalTrays}\n`;
-    csv += `Total Premium Plus Sold,${metrics.totalEggs}\n\n`;
+    csv += `Total Premium Sold,${metrics.premiumSold}\n`;
+    csv += `Total Premium Pro Sold,${metrics.premiumProSold}\n`;
+    csv += `Total Premium Plus Sold,${metrics.premiumPlusSold}\n`;
+    csv += `Total Renewal Licence Sold,${metrics.renewalSold}\n`;
+    csv += `Total Sales Lines,${filteredSoldItems.length}\n\n`;
 
     csv += `#,Invoice Number,Date & Time,Product Name,Category,Customer,Quantity,Unit Type,Premium,Premium Pro,Premium Plus,Unit Price,Total Amount,Payment Mode\n`;
     filteredSoldItems.forEach((i, idx) => {
@@ -865,12 +894,16 @@ export default function SoldProductsHistoryView({
     msg += `📅 *Timeframe:* ${timeframe} (${now.toLocaleDateString('en-PK')})\n`;
     msg += `══════════════════════\n\n`;
     msg += `💰 *Total Sold Revenue:* ${currency} ${fmtNum(metrics.totalRevenue)}\n`;
-    msg += `📦 *Total Sold:* ${fmtNum(metrics.totalPetis)} Premium • ${fmtNum(metrics.totalTrays)} Premium Pro • ${fmtNum(metrics.totalEggs)} Premium Plus\n`;
+    msg += `📦 *Total Sold:*\n`;
+    msg += `• Premium: *${fmtNum(metrics.premiumSold)}*\n`;
+    msg += `• Premium Pro: *${fmtNum(metrics.premiumProSold)}*\n`;
+    msg += `• Premium Plus: *${fmtNum(metrics.premiumPlusSold)}*\n`;
+    msg += `• Renewal Licence: *${fmtNum(metrics.renewalSold)}*\n`;
     msg += `📋 *Total Sold Lines:* ${metrics.totalItemsCount}\n\n`;
 
     msg += `📊 *PRODUCT BREAKDOWN:*\n`;
     productWiseSummary.forEach((p, idx) => {
-      msg += `• *${formatProductNameDisplay(p.productName)}* [${p.category}]: ${p.totalPetis} Premium • ${p.totalTrays} Pro (${fmtNum(p.totalEggs)} Premium Plus) | Avg Rate: ${currency} ${fmtNum(p.avgPrice)} | Total: *${currency} ${fmtNum(p.totalRevenue)}*\n`;
+      msg += `• *${formatProductNameDisplay(p.productName)}* [${p.category}]: Qty *${p.totalQuantity}* | Avg Rate: ${currency} ${fmtNum(p.avgPrice)} | Total: *${currency} ${fmtNum(p.totalRevenue)}*\n`;
     });
 
     msg += `\n══════════════════════\n`;
@@ -971,30 +1004,35 @@ export default function SoldProductsHistoryView({
           </div>
         </div>
 
-        <div className="flex items-center gap-3 sm:gap-4 flex-wrap bg-gradient-to-b from-white to-slate-50 px-4 py-2.5 rounded-2xl border-t border-t-white border-x border-slate-300 border-b-2 border-b-slate-400 w-full xl:w-auto justify-between sm:justify-start shadow-sm relative z-10">
-          <div className="text-center">
-            <div className="text-[10px] uppercase font-black text-black">Total Premium Sold</div>
-            <div className="text-sm sm:text-base font-black text-black">{cumulativePreservedMetrics.totalPetis} Prem</div>
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap bg-gradient-to-b from-white to-slate-50 px-3.5 py-2.5 rounded-2xl border-t border-t-white border-x border-slate-300 border-b-2 border-b-slate-400 w-full xl:w-auto justify-between sm:justify-start shadow-sm relative z-10">
+          <div className="text-center px-1.5">
+            <div className="text-[10px] uppercase font-black text-amber-700">Premium Sold</div>
+            <div className="text-sm sm:text-base font-black text-slate-900">{cumulativePreservedMetrics.premiumSold.toLocaleString('en-PK')}</div>
           </div>
           <div className="w-px h-8 bg-slate-300 hidden sm:block"></div>
-          <div className="text-center">
-            <div className="text-[10px] uppercase font-black text-blue-900">Total Premium Pro Sold</div>
-            <div className="text-sm sm:text-base font-black text-blue-900">{cumulativePreservedMetrics.totalTrays.toLocaleString('en-PK')} Pro</div>
+          <div className="text-center px-1.5">
+            <div className="text-[10px] uppercase font-black text-blue-700">Premium Pro Sold</div>
+            <div className="text-sm sm:text-base font-black text-blue-900">{cumulativePreservedMetrics.premiumProSold.toLocaleString('en-PK')}</div>
           </div>
           <div className="w-px h-8 bg-slate-300 hidden sm:block"></div>
-          <div className="text-center">
-            <div className="text-[10px] uppercase font-black text-black">Total Premium Plus Sold</div>
-            <div className="text-sm sm:text-base font-black text-black">{cumulativePreservedMetrics.totalEggs.toLocaleString('en-PK')} Plus</div>
+          <div className="text-center px-1.5">
+            <div className="text-[10px] uppercase font-black text-emerald-700">Premium Plus Sold</div>
+            <div className="text-sm sm:text-base font-black text-emerald-900">{cumulativePreservedMetrics.premiumPlusSold.toLocaleString('en-PK')}</div>
           </div>
           <div className="w-px h-8 bg-slate-300 hidden sm:block"></div>
-          <div className="text-center">
-            <div className="text-[10px] uppercase font-black text-black">Total Sold Records</div>
-            <div className="text-sm sm:text-base font-black text-black">{cumulativePreservedMetrics.totalCount} Bills</div>
+          <div className="text-center px-1.5">
+            <div className="text-[10px] uppercase font-black text-purple-700">Renewal Licence Sold</div>
+            <div className="text-sm sm:text-base font-black text-purple-900">{cumulativePreservedMetrics.renewalSold.toLocaleString('en-PK')}</div>
           </div>
           <div className="w-px h-8 bg-slate-300 hidden sm:block"></div>
-          <div className="text-center">
-            <div className="text-[10px] uppercase font-black text-black">Total Value (Rupees)</div>
-            <div className="text-sm sm:text-base font-black text-black">{currency} {cumulativePreservedMetrics.totalRevenue.toLocaleString('en-PK')}</div>
+          <div className="text-center px-1.5">
+            <div className="text-[10px] uppercase font-black text-slate-600">Total Sold Records</div>
+            <div className="text-sm sm:text-base font-black text-slate-900">{cumulativePreservedMetrics.totalCount} Bills</div>
+          </div>
+          <div className="w-px h-8 bg-slate-300 hidden sm:block"></div>
+          <div className="text-center px-1.5">
+            <div className="text-[10px] uppercase font-black text-emerald-700">Total Value (Rupees)</div>
+            <div className="text-sm sm:text-base font-black text-emerald-900">{currency} {cumulativePreservedMetrics.totalRevenue.toLocaleString('en-PK')}</div>
           </div>
         </div>
       </div>
@@ -1020,7 +1058,7 @@ export default function SoldProductsHistoryView({
           </div>
         </div>
 
-        {/* Metric 2: Total Petis Sold */}
+        {/* Metric 2: Total Premium Sold */}
         <div className="bg-white border-2 border-amber-400 rounded-3xl p-4 sm:p-5 shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between">
             <span className="text-[10.5px] font-black uppercase tracking-wider text-amber-800">
@@ -1031,11 +1069,11 @@ export default function SoldProductsHistoryView({
             </span>
           </div>
           <div className="text-xl sm:text-3xl font-black text-slate-900 mt-2">
-            {metrics.totalPetis.toLocaleString('en-PK')} <span className="text-sm font-black text-slate-500">Premium</span>
+            {metrics.premiumSold.toLocaleString('en-PK')} <span className="text-sm font-black text-slate-500">Units</span>
           </div>
           <div className="text-[11px] font-bold text-amber-700 mt-1 flex items-center justify-between">
             <span>Stock Outflow</span>
-            <span className="text-[9px] uppercase px-1.5 py-0.5 rounded bg-amber-50 border border-amber-300 font-black">1 Prem = 12 Pro</span>
+            <span className="text-[9px] uppercase px-1.5 py-0.5 rounded bg-amber-50 border border-amber-300 font-black">Premium</span>
           </div>
         </div>
 
@@ -1050,49 +1088,49 @@ export default function SoldProductsHistoryView({
             </span>
           </div>
           <div className="text-xl sm:text-3xl font-black text-slate-900 mt-2">
-            {metrics.totalTrays.toLocaleString('en-PK')} <span className="text-sm font-black text-slate-500">Premium Pro</span>
+            {metrics.premiumProSold.toLocaleString('en-PK')} <span className="text-sm font-black text-slate-500">Units</span>
           </div>
           <div className="text-[11px] font-bold text-blue-700 mt-1 flex items-center justify-between">
-            <span>Intermediate Packs</span>
-            <span className="text-[9px] uppercase px-1.5 py-0.5 rounded bg-blue-50 border border-blue-300 font-black">1 Pro = 30 Plus</span>
+            <span>Stock Outflow</span>
+            <span className="text-[9px] uppercase px-1.5 py-0.5 rounded bg-blue-50 border border-blue-300 font-black">Premium Pro</span>
           </div>
         </div>
 
-        {/* Metric 4: Total Eggs Sold */}
-        <div className="bg-white border-2 border-yellow-400 rounded-3xl p-4 sm:p-5 shadow-xs flex flex-col justify-between">
+        {/* Metric 4: Total Premium Plus Sold */}
+        <div className="bg-white border-2 border-emerald-400 rounded-3xl p-4 sm:p-5 shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-[10.5px] font-black uppercase tracking-wider text-amber-900">
+            <span className="text-[10.5px] font-black uppercase tracking-wider text-emerald-800">
               Total Premium Plus Sold
             </span>
-            <span className="p-2 rounded-xl bg-yellow-100 text-amber-900">
+            <span className="p-2 rounded-xl bg-emerald-100 text-emerald-800">
               <Sparkles className="w-4 h-4 stroke-[2.5]" />
             </span>
           </div>
           <div className="text-xl sm:text-3xl font-black text-slate-900 mt-2">
-            {metrics.totalEggs.toLocaleString('en-PK')} <span className="text-sm font-black text-slate-500">Premium Plus</span>
+            {metrics.premiumPlusSold.toLocaleString('en-PK')} <span className="text-sm font-black text-slate-500">Units</span>
           </div>
-          <div className="text-[11px] font-bold text-amber-700 mt-1 flex items-center justify-between">
-            <span>Cumulative Individual Count</span>
-            <span className="text-[9px] uppercase px-1.5 py-0.5 rounded bg-yellow-50 border border-yellow-300 font-black">All Types</span>
+          <div className="text-[11px] font-bold text-emerald-700 mt-1 flex items-center justify-between">
+            <span>Stock Outflow</span>
+            <span className="text-[9px] uppercase px-1.5 py-0.5 rounded bg-emerald-50 border border-emerald-300 font-black">Premium Plus</span>
           </div>
         </div>
 
-        {/* Metric 5: Unique Products Sold */}
-        <div className="bg-white border-2 border-slate-300 rounded-3xl p-4 sm:p-5 shadow-xs flex flex-col justify-between">
+        {/* Metric 5: Total Renewal Licence Sold */}
+        <div className="bg-white border-2 border-purple-400 rounded-3xl p-4 sm:p-5 shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-[10.5px] font-black uppercase tracking-wider text-slate-700">
-              Active Products Sold
+            <span className="text-[10.5px] font-black uppercase tracking-wider text-purple-800">
+              Total Renewal Licence Sold
             </span>
-            <span className="p-2 rounded-xl bg-slate-100 text-slate-700">
-              <Layers className="w-4 h-4 stroke-[2.5]" />
+            <span className="p-2 rounded-xl bg-purple-100 text-purple-800">
+              <ShieldCheck className="w-4 h-4 stroke-[2.5]" />
             </span>
           </div>
           <div className="text-xl sm:text-3xl font-black text-slate-900 mt-2">
-            {productWiseSummary.length} <span className="text-sm font-black text-slate-500">Products</span>
+            {metrics.renewalSold.toLocaleString('en-PK')} <span className="text-sm font-black text-slate-500">Units</span>
           </div>
-          <div className="text-[11px] font-bold text-slate-600 mt-1 flex items-center justify-between">
-            <span>Across {categoryWiseSummary.length} Categories</span>
-            <span className="text-[9px] uppercase px-1.5 py-0.5 rounded bg-slate-100 border border-slate-300 font-black">Catalog Mix</span>
+          <div className="text-[11px] font-bold text-purple-700 mt-1 flex items-center justify-between">
+            <span>Stock Outflow</span>
+            <span className="text-[9px] uppercase px-1.5 py-0.5 rounded bg-purple-50 border border-purple-300 font-black">Renewal Licence</span>
           </div>
         </div>
       </div>
@@ -1290,7 +1328,7 @@ export default function SoldProductsHistoryView({
                     {cat.name}
                   </span>
                   <div className="text-xs font-black text-slate-900 mt-1.5">
-                    {cat.totalPetis} Premium • {cat.totalTrays} Pro ({cat.totalEggs.toLocaleString('en-PK')} Plus)
+                    {cat.totalQuantity.toLocaleString('en-PK')} Units Sold
                   </div>
                   <div className="text-[10px] text-slate-500 font-bold">
                     {cat.count} Sales Entries
@@ -1335,9 +1373,7 @@ export default function SoldProductsHistoryView({
                   <th className="p-3 border border-slate-300">Product Name</th>
                   <th className="p-3 text-center border border-slate-300">Category</th>
                   <th className="p-3 text-center border border-slate-300">Total Sales Entries</th>
-                  <th className="p-3 text-right border border-slate-300">Quantity (Premium)</th>
-                  <th className="p-3 text-right border border-slate-300">Quantity (Premium Pro)</th>
-                  <th className="p-3 text-right border border-slate-300">Quantity (Premium Plus)</th>
+                  <th className="p-3 text-center border border-slate-300">Quantity Sold</th>
                   <th className="p-3 text-right border border-slate-300">Avg Selling Rate</th>
                   <th className="p-3 text-right border border-slate-300">Total Revenue</th>
                 </tr>
@@ -1370,14 +1406,8 @@ export default function SoldProductsHistoryView({
                     <td className="p-3 text-center border border-slate-300 font-bold text-slate-600">
                       {p.salesCount} Bills
                     </td>
-                    <td className="p-3 border border-slate-300 text-right font-black text-amber-900">
-                      {p.totalPetis} Prem
-                    </td>
-                    <td className="p-3 border border-slate-300 text-right font-black text-blue-900">
-                      {p.totalTrays} Pro
-                    </td>
-                    <td className="p-3 border border-slate-300 text-right font-bold text-slate-700">
-                      {p.totalEggs.toLocaleString('en-PK')} Premium Plus
+                    <td className="p-3 border border-slate-300 text-center font-black text-slate-900 text-sm">
+                      {p.totalQuantity}
                     </td>
                     <td className="p-3 border border-slate-300 text-right font-bold text-blue-700">
                       {currency} {p.avgPrice.toLocaleString('en-PK')}
@@ -1518,14 +1548,17 @@ export default function SoldProductsHistoryView({
             <span className="text-slate-700 uppercase text-[10.5px] font-black flex items-center gap-1.5">
               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Filtered Outflow Summary:
             </span>
-            <span className="bg-white text-emerald-800 border border-slate-300 px-3 py-1 rounded-xl shadow-xs font-black">
-              📦 Premium: {metrics.totalPetis} Prem
+            <span className="bg-white text-amber-800 border border-amber-300 px-3 py-1 rounded-xl shadow-xs font-black">
+              📦 Premium: {metrics.premiumSold}
             </span>
-            <span className="bg-white text-blue-800 border border-slate-300 px-3 py-1 rounded-xl shadow-xs font-black">
-              🍱 Premium Pro: {metrics.totalTrays} Pro
+            <span className="bg-white text-blue-800 border border-blue-300 px-3 py-1 rounded-xl shadow-xs font-black">
+              🍱 Premium Pro: {metrics.premiumProSold}
             </span>
-            <span className="bg-white text-amber-800 border border-slate-300 px-3 py-1 rounded-xl shadow-xs font-black">
-              🥚 Premium Plus: {metrics.totalEggs.toLocaleString('en-PK')} Plus
+            <span className="bg-white text-emerald-800 border border-emerald-300 px-3 py-1 rounded-xl shadow-xs font-black">
+              🥚 Premium Plus: {metrics.premiumPlusSold}
+            </span>
+            <span className="bg-white text-purple-800 border border-purple-300 px-3 py-1 rounded-xl shadow-xs font-black">
+              🔑 Renewal Licence: {metrics.renewalSold}
             </span>
             <span className="bg-white text-slate-800 border border-slate-300 px-3 py-1 rounded-xl shadow-xs font-black">
               📑 Bills Count: {filteredSoldItems.length}

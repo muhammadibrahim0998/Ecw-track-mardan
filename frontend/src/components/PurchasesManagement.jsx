@@ -58,7 +58,7 @@ export const isPurchaseInPaymentChannel = (p, filter) => {
   return true;
 };
 
-export function PurchasesManagement({ products: propProducts, shopId: propShopId, onAddProduct, onEditProduct, onDeleteProduct, onViewProduct, onRefresh }) {
+export function PurchasesManagement({ products: propProducts, sales: propSales, shopId: propShopId, onAddProduct, onEditProduct, onDeleteProduct, onViewProduct, onRefresh }) {
   const { user } = useUser?.() || {};
   const activeShopId = propShopId || (user?.shopId ? (typeof user.shopId === 'object' ? (user.shopId._id || user.shopId.id) : String(user.shopId)) : null);
   const productCtx = useProducts() || {};
@@ -619,7 +619,7 @@ export function PurchasesManagement({ products: propProducts, shopId: propShopId
     });
 
     // Tally sold stock from sales
-    const salesList = productCtx?.sales || [];
+    const salesList = (Array.isArray(propSales) && propSales.length > 0) ? propSales : (productCtx?.sales || []);
     salesList.forEach(s => {
       let sItems = [];
       if (Array.isArray(s.items)) sItems = s.items;
@@ -642,7 +642,7 @@ export function PurchasesManagement({ products: propProducts, shopId: propShopId
     });
 
     return summary;
-  }, [products, productCtx?.sales]);
+  }, [products, propSales, productCtx?.sales]);
 
   // Timeframe date filtering logic
   const filteredByTimeframeProducts = useMemo(() => {

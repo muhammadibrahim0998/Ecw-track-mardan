@@ -2777,9 +2777,6 @@ export default function TodayHistoryView({
                     </span>
                   ))}
                 </div>
-                <span className="text-[11px] font-black text-black">
-                  📦 Total Stock: {salesTotals.petis} Premium ({salesTotals.eggs.toLocaleString('en-PK')} Premium Plus)
-                </span>
               </div>
             )}
           </div>
@@ -2979,7 +2976,7 @@ export default function TodayHistoryView({
                 </h3>
               </div>
               <span className="text-xs font-black text-red-600 bg-rose-50 px-3 py-1 rounded-xl border-2 border-red-300 shadow-xs">
-                Total Loss: {currency} {damagedTotals.totalLoss.toLocaleString('en-PK')} ({damagedTotals.eggs} Premium Plus)
+                Total Loss: {currency} {damagedTotals.totalLoss.toLocaleString('en-PK')} ({damagedTotals.eggs} Units)
               </span>
             </div>
 
