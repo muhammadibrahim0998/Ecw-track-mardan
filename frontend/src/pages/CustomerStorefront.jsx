@@ -10334,15 +10334,9 @@ function StoreContent({ shopId }) {
                                 </div>
                                 <div className="min-w-0 flex-1">
                                   <h4 className="font-black text-gray-900 text-xs uppercase tracking-tight truncate">{product.name}</h4>
-                                  {singlePrice > 0 ? (
-                                    <p className="text-emerald-700 font-extrabold text-[11px] mt-0.5">
-                                      {currency} {singlePrice.toLocaleString()} <span className="text-[9px] font-normal text-gray-400">/ {prodUnit}</span>
-                                    </p>
-                                  ) : (
-                                    <p className="text-gray-400 font-bold text-[10px] mt-0.5 uppercase tracking-wide">
-                                      Rate: Enter on Bill
-                                    </p>
-                                  )}
+                                  <p className="text-gray-400 font-bold text-[10px] mt-0.5 uppercase tracking-wide">
+                                    Rate: Enter on Bill
+                                  </p>
                                   {isOutOfStock ? (
                                     <span className="text-[9px] font-black uppercase text-red-600 bg-red-100 border border-red-200 px-2 py-0.5 rounded-md inline-flex items-center gap-1 mt-0.5 animate-pulse">
                                       <Lock className="w-2.5 h-2.5" /> Out of Stock (0 Stock - Locked)
@@ -10394,11 +10388,7 @@ function StoreContent({ shopId }) {
                                       <span>{getProdIcon(prodUnit)}</span>
                                       <span>{product.name}</span>
                                     </span>
-                                    {singlePrice > 0 ? (
-                                      <span className="text-[11px] font-extrabold text-emerald-950">{currency} {singlePrice.toLocaleString()}</span>
-                                    ) : (
-                                      <span className="text-[10px] font-bold text-emerald-700 uppercase">+ Add to Bill</span>
-                                    )}
+                                    <span className="text-[10px] font-bold text-emerald-700 uppercase">+ Add to Bill</span>
                                   </button>
                                 </div>
                               )}
