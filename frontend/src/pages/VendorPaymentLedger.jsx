@@ -362,6 +362,25 @@ export function VendorPaymentLedger({ shopId: propShopId }) {
       const traysCount = rawTrays;
       const finalEggsCount = rawEggs;
 
+      // Clean single-unit quantity detection per product
+      const pNameLower = String(p.productName || p.rawProductName || '').toLowerCase();
+      const pUnitLower = String(p.unitType || p.unit || '').toLowerCase();
+      let cleanQtyStr = '';
+
+      if (pNameLower.includes('plus') || pUnitLower.includes('plus') || pUnitLower.includes('egg')) {
+        const qty = rawEggs > 0 ? rawEggs : (p.stock || p.quantity || 1);
+        cleanQtyStr = `${Number(qty).toLocaleString('en-PK')} Premium Plus`;
+      } else if (pNameLower.includes('pro') || pUnitLower.includes('pro') || pUnitLower.includes('tray')) {
+        const qty = rawTrays > 0 ? rawTrays : (p.stock || p.quantity || 1);
+        cleanQtyStr = `${qty} Premium Pro`;
+      } else if (pNameLower.includes('renewal') || pUnitLower.includes('renewal')) {
+        const qty = p.stock || p.quantity || 1;
+        cleanQtyStr = `${qty} Renewal Licence`;
+      } else {
+        const qty = rawPetis > 0 ? rawPetis : (p.stock || p.quantity || 1);
+        cleanQtyStr = `${qty} Premium`;
+      }
+
       return {
         id: p._id || p.id,
         date: p.date || p.purchaseDate || p.createdAt,
@@ -370,6 +389,7 @@ export function VendorPaymentLedger({ shopId: propShopId }) {
         supplierLocation: p.supplierLocation || '',
         productName: formatProductNameDisplay(p.productName || p.rawProductName || 'Stock'),
         category: formatCategoryDisplay(p.category),
+        cleanQuantityDisplay: cleanQtyStr,
         petisPurchased: petisCount,
         petisCount: petisCount,
         traysCount: traysCount,
@@ -620,7 +640,7 @@ export function VendorPaymentLedger({ shopId: propShopId }) {
       s.category,
       s.productName,
       `${formatDateTime(s.date).dateStr} ${formatDateTime(s.date).timeStr}`.trim(),
-      `${s.petisPurchased} Prem`,
+      s.cleanQuantityDisplay || `${s.petisPurchased} Prem`,
       s.paymentMethod || 'CASH',
       `Rs. ${fmt(s.cashPaid)}`,
       `Rs. ${fmt(s.bankPaid)}`,
@@ -631,13 +651,13 @@ export function VendorPaymentLedger({ shopId: propShopId }) {
 
     autoTable(doc, {
       startY: 28,
-      head: [['Vendor', 'Phone', 'Category', 'Product', 'Date', 'Premium', 'Method', 'Cash Paid', 'Bank Paid', 'Credit Remaining', 'Total Cost (Rs)', 'Status']],
+      head: [['Vendor', 'Phone', 'Category', 'Product', 'Date', 'Quantity', 'Method', 'Cash Paid', 'Bank Paid', 'Credit Remaining', 'Total Cost (Rs)', 'Status']],
       body: tableData,
       theme: 'grid',
       headStyles: { fillColor: [234, 88, 12] },
       foot: [[
         'Total', '', '', '', '',
-        `${stats.totalPetisPurchased.toFixed(1)} Prem`,
+        '-',
         '',
         `Rs. ${fmt(stats.supplierCashPaid)}`,
         `Rs. ${fmt(stats.supplierBankPaid)}`,
@@ -881,7 +901,7 @@ export function VendorPaymentLedger({ shopId: propShopId }) {
                   </span>
                 )}
                 <span className="text-xs bg-white text-slate-800 border-2 border-slate-300 px-3 py-1 rounded-xl font-bold shadow-xs">
-                  {todayStats.totalBills} Purchase Invoices &bull; {todayStats.totalPetisPurchased.toFixed(1)} Premium
+                  {todayStats.totalBills} Purchase {todayStats.totalBills === 1 ? 'Invoice' : 'Invoices'}
                 </span>
               </div>
             </div>
@@ -1123,8 +1143,8 @@ export function VendorPaymentLedger({ shopId: propShopId }) {
                   <th className="py-2.5 px-2.5 whitespace-nowrap border border-gray-300">Date</th>
                   <th className="py-2.5 px-2.5 whitespace-nowrap border border-gray-300">Vendor / Supplier</th>
                   <th className="py-2.5 px-2 whitespace-nowrap border border-gray-300">Category</th>
-                  <th className="py-2.5 px-2.5 border border-gray-300">Product (Prem • Pro • Plus)</th>
-                  <th className="py-2.5 px-2 text-center whitespace-nowrap border border-gray-300">Premium</th>
+                  <th className="py-2.5 px-2.5 border border-gray-300">Product / Item</th>
+                  <th className="py-2.5 px-2 text-center whitespace-nowrap border border-gray-300">Quantity</th>
                   <th className="py-2.5 px-2 text-center whitespace-nowrap border border-gray-300">Method</th>
                   <th className="py-2.5 px-2 text-right whitespace-nowrap border border-gray-300">Cash Paid</th>
                   <th className="py-2.5 px-2 text-right whitespace-nowrap border border-gray-300">Bank Paid</th>
@@ -1169,42 +1189,14 @@ export function VendorPaymentLedger({ shopId: propShopId }) {
                         </span>
                       </td>
                       <td className="py-2 px-2.5 border border-gray-300">
-                        <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
-                          <span className="font-black text-zinc-900 text-[11px] truncate max-w-[90px]" title={formatProductNameDisplay(txn.productName)}>
-                            {formatProductNameDisplay(txn.productName)}
-                          </span>
-                          {/* Compact Simple 3-Box strip for Prem • Pro • Plus */}
-                          <div className="flex items-center gap-0.5 shrink-0">
-                            <div className="px-1.5 py-0.5 bg-gray-100 border border-gray-300 rounded text-center min-w-[30px]">
-                              <span className="text-[7px] font-black text-gray-600 uppercase block leading-none">Prem</span>
-                              <span className="text-[10px] font-black text-gray-950 leading-tight block mt-0.5">
-                                {txn.petisCount > 0 ? txn.petisCount : (txn.petisPurchased > 0 ? txn.petisPurchased : (txn.totalEggsCount > 0 ? Math.floor(txn.totalEggsCount / 360) : '0'))}
-                              </span>
-                            </div>
-                            <div className="px-1.5 py-0.5 bg-gray-100 border border-gray-300 rounded text-center min-w-[30px]">
-                              <span className="text-[7px] font-black text-gray-600 uppercase block leading-none">Pro</span>
-                              <span className="text-[10px] font-black text-gray-950 leading-tight block mt-0.5">
-                                {txn.traysCount > 0 ? txn.traysCount : (txn.petisCount > 0 ? Math.round(txn.petisCount * 12) : (txn.totalEggsCount > 0 ? Math.round(txn.totalEggsCount / 30) : '0'))}
-                              </span>
-                            </div>
-                            <div className="px-1.5 py-0.5 bg-gray-100 border border-gray-300 rounded text-center min-w-[38px]">
-                              <span className="text-[7px] font-black text-gray-600 uppercase block leading-none">Plus</span>
-                              <span className="text-[10px] font-black text-gray-950 leading-tight block mt-0.5">
-                                {txn.totalEggsCount > 0 ? txn.totalEggsCount.toLocaleString('en-PK') : (txn.petisCount > 0 ? Math.round(txn.petisCount * 360).toLocaleString('en-PK') : (txn.eggQuantity > 0 ? txn.eggQuantity.toLocaleString('en-PK') : '0'))}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
+                        <span className="font-black text-zinc-900 text-[11px]" title={formatProductNameDisplay(txn.productName)}>
+                          {formatProductNameDisplay(txn.productName)}
+                        </span>
                       </td>
                       <td className="py-2 px-2 text-center whitespace-nowrap font-black text-orange-800 border border-gray-300">
                         <div className="font-black text-orange-800 text-[11px]">
-                          {txn.petisPurchased > 0 ? `${txn.petisPurchased} Prem` : (txn.petisCount > 0 ? `${txn.petisCount} Prem` : (txn.totalEggsCount > 0 ? `${Math.floor(txn.totalEggsCount / 360)} Prem` : '-'))}
+                          {txn.cleanQuantityDisplay || (txn.petisPurchased > 0 ? `${txn.petisPurchased} Prem` : '-')}
                         </div>
-                        {(txn.totalEggsCount > 0 || txn.petisCount > 0) && (
-                          <div className="text-[8px] font-bold text-zinc-400">
-                            {(txn.totalEggsCount > 0 ? txn.totalEggsCount : (txn.petisCount * 360)).toLocaleString('en-PK')} Premium Plus
-                          </div>
-                        )}
                       </td>
                       <td className="py-2 px-2 text-center whitespace-nowrap border border-gray-300">
                         {txn.paymentMethod === 'BANK' ? (
@@ -1364,8 +1356,8 @@ export function VendorPaymentLedger({ shopId: propShopId }) {
                             <tr className="border-b border-gray-300">
                               <th className="py-2 px-3 border border-gray-300">Date</th>
                               <th className="py-2 px-3 border border-gray-300">Category</th>
-                              <th className="py-2 px-3 border border-gray-300">Product (Prem • Pro • Plus)</th>
-                              <th className="py-2 px-3 text-center border border-gray-300">Premium</th>
+                              <th className="py-2 px-3 border border-gray-300">Product / Item</th>
+                              <th className="py-2 px-3 text-center border border-gray-300">Quantity</th>
                               <th className="py-2 px-3 text-center border border-gray-300">Method</th>
                               <th className="py-2 px-3 text-right border border-gray-300">Cash Paid</th>
                               <th className="py-2 px-3 text-right border border-gray-300">Bank Paid</th>
@@ -1395,36 +1387,10 @@ export function VendorPaymentLedger({ shopId: propShopId }) {
                                   </span>
                                 </td>
                                 <td className="py-2 px-3 font-black text-zinc-900 border border-gray-300">
-                                  <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
-                                    <span className="truncate max-w-[90px]" title={formatProductNameDisplay(b.productName)}>{formatProductNameDisplay(b.productName)}</span>
-                                    {/* Compact 3-box strip for Prem • Pro • Plus */}
-                                    <div className="flex items-center gap-0.5 shrink-0">
-                                      <div className="px-1.5 py-0.5 bg-gray-100 border border-gray-300 rounded text-center min-w-[28px]">
-                                        <span className="text-[7px] font-black text-gray-600 uppercase block leading-none">Prem</span>
-                                        <span className="text-[10px] font-black text-gray-950 leading-tight block mt-0.5">
-                                          {b.petisCount > 0 ? b.petisCount : (b.petisPurchased > 0 ? b.petisPurchased : (b.totalEggsCount > 0 ? Math.floor(b.totalEggsCount / 360) : '0'))}
-                                        </span>
-                                      </div>
-                                      <div className="px-1.5 py-0.5 bg-gray-100 border border-gray-300 rounded text-center min-w-[28px]">
-                                        <span className="text-[7px] font-black text-gray-600 uppercase block leading-none">Pro</span>
-                                        <span className="text-[10px] font-black text-gray-950 leading-tight block mt-0.5">
-                                          {b.traysCount > 0 ? b.traysCount : (b.petisCount > 0 ? Math.round(b.petisCount * 12) : (b.totalEggsCount > 0 ? Math.round(b.totalEggsCount / 30) : '0'))}
-                                        </span>
-                                      </div>
-                                      <div className="px-1.5 py-0.5 bg-gray-100 border border-gray-300 rounded text-center min-w-[34px]">
-                                        <span className="text-[7px] font-black text-gray-600 uppercase block leading-none">Plus</span>
-                                        <span className="text-[10px] font-black text-gray-950 leading-tight block mt-0.5">
-                                          {b.totalEggsCount > 0 ? b.totalEggsCount.toLocaleString('en-PK') : (b.petisCount > 0 ? Math.round(b.petisCount * 360).toLocaleString('en-PK') : (b.eggQuantity > 0 ? b.eggQuantity.toLocaleString('en-PK') : '0'))}
-                                        </span>
-                                      </div>
-                                    </div>
-                                  </div>
+                                  <span className="font-black text-zinc-900 text-[11px]" title={formatProductNameDisplay(b.productName)}>{formatProductNameDisplay(b.productName)}</span>
                                 </td>
                                 <td className="py-2 px-3 text-center font-black text-orange-800 border border-gray-300">
-                                  <div>{b.petisPurchased > 0 ? `${b.petisPurchased} Prem` : (b.petisCount > 0 ? `${b.petisCount} Prem` : (b.totalEggsCount > 0 ? `${Math.floor(b.totalEggsCount / 360)} Prem` : '-'))}</div>
-                                  {(b.totalEggsCount > 0 || b.petisCount > 0) && (
-                                    <div className="text-[8px] font-bold text-zinc-400">{(b.totalEggsCount > 0 ? b.totalEggsCount : (b.petisCount * 360)).toLocaleString('en-PK')} Premium Plus</div>
-                                  )}
+                                  <div>{b.cleanQuantityDisplay || (b.petisPurchased > 0 ? `${b.petisPurchased} Prem` : '-')}</div>
                                 </td>
                                 <td className="py-2 px-3 text-center whitespace-nowrap border border-gray-300">
                                   {b.paymentMethod === 'BANK' ? (

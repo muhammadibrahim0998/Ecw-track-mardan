@@ -204,11 +204,12 @@ const createItem = async (req, res) => {
           supplierName: newItem.supplierName || sName || 'Egg Supplier',
           supplierPhone: newItem.supplierPhone || '',
           supplierLocation: newItem.supplierLocation || '',
-          quantityText: [
-            newItem.petiQuantity > 0 ? `${newItem.petiQuantity} Premium` : '',
-            newItem.trayQuantity > 0 ? `${newItem.trayQuantity} Premium Pro` : '',
-            newItem.eggQuantity > 0 ? `${newItem.eggQuantity} Premium Plus` : ''
-          ].filter(Boolean).join(', ') || '0',
+          quantityText: (
+            newItem.unitType === 'Premium Pro' ? `${newItem.trayQuantity || newItem.stock} Premium Pro` :
+            newItem.unitType === 'Premium Plus' ? `${newItem.eggQuantity || newItem.stock} Premium Plus` :
+            newItem.unitType === 'Renewal Licence' ? `${newItem.stock} Renewal Licence` :
+            `${newItem.petiQuantity || newItem.stock} Premium`
+          ),
           totalCost: Number(newItem.totalPurchaseCost) || 0,
           paidToDate: Number(newItem.amountPaidToSupplier) || 0,
           pendingDue: Number(newItem.dueAmountToSupplier) || 0,
@@ -1030,11 +1031,7 @@ const getPurchaseCredits = async (req, res) => {
         if (eMatch && !eggs) eggs = parseFloat(eMatch[1].replace(/,/g, ''));
       }
 
-      if (petis > 0 && trays === 0) trays = Math.round(petis * 12);
-      if (petis > 0 && eggs === 0) eggs = Math.round(petis * 360);
-      if (trays > 0 && eggs === 0) eggs = Math.round(trays * 30);
-      if (eggs > 0 && petis === 0) petis = Number((eggs / 360).toFixed(2));
-      if (eggs > 0 && trays === 0) trays = Math.round(eggs / 30);
+
 
       return {
         ...c,

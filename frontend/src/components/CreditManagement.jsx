@@ -41,6 +41,71 @@ const formatCleanUnits = (val) => {
     .replace(/\b1P=12T=360E\b/gi, '1 Prem = 12 Pro = 360 Plus');
 };
 
+const getCleanPurchaseQuantity = (item) => {
+  if (!item) return '';
+  const name = String(item.name || item.productName || '').trim().toLowerCase();
+  const unit = String(item.unitType || item.unit || '').trim().toLowerCase();
+  const qText = String(item.quantityText || '');
+
+  let targetType = 'premium';
+  if (name.includes('plus') || unit.includes('plus') || unit.includes('egg')) {
+    targetType = 'plus';
+  } else if (name.includes('pro') || unit.includes('pro') || unit.includes('tray')) {
+    targetType = 'pro';
+  } else if (name.includes('renewal') || unit.includes('renewal')) {
+    targetType = 'renewal';
+  }
+
+  // 1. If qText contains the specific unit for this product, extract that quantity
+  if (qText) {
+    if (targetType === 'pro') {
+      const match = qText.match(/([\d,]+(?:\.\d+)?)\s*(?:Premium Pro|Trays?|Pro)/i);
+      if (match) {
+        const val = parseFloat(match[1].replace(/,/g, ''));
+        return `${Number(val.toFixed(2))} Premium Pro`;
+      }
+    } else if (targetType === 'plus') {
+      const match = qText.match(/([\d,]+(?:\.\d+)?)\s*(?:Premium Plus|Eggs?|Plus)/i);
+      if (match) {
+        const val = parseFloat(match[1].replace(/,/g, ''));
+        return `${Number(val.toFixed(2))} Premium Plus`;
+      }
+    } else if (targetType === 'renewal') {
+      const match = qText.match(/([\d,]+(?:\.\d+)?)\s*(?:Renewal Licence|Licence)/i);
+      if (match) {
+        const val = parseFloat(match[1].replace(/,/g, ''));
+        return `${Number(val.toFixed(2))} Renewal Licence`;
+      }
+    } else {
+      const match = qText.match(/([\d,]+(?:\.\d+)?)\s*(?:Premium(?! Pro| Plus)|Petis?)/i);
+      if (match) {
+        const val = parseFloat(match[1].replace(/,/g, ''));
+        return `${Number(val.toFixed(2))} Premium`;
+      }
+    }
+
+    if (!qText.includes(',')) {
+      return formatCleanUnits(qText);
+    }
+  }
+
+  // 2. Direct field fallback based on targetType
+  if (targetType === 'pro') {
+    const qty = Number(item.trayQuantity || item.traysCount || item.stock || item.quantity || 0);
+    return `${qty} Premium Pro`;
+  }
+  if (targetType === 'plus') {
+    const qty = Number(item.eggQuantity || item.totalEggsCount || item.stock || item.quantity || 0);
+    return `${qty} Premium Plus`;
+  }
+  if (targetType === 'renewal') {
+    const qty = Number(item.stock || item.quantity || 0);
+    return `${qty} Renewal Licence`;
+  }
+  const qty = Number(item.petiQuantity || item.petisPurchased || item.petisCount || item.stock || item.quantity || 0);
+  return `${qty} Premium`;
+};
+
 export function CreditManagement({
   items = [],
   shopSalesList = [],
@@ -778,7 +843,7 @@ export function CreditManagement({
       idx + 1,
       p.name || p.productName || 'Stock',
       p.supplierName || 'Farm Supplier',
-      formatCleanUnits(p.quantityText) || `${p.petiQuantity || p.totalPetis || 0} Premium`,
+      getCleanPurchaseQuantity(p),
       (p.calculatedTotalCost || 0).toLocaleString('en-PK'),
       (p.calculatedPaid || 0).toLocaleString('en-PK'),
       (p.calculatedDue || 0).toLocaleString('en-PK')
@@ -1017,7 +1082,7 @@ export function CreditManagement({
             )}
           </div>
           <span className="text-xs bg-white text-slate-800 border-2 border-slate-300 px-3 py-1 rounded-xl font-bold shadow-xs">
-            {todayInflow.count} Invoices &bull; {todayInflow.petis} Premium Sold
+            {todayInflow.count} {todayInflow.count === 1 ? 'Invoice' : 'Invoices'}
           </span>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -1324,7 +1389,7 @@ export function CreditManagement({
                             </span>
                           </td>
                           <td className="py-3.5 px-4 font-bold text-zinc-700">
-                            {formatCleanUnits(item.quantityText) || `${item.petiQuantity || item.totalPetis || 0} Premium`}
+                            {getCleanPurchaseQuantity(item)}
                           </td>
                           <td className="py-3.5 px-4 font-black text-zinc-900">
                             {currency} {(item.calculatedTotalCost || 0).toLocaleString('en-PK')}
@@ -1391,7 +1456,7 @@ export function CreditManagement({
                           </div>
                           <span className="text-[11px] font-bold text-zinc-500 block mt-0.5">
                             Supplier: <strong className="text-zinc-800">{item.supplierName || 'Farm Supplier'}</strong>
-                            {item.quantityText ? <span className="text-zinc-700 block font-bold text-[10px] mt-0.5">{formatCleanUnits(item.quantityText)}</span> : null}
+                            <span className="text-zinc-700 block font-bold text-[10px] mt-0.5">{getCleanPurchaseQuantity(item)}</span>
                           </span>
                         </div>
                         <div className="flex items-center gap-1.5">

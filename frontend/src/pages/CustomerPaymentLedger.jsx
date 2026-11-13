@@ -1446,8 +1446,8 @@ export function CustomerPaymentLedger({ shopId: propShopId }) {
                   <th className="py-1.5 px-1 text-center whitespace-nowrap border border-gray-300">Invoice #</th>
                   <th className="py-1.5 px-1.5 text-left whitespace-nowrap border border-gray-300">Customer</th>
                   <th className="py-1.5 px-1 text-center whitespace-nowrap border border-gray-300">Category</th>
-                  <th className="py-1.5 px-1 text-center whitespace-nowrap border border-gray-300">Products (Prem • Pro • Plus)</th>
-                  <th className="py-1.5 px-1 text-center whitespace-nowrap border border-gray-300">Prem • Plus</th>
+                  <th className="py-1.5 px-1 text-center whitespace-nowrap border border-gray-300">Products Sold</th>
+                  <th className="py-1.5 px-1 text-center whitespace-nowrap border border-gray-300">Total Qty</th>
                   <th className="py-1.5 px-1 text-right whitespace-nowrap border border-gray-300">Cash Paid</th>
                   <th className="py-1.5 px-1 text-right whitespace-nowrap border border-gray-300">Bank Paid</th>
                   <th className="py-1.5 px-1 text-right whitespace-nowrap border border-gray-300">Credit Due</th>
@@ -1488,55 +1488,32 @@ export function CustomerPaymentLedger({ shopId: propShopId }) {
                         </span>
                       </td>
                       <td className="py-1.5 px-1 max-w-[190px] border border-gray-300">
-                        <div className="flex items-center justify-center gap-1 flex-nowrap whitespace-nowrap">
+                        <div className="flex items-center justify-center gap-1 flex-wrap">
                           {Array.isArray(txn.items) && txn.items.length > 0 ? (
-                            <div className="flex items-center gap-0.5 shrink-0">
+                            <div className="flex items-center gap-0.5 flex-wrap justify-center">
                               {txn.items.map((it, iIdx) => (
                                 <span
                                   key={iIdx}
                                   className="inline-flex items-center gap-0.5 px-1 py-0.5 rounded text-[8px] font-black bg-gray-100 text-gray-900 border border-gray-300"
                                   title={`${formatProductNameDisplay(it.name || it.rawProductName)} (Qty: ${it.quantity} ${formatCleanUnitOrText(it.unitLabel || it.unit || '')})`}
                                 >
-                                  <span className="truncate max-w-[55px] font-black">{formatProductNameDisplay(it.rawProductName || it.name)}</span>
+                                  <span className="truncate max-w-[65px] font-black">{formatProductNameDisplay(it.rawProductName || it.name)}</span>
                                   <span className="font-black px-0.5 rounded text-[7px] bg-gray-300 text-gray-950">
-                                    x{it.quantity}
+                                    x{it.quantity} {formatCleanUnitOrText(it.unitLabel || it.unit || '')}
                                   </span>
                                 </span>
                               ))}
                             </div>
                           ) : (
-                            <div className="text-[9.5px] font-black text-zinc-800 truncate max-w-[70px]">{formatCleanUnitOrText(txn.itemsDescription)}</div>
+                            <div className="text-[9.5px] font-black text-zinc-800 truncate max-w-[90px]">{formatCleanUnitOrText(txn.itemsDescription)}</div>
                           )}
-
-                          {/* Compact Simple 3-Box strip for Prem • Pro • Plus on the same line */}
-                          <div className="flex items-center gap-0.5 shrink-0">
-                            <div className="px-1 py-0.2 bg-gray-100 border border-gray-300 rounded text-center min-w-[24px]">
-                              <span className="text-[6.5px] font-black text-gray-500 uppercase block leading-none">Prem</span>
-                              <span className="text-[9px] font-black text-gray-950 leading-tight block">
-                                {txn.petisCount > 0 ? txn.petisCount : (txn.petisBought > 0 ? txn.petisBought : '0')}
-                              </span>
-                            </div>
-                            <div className="px-1 py-0.2 bg-gray-100 border border-gray-300 rounded text-center min-w-[24px]">
-                              <span className="text-[6.5px] font-black text-gray-500 uppercase block leading-none">Pro</span>
-                              <span className="text-[9px] font-black text-gray-950 leading-tight block">
-                                {txn.traysCount > 0 ? txn.traysCount : '0'}
-                              </span>
-                            </div>
-                            <div className="px-1 py-0.2 bg-gray-100 border border-gray-300 rounded text-center min-w-[28px]">
-                              <span className="text-[6.5px] font-black text-gray-500 uppercase block leading-none">Plus</span>
-                              <span className="text-[9px] font-black text-gray-950 leading-tight block">
-                                {txn.totalEggsCount > 0 ? txn.totalEggsCount.toLocaleString('en-PK') : (txn.eggsBought > 0 ? txn.eggsBought.toLocaleString('en-PK') : '0')}
-                              </span>
-                            </div>
-                          </div>
                         </div>
                       </td>
                       <td className="py-1.5 px-1 text-center whitespace-nowrap border border-gray-300">
                         <div className="font-black text-emerald-800 text-[10px]">
-                          {txn.petisBought > 0 ? `${txn.petisBought} Prem` : `${txn.petisCount || 0} Prem`}
-                        </div>
-                        <div className="text-[8px] font-bold text-zinc-500">
-                          {txn.totalEggsCount > 0 ? `${txn.totalEggsCount.toLocaleString('en-PK')} Plus` : ''}
+                          {Array.isArray(txn.items) && txn.items.length > 0
+                            ? `${txn.items.reduce((sum, it) => sum + (Number(it.quantity) || 0), 0)} Units`
+                            : (txn.petisBought > 0 ? `${txn.petisBought} Prem` : `${txn.petisCount || 1} Units`)}
                         </div>
                       </td>
                       <td className="py-1.5 px-1 text-right whitespace-nowrap font-black text-emerald-800 text-[10px] border border-gray-300">
@@ -1767,23 +1744,9 @@ export function CustomerPaymentLedger({ shopId: propShopId }) {
                                             title={`${formatProductNameDisplay(it.name || it.rawProductName)} (Qty: ${it.quantity} ${formatCleanUnitOrText(it.unitLabel || it.unit || '')})`}
                                           >
                                             <span className="truncate max-w-[55px]">{formatProductNameDisplay(it.rawProductName || it.name)}</span>
-                                            <span className="font-black text-emerald-950 bg-emerald-200 px-0.5 rounded text-[7px]">x{it.quantity}</span>
+                                            <span className="font-black text-emerald-950 bg-emerald-200 px-0.5 rounded text-[7px]">x{it.quantity} {formatCleanUnitOrText(it.unitLabel || it.unit || '')}</span>
                                           </span>
                                         ))}
-                                      </div>
-                                      <div className="grid grid-cols-3 gap-0.5 text-center w-full max-w-[110px] mx-auto">
-                                        <div className="px-1 py-0.2 bg-gray-100 border border-gray-300 rounded">
-                                          <span className="text-[6.5px] font-black text-gray-600 uppercase block leading-none">Prem</span>
-                                          <span className="text-[9px] font-black text-gray-950 leading-tight block mt-0.5">{t.petisCount > 0 ? t.petisCount : (t.petisBought > 0 ? t.petisBought : '0')}</span>
-                                        </div>
-                                        <div className="px-1 py-0.2 bg-gray-100 border border-gray-300 rounded">
-                                          <span className="text-[6.5px] font-black text-gray-600 uppercase block leading-none">Pro</span>
-                                          <span className="text-[9px] font-black text-gray-950 leading-tight block mt-0.5">{t.traysCount > 0 ? t.traysCount : '0'}</span>
-                                        </div>
-                                        <div className="px-1 py-0.2 bg-gray-100 border border-gray-300 rounded">
-                                          <span className="text-[6.5px] font-black text-gray-600 uppercase block leading-none">Plus</span>
-                                          <span className="text-[9px] font-black text-gray-950 leading-tight block mt-0.5">{t.totalEggsCount > 0 ? t.totalEggsCount.toLocaleString('en-PK') : (t.eggsBought > 0 ? t.eggsBought.toLocaleString('en-PK') : '0')}</span>
-                                        </div>
                                       </div>
                                     </div>
                                   ) : (
@@ -1791,7 +1754,9 @@ export function CustomerPaymentLedger({ shopId: propShopId }) {
                                   )}
                                 </td>
                                 <td className="py-1.5 px-1 text-center font-black text-emerald-800 text-[10px] border border-gray-300">
-                                  {t.petisBought > 0 ? `${t.petisBought} Prem` : '-'}
+                                  {Array.isArray(t.items) && t.items.length > 0
+                                    ? `${t.items.reduce((sum, it) => sum + (Number(it.quantity) || 0), 0)} Units`
+                                    : (t.petisBought > 0 ? `${t.petisBought} Prem` : '-')}
                                 </td>
                                 <td className="py-1.5 px-1 text-right text-emerald-800 font-black text-[10px] border border-gray-300">
                                   {t.cashPaid > 0 ? `Rs. ${fmt(t.cashPaid)}` : '-'}

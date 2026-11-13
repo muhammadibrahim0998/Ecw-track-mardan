@@ -1801,11 +1801,9 @@ export function PurchasesManagement({ products: propProducts, shopId: propShopId
                     <Box className="w-3.5 h-3.5 text-amber-600" />
                   </div>
                 </div>
-                <h4 className="text-xl sm:text-2xl font-black tracking-tight text-gray-900">{stats.remainingPetis} <span className="text-base text-amber-600">Premium</span></h4>
+                <h4 className="text-xl sm:text-2xl font-black tracking-tight text-gray-900">{stats.remainingPetis} <span className="text-base text-amber-600">Stock Units</span></h4>
                 <span className="text-[10px] font-bold text-gray-400 uppercase mt-1 block">
-                  {stats.soldPetis > 0
-                    ? `${stats.totalPetis}P Buy - ${stats.soldPetis}P Sold = ${stats.remainingPetis}P (${fmt(stats.remainingEggs)} Premium Plus)`
-                    : `${stats.totalTrays} Premium Pro • ${fmt(stats.totalEggs)} Premium Plus`}
+                  {stats.totalPetis} Total Units In Inventory
                 </span>
               </div>
             </div>
@@ -1986,11 +1984,9 @@ export function PurchasesManagement({ products: propProducts, shopId: propShopId
                 title="Click to view Today's Purchases List"
               >
                 <span className="text-[10px] font-black uppercase tracking-wider text-amber-800">1. Today Stock In Hand</span>
-                <div className="text-lg sm:text-xl font-black text-slate-900 mt-2">{todayStats.remainingPetis} Premium</div>
+                <div className="text-lg sm:text-xl font-black text-slate-900 mt-2">{todayStats.remainingPetis} Units</div>
                 <span className="text-[10px] font-bold text-slate-600 truncate mt-1">
-                  {todayStats.soldPetis > 0
-                    ? `Buy ${todayStats.totalPetis}P - Sold ${todayStats.soldPetis}P (${todayStats.remainingEggs.toLocaleString('en-PK')} Premium Plus)`
-                    : `(${todayStats.totalEggs.toLocaleString('en-PK')} Premium Plus)`}
+                  {todayStats.totalPetis} Units Restocked Today
                 </span>
               </div>
 
@@ -2175,20 +2171,29 @@ export function PurchasesManagement({ products: propProducts, shopId: propShopId
       {/* Purchases Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {purchaseItems.map((item) => {
-          const itemEggs = Number(item.stock !== undefined ? item.stock : (item.eggQuantity || 0));
-          const itemPetis = Number((itemEggs / 360).toFixed(1));
-          const itemTrays = Math.round(itemEggs / 30);
-          const initialEggs = Math.max(itemEggs, Number(item.initialStock || item.eggQuantity || 0), (Number(item.petiQuantity || 0) * 360));
-          const initialPetis = Number((initialEggs / 360).toFixed(1));
-          const soldEggs = Math.max(0, initialEggs - itemEggs);
-          const soldPetis = Number((soldEggs / 360).toFixed(1));
+          const rawUnit = item.unitType || (
+            (item.name || '').toLowerCase().includes('plus') ? 'Premium Plus' :
+            (item.name || '').toLowerCase().includes('pro') ? 'Premium Pro' :
+            (item.name || '').toLowerCase().includes('renewal') ? 'Renewal Licence' : 'Premium'
+          );
+          const unitLabel = rawUnit === 'peti' ? 'Premium' : rawUnit === 'tray' ? 'Premium Pro' : rawUnit === 'egg' ? 'Premium Plus' : rawUnit;
+          const currentStock = Number(item.stock !== undefined ? item.stock : (
+            unitLabel === 'Premium Pro' ? (item.trayQuantity || 0) :
+            unitLabel === 'Premium Plus' ? (item.eggQuantity || 0) :
+            (item.petiQuantity || item.eggQuantity || 0)
+          ));
+          const initialStock = Math.max(currentStock, Number(item.initialStock || (
+            unitLabel === 'Premium Pro' ? (item.trayQuantity || 0) :
+            unitLabel === 'Premium Plus' ? (item.eggQuantity || 0) :
+            (item.petiQuantity || item.eggQuantity || 0)
+          )));
+          const soldStock = Math.max(0, initialStock - currentStock);
           const pMethod = String(item.paymentMethod || 'Cash').trim();
           
           const unitCost = Number(item.costPrice) > 0 ? Number(item.costPrice) : Number(item.price || 0);
-          const unitDivisor = item.unitType === 'egg' ? 1 : item.unitType === 'tray' ? 30 : 360;
           const costVal = Number(item.totalPurchaseCost) > 0
             ? Number(item.totalPurchaseCost)
-            : (itemPetis > 0 ? itemPetis * unitCost : (Number(item.stock || 0) * (unitCost / unitDivisor)));
+            : (currentStock * unitCost);
           
           const isCreditMethod = pMethod.toLowerCase().includes('credit') || pMethod.toLowerCase().includes('due') || pMethod.toLowerCase().includes('partial');
           const hasExplicitDue = item.dueAmountToSupplier !== undefined && item.dueAmountToSupplier !== null && Number(item.dueAmountToSupplier) > 0;
@@ -2216,7 +2221,7 @@ export function PurchasesManagement({ products: propProducts, shopId: propShopId
             let msg = `*ECW TRACK POS - PURCHASE VOUCHER*\n`;
             msg += `*Product:* ${pItem.name}\n`;
             msg += `*Vendor:* ${pItem.supplierName || 'Farm Vendor'}\n`;
-            msg += `*Volume:* ${itemPetis} Premium (${itemTrays} Premium Pro / ${Number(itemEggs).toLocaleString()} Premium Plus)\n`;
+            msg += `*Volume:* ${currentStock.toLocaleString('en-PK')} ${unitLabel}\n`;
             msg += `*Rate:* Rs. ${fmt(unitCost)}\n`;
             msg += `*Total Value:* Rs. ${fmt(costVal)}\n`;
             msg += `*Paid Amount:* Rs. ${fmt(paidAmount)}\n`;
@@ -2248,7 +2253,7 @@ export function PurchasesManagement({ products: propProducts, shopId: propShopId
               body: [
                 ['Product Name', pItem.name || 'N/A'],
                 ['Category', pItem.category || 'General'],
-                ['Stock Volume', `${itemPetis} Premium (${itemTrays} Premium Pro / ${Number(itemEggs).toLocaleString()} Premium Plus)`],
+                ['Stock Volume', `${currentStock.toLocaleString('en-PK')} ${unitLabel}`],
                 ['Unit Rate', `Rs. ${fmt(unitCost)}`],
                 ['Total Purchase Cost', `Rs. ${fmt(costVal)}`],
                 ['Paid Amount', `Rs. ${fmt(paidAmount)}`],
@@ -2358,14 +2363,14 @@ export function PurchasesManagement({ products: propProducts, shopId: propShopId
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-black text-gray-400 uppercase">Available Stock:</span>
                     <span className="font-black text-amber-700">
-                      📦 {itemPetis} Premium <span className="text-gray-400 font-medium">({itemTrays} Premium Pro • {Number(itemEggs).toLocaleString()} Premium Plus)</span>
+                      📦 {currentStock.toLocaleString('en-PK')} {unitLabel}
                     </span>
                   </div>
-                  {soldEggs > 0 && (
+                  {soldStock > 0 && (
                     <div className="flex items-center justify-between text-[9px] font-black pt-1 border-t border-gray-200 text-gray-500">
-                      <span>Purchased: {initialPetis}P</span>
-                      <span className="text-rose-600 font-bold">Sold: -{soldPetis}P</span>
-                      <span className="text-emerald-700 font-bold">In-Hand: {itemPetis}P</span>
+                      <span>Purchased: {initialStock} {unitLabel}</span>
+                      <span className="text-rose-600 font-bold">Sold: -{soldStock} {unitLabel}</span>
+                      <span className="text-emerald-700 font-bold">In-Hand: {currentStock} {unitLabel}</span>
                     </div>
                   )}
                 </div>
@@ -2493,7 +2498,7 @@ export function PurchasesManagement({ products: propProducts, shopId: propShopId
                     <th className="p-3">Vendor / Farm</th>
                     <th className="p-3">Contact &amp; Location</th>
                     <th className="p-3">Products Supplied</th>
-                    <th className="p-3 text-center">Volume</th>
+                    <th className="p-3 text-center">Purchases</th>
                     <th className="p-3 text-right">Total Spend</th>
                     <th className="p-3 text-right">Paid</th>
                     <th className="p-3 text-right">Credit (Due)</th>
@@ -2554,8 +2559,9 @@ export function PurchasesManagement({ products: propProducts, shopId: propShopId
                           </div>
                         </td>
                         <td className="p-3 text-center text-[11px]">
-                          <span className="text-amber-700 font-black">{v.totalPetis} Prem</span> •{' '}
-                          <span className="text-teal-700 font-black">{v.totalTrays} Pro</span>
+                          <span className="text-slate-800 font-black bg-slate-100 px-2 py-0.5 rounded-lg border border-slate-200">
+                            {v.products.length} {v.products.length === 1 ? 'Entry' : 'Entries'}
+                          </span>
                         </td>
                         <td className="p-3 text-right font-black text-slate-900">
                           Rs. {fmt(v.totalCost)}
@@ -3362,12 +3368,17 @@ export function PurchasesManagement({ products: propProducts, shopId: propShopId
                       </thead>
                       <tbody className="divide-y divide-slate-100 font-bold text-slate-800">
                         {selectedVendor.products.map((p, idx) => {
-                          const eggs = Number(p.stock !== undefined ? p.stock : (p.eggQuantity || 0));
-                          const petis = Number((eggs / 360).toFixed(1));
-                          const trays = Math.round(eggs / 30);
-                          const initialEggs = Math.max(eggs, Number(p.initialStock || p.eggQuantity || 0), (Number(p.petiQuantity || 0) * 360));
-                          const soldEggs = Math.max(0, initialEggs - eggs);
-                          const soldPetis = Number((soldEggs / 360).toFixed(1));
+                          const rawUnit = p.unitType || (
+                            (p.name || '').toLowerCase().includes('plus') ? 'Premium Plus' :
+                            (p.name || '').toLowerCase().includes('pro') ? 'Premium Pro' :
+                            (p.name || '').toLowerCase().includes('renewal') ? 'Renewal Licence' : 'Premium'
+                          );
+                          const unitLabel = rawUnit === 'peti' ? 'Premium' : rawUnit === 'tray' ? 'Premium Pro' : rawUnit === 'egg' ? 'Premium Plus' : rawUnit;
+                          const currentStock = Number(p.stock !== undefined ? p.stock : (
+                            unitLabel === 'Premium Pro' ? (p.trayQuantity || 0) :
+                            unitLabel === 'Premium Plus' ? (p.eggQuantity || 0) :
+                            (p.petiQuantity || p.eggQuantity || 0)
+                          ));
                           const rate = Number(p.costPrice) > 0 ? Number(p.costPrice) : Number(p.price || 0);
                           const cost = Number(p.costVal) || Number(p.totalPurchaseCost) || 0;
                           const paid = Number(p.paidVal) !== undefined ? Number(p.paidVal) : (Number(p.amountPaidToSupplier) || 0);
@@ -3394,16 +3405,9 @@ export function PurchasesManagement({ products: propProducts, shopId: propShopId
                                 </div>
                               </td>
                               <td className="py-2 px-2 text-center text-[10.5px]">
-                                <div>
-                                  <span className="text-amber-700 font-black">{petis}P</span> •{' '}
-                                  <span className="text-teal-700 font-black">{trays}T</span> •{' '}
-                                  <span className="text-slate-500">{fmt(eggs)}E</span>
+                                <div className="font-black text-amber-700">
+                                  {currentStock.toLocaleString('en-PK')} {unitLabel}
                                 </div>
-                                {soldEggs > 0 && (
-                                  <div className="text-[8.5px] font-bold text-rose-600 mt-0.5">
-                                    (-{soldPetis}P Sold)
-                                  </div>
-                                )}
                               </td>
                               <td className="py-2 px-2 text-right font-black text-slate-700 text-xs">
                                 Rs. {fmt(rate)}

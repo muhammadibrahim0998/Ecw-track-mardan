@@ -13016,7 +13016,7 @@ function StoreContent({ shopId }) {
                                 <th className="py-1 px-1.5 text-left w-[17%] border border-gray-300">Customer &amp; Email ID</th>
                                 <th className="py-1 px-1 text-center w-[85px] border border-gray-300">Contact Phone</th>
                                 <th className="py-1 px-1 text-center w-[60px] border border-gray-300">Invoices / Bills</th>
-                                <th className="py-1 px-1.5 text-center border border-gray-300">Items (Prem • Pro • Plus)</th>
+                                <th className="py-1 px-1.5 text-center border border-gray-300">Items Sold</th>
                                 <th className="py-1 px-1 text-center w-[95px] border border-gray-300">Payment Breakdown</th>
                                 <th className="py-1 px-1 text-center w-[75px] border border-gray-300">Credit Due</th>
                                 <th className="py-1 px-1.5 text-right w-[85px] whitespace-nowrap border border-gray-300">Total Purchases</th>
@@ -13209,7 +13209,7 @@ function StoreContent({ shopId }) {
                                             }
 
                                             return (
-                                              <div className="flex items-center justify-center gap-1 flex-nowrap whitespace-nowrap">
+                                              <div className="flex items-center justify-center gap-1 flex-wrap">
                                                 {/* Product Pills - Identical to Localhost */}
                                                 <div className="flex items-center gap-0.5 shrink-0">
                                                   {customerItems.map((it, itIdx) => (
@@ -13224,22 +13224,6 @@ function StoreContent({ shopId }) {
                                                       </span>
                                                     </span>
                                                   ))}
-                                                </div>
-
-                                                {/* Compact Simple 3-Box strip for Peti • Tray • Egg on the same line */}
-                                                <div className="flex items-center gap-0.5 shrink-0">
-                                                  <div className="px-0.5 py-0.5 bg-gray-50 border border-gray-300 rounded text-center min-w-[28px]">
-                                                    <span className="text-[6px] font-black text-gray-500 uppercase block leading-none">Prem</span>
-                                                    <span className="text-[8px] font-black text-gray-900 leading-tight block mt-0.5">{totalPetis > 0 ? totalPetis : '0'}</span>
-                                                  </div>
-                                                  <div className="px-0.5 py-0.5 bg-gray-50 border border-gray-300 rounded text-center min-w-[28px]">
-                                                    <span className="text-[6px] font-black text-gray-500 uppercase block leading-none">Pro</span>
-                                                    <span className="text-[8px] font-black text-gray-900 leading-tight block mt-0.5">{totalTrays > 0 ? totalTrays : '0'}</span>
-                                                  </div>
-                                                  <div className="px-0.5 py-0.5 bg-gray-50 border border-gray-300 rounded text-center min-w-[34px]">
-                                                    <span className="text-[6px] font-black text-gray-500 uppercase block leading-none">Plus</span>
-                                                    <span className="text-[8px] font-black text-gray-900 leading-tight block mt-0.5">{totalEggsCount > 0 ? totalEggsCount.toLocaleString('en-PK') : '0'}</span>
-                                                  </div>
                                                 </div>
                                               </div>
                                             );
@@ -14755,22 +14739,9 @@ function StoreContent({ shopId }) {
                               </div>
                             </td>
                             <td className="p-3.5 text-center">
-                              <div className="inline-flex items-center gap-1 flex-wrap justify-center">
-                                {profitReportStats.productPurchasesSummary && profitReportStats.productPurchasesSummary.length > 0 ? (
-                                  profitReportStats.productPurchasesSummary.map((item, idx) => {
-                                    const theme = getUnitTheme(item.unit || item.name);
-                                    return (
-                                      <span key={idx} className={`px-2 py-0.5 ${theme.bg} ${theme.text} border ${theme.border} rounded text-[9px] font-black`}>
-                                        {theme.icon} {item.qty.toLocaleString('en-PK')} {item.unit}
-                                      </span>
-                                    );
-                                  })
-                                ) : (
-                                  <span className="px-2 py-0.5 bg-slate-50 text-slate-600 border border-slate-200 rounded text-[9px] font-black">
-                                    0 Restocks
-                                  </span>
-                                )}
-                              </div>
+                              <span className="px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider bg-blue-50 text-blue-800 border border-blue-200">
+                                INVENTORY PURCHASES
+                              </span>
                             </td>
                             <td className="p-3.5 text-center text-gray-600">
                               {profitReportStats.filteredPurchasesCount} Restocks
