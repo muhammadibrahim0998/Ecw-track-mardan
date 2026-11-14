@@ -8513,8 +8513,8 @@ function StoreContent({ shopId }) {
         </div>
       )}
 
-      {/* Top Navbar — Light & Vibrant Green Gradient */}
-      <nav className="sticky top-0 z-50 w-full bg-gradient-to-r from-[#166534] via-[#16a34a] to-[#15803d] backdrop-blur-xl border-b-2 border-b-emerald-400/40 shadow-lg transition-all duration-300">
+      {/* Top Navbar — Light & Vibrant Royal Blue Gradient with Multi-Color 3D Shadow (Yellow, Red, Green) */}
+      <nav className="sticky top-0 z-50 w-full bg-gradient-to-r from-[#172554] via-[#1e40af] to-[#1d4ed8] backdrop-blur-xl border-b-2 border-b-amber-400/40 shadow-[0_6px_22px_rgba(234,179,8,0.28),0_12px_30px_rgba(239,68,68,0.2),0_4px_18px_rgba(34,197,94,0.22)] transition-all duration-300">
         <div className="flex items-center justify-between h-20 gap-4 px-4 sm:px-6 max-w-[1600px] mx-auto">
 
           {/* Left branding */}
@@ -8522,7 +8522,7 @@ function StoreContent({ shopId }) {
             {/* Mobile Toggle */}
             <button
               onClick={() => setIsMobileOpen(!isMobileOpen)}
-              className="p-2.5 -ml-2 text-white bg-[#14532d] hover:bg-gradient-to-r hover:from-emerald-500 hover:to-[#14532d] hover:border-t-emerald-300 rounded-xl transition-all duration-300 ease-out shadow-[0_4px_12px_rgba(0,0,0,0.3)] border-t border-t-white/30 border-b-4 border-b-[#0f3d20] hover:scale-110 hover:-translate-y-0.5 active:translate-y-[2px] active:scale-95 cursor-pointer md:hidden"
+              className="p-2.5 -ml-2 text-white bg-gradient-to-r from-[#1e3a8a] to-[#172554] hover:from-blue-600 hover:to-[#1e3a8a] hover:border-t-amber-300 rounded-xl transition-all duration-300 ease-out shadow-[0_4px_12px_rgba(234,179,8,0.4),0_6px_16px_rgba(239,68,68,0.28),0_0_12px_rgba(34,197,94,0.3)] border-t border-t-white/30 border-b-4 border-b-[#0f172a] hover:shadow-[0_6px_20px_rgba(250,204,21,0.75),0_10px_25px_rgba(239,68,68,0.55),0_0_18px_rgba(34,197,94,0.55)] hover:scale-110 hover:-translate-y-0.5 active:translate-y-[2px] active:scale-95 cursor-pointer md:hidden"
               aria-label="Toggle Mobile Menu"
             >
               <Menu className="w-6 h-6" />
@@ -8531,13 +8531,13 @@ function StoreContent({ shopId }) {
             {/* Desktop Toggle */}
             <button
               onClick={() => setIsDesktopOpen(!isDesktopOpen)}
-              className="p-2.5 -ml-2 text-white bg-[#14532d] hover:bg-gradient-to-r hover:from-emerald-500 hover:to-[#14532d] hover:border-t-emerald-300 rounded-xl transition-all duration-300 ease-out shadow-[0_4px_12px_rgba(0,0,0,0.3)] border-t border-t-white/30 border-b-4 border-b-[#0f3d20] hover:scale-105 hover:-translate-y-0.5 active:translate-y-[2px] active:scale-95 cursor-pointer hidden md:block"
+              className="p-2.5 -ml-2 text-white bg-gradient-to-r from-[#1e3a8a] to-[#172554] hover:from-blue-600 hover:to-[#1e3a8a] hover:border-t-amber-300 rounded-xl transition-all duration-300 ease-out shadow-[0_4px_12px_rgba(234,179,8,0.4),0_6px_16px_rgba(239,68,68,0.28),0_0_12px_rgba(34,197,94,0.3)] border-t border-t-white/30 border-b-4 border-b-[#0f172a] hover:shadow-[0_6px_20px_rgba(250,204,21,0.75),0_10px_25px_rgba(239,68,68,0.55),0_0_18px_rgba(34,197,94,0.55)] hover:scale-105 hover:-translate-y-0.5 active:translate-y-[2px] active:scale-95 cursor-pointer hidden md:block"
               aria-label="Toggle Desktop Menu"
             >
               <Menu className="w-6 h-6" />
             </button>
 
-            <button onClick={() => navigate('/shop')} className="p-2.5 bg-[#14532d] hover:bg-gradient-to-r hover:from-emerald-500 hover:to-[#14532d] hover:border-t-emerald-300 text-white rounded-xl transition-all duration-300 ease-out shadow-[0_4px_12px_rgba(0,0,0,0.3)] border-t border-t-white/30 border-b-4 border-b-[#0f3d20] hover:scale-105 hover:-translate-y-0.5 active:translate-y-[2px] active:scale-95 cursor-pointer hidden md:block" title="Back to Stores">
+            <button onClick={() => navigate('/shop')} className="p-2.5 bg-gradient-to-r from-[#1e3a8a] to-[#172554] hover:from-blue-600 hover:to-[#1e3a8a] hover:border-t-amber-300 text-white rounded-xl transition-all duration-300 ease-out shadow-[0_4px_12px_rgba(234,179,8,0.4),0_6px_16px_rgba(239,68,68,0.28),0_0_12px_rgba(34,197,94,0.3)] border-t border-t-white/30 border-b-4 border-b-[#0f172a] hover:shadow-[0_6px_20px_rgba(250,204,21,0.75),0_10px_25px_rgba(239,68,68,0.55),0_0_18px_rgba(34,197,94,0.55)] hover:scale-105 hover:-translate-y-0.5 active:translate-y-[2px] active:scale-95 cursor-pointer hidden md:block" title="Back to Stores">
               <ArrowLeft className="w-5 h-5" />
             </button>
 
@@ -8548,7 +8548,7 @@ function StoreContent({ shopId }) {
                   const mainContent = document.getElementById('main-store-content');
                   if (mainContent) mainContent.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className="relative bg-white rounded-xl w-32 sm:w-36 h-10 sm:h-11 flex items-center justify-center shrink-0 shadow-[0_4px_14px_rgba(15,23,42,0.4),0_0_10px_rgba(59,130,246,0.25),0_0_8px_rgba(245,158,11,0.15)] overflow-hidden border-2 border-white/80 ring-2 ring-blue-500/40 group-hover:scale-105 group-hover:border-blue-300 group-hover:ring-blue-400 group-hover:shadow-[0_6px_18px_rgba(15,23,42,0.5),0_0_14px_rgba(59,130,246,0.35),0_0_12px_rgba(245,158,11,0.25)] transition-all duration-300 ease-out px-2 py-1"
+                className="relative bg-white rounded-xl w-auto max-w-[125px] sm:max-w-[138px] h-10 sm:h-11 flex items-center justify-center shrink-0 shadow-[0_4px_14px_rgba(234,179,8,0.45),0_7px_18px_rgba(239,68,68,0.32),0_0_14px_rgba(34,197,94,0.35)] overflow-hidden border-2 border-white/90 ring-2 ring-amber-400/60 hover:ring-emerald-400/80 hover:scale-108 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(250,204,21,0.8),0_12px_30px_rgba(239,68,68,0.6),0_0_22px_rgba(34,197,94,0.65)] active:scale-95 transition-all duration-300 ease-out px-1.5 py-0.5"
                 title={isAdminUser ? "Go to Shop Admin Dashboard" : "Go to Customer Dashboard"}
               >
                 {shop?.logoUrl ? (
@@ -8560,7 +8560,7 @@ function StoreContent({ shopId }) {
               <div className="min-w-0">
                 <h1 className="text-lg sm:text-xl font-black tracking-tighter text-yellow-300 group-hover:text-amber-200 uppercase italic drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] group-hover:drop-shadow-[0_0_12px_rgba(251,191,36,0.8)] leading-none truncate max-w-[140px] sm:max-w-xs md:max-w-md transition-all duration-300">{shop?.name || 'Customer Store'}</h1>
                 {shop?.address && (
-                  <p className="text-[10px] font-black text-emerald-300 group-hover:text-emerald-200 flex items-center gap-1 mt-1 truncate max-w-[140px] sm:max-w-xs md:max-w-md uppercase tracking-wider transition-all duration-300">
+                  <p className="text-[10px] font-black text-blue-200 group-hover:text-blue-100 flex items-center gap-1 mt-1 truncate max-w-[140px] sm:max-w-xs md:max-w-md uppercase tracking-wider transition-all duration-300">
                     <MapPin className="w-3 h-3 shrink-0" /> <span className="truncate">{shop.address}</span>
                   </p>
                 )}
@@ -8568,7 +8568,7 @@ function StoreContent({ shopId }) {
             </div>
           </div>
 
-          {/* Center Search Input with Balanced Yellow, Blue & Gray Shadow */}
+          {/* Center Search Input with Balanced 3D Shadow (Yellow, Red, Green) */}
           <div className="flex-1 flex justify-center max-w-md mx-auto hidden sm:flex">
             <div className="relative w-full group">
               <input
@@ -8578,9 +8578,9 @@ function StoreContent({ shopId }) {
                 onFocus={() => setShowSearchDropdown(true)}
                 onBlur={() => setTimeout(() => setShowSearchDropdown(false), 200)}
                 placeholder="Search products..."
-                className="w-full bg-white/95 backdrop-blur-sm rounded-full py-2.5 flex items-center pl-6 pr-14 text-sm font-black text-gray-900 placeholder:text-gray-500 focus:bg-white focus:ring-2 focus:ring-blue-400/40 hover:bg-white transition-all duration-300 shadow-[inset_0_2px_4px_rgba(0,0,0,0.08),0_4px_14px_rgba(15,23,42,0.35),0_0_10px_rgba(59,130,246,0.2),0_0_8px_rgba(245,158,11,0.12)] hover:shadow-[0_6px_20px_rgba(15,23,42,0.45),0_0_15px_rgba(59,130,246,0.3),0_0_12px_rgba(245,158,11,0.2)] border-b-2 border-blue-500 focus:border-blue-400"
+                className="w-full bg-white/95 backdrop-blur-sm rounded-full py-2.5 flex items-center pl-6 pr-14 text-sm font-black text-gray-900 placeholder:text-gray-500 focus:bg-white focus:ring-2 focus:ring-amber-400/60 hover:bg-white transition-all duration-300 shadow-[inset_0_2px_4px_rgba(0,0,0,0.08),0_4px_14px_rgba(234,179,8,0.35),0_7px_18px_rgba(239,68,68,0.22),0_0_14px_rgba(34,197,94,0.25)] hover:shadow-[0_6px_22px_rgba(250,204,21,0.6),0_10px_26px_rgba(239,68,68,0.4),0_0_18px_rgba(34,197,94,0.45)] focus:shadow-[0_8px_26px_rgba(250,204,21,0.8),0_12px_32px_rgba(239,68,68,0.55),0_0_24px_rgba(34,197,94,0.6)] border-b-2 border-amber-400 focus:border-emerald-500"
               />
-              <button className="absolute right-1.5 top-1/2 -translate-y-1/2 bg-gradient-to-r from-[#166534] to-[#14532d] hover:from-emerald-500 hover:to-emerald-700 text-white p-2 rounded-full transition-all duration-300 ease-out shadow-[0_4px_10px_rgba(0,0,0,0.3)] border-t border-t-white/30 border-b-2 border-b-[#0f3d20] hover:scale-105 active:scale-95 cursor-pointer">
+              <button className="absolute right-1.5 top-1/2 -translate-y-1/2 bg-gradient-to-r from-[#1e3a8a] to-[#172554] hover:from-blue-600 hover:to-blue-800 text-white p-2 rounded-full transition-all duration-300 ease-out shadow-[0_3px_10px_rgba(234,179,8,0.45),0_5px_14px_rgba(239,68,68,0.35),0_0_12px_rgba(34,197,94,0.35)] border-t border-t-white/30 border-b-2 border-b-[#0f172a] hover:shadow-[0_6px_18px_rgba(250,204,21,0.85),0_8px_22px_rgba(239,68,68,0.65),0_0_18px_rgba(34,197,94,0.65)] hover:scale-115 active:scale-95 cursor-pointer">
                 <Search className="w-4 h-4" />
               </button>
 
@@ -8610,7 +8610,7 @@ function StoreContent({ shopId }) {
                           )}
                           <div className="flex-1 min-w-0">
                             <p className="text-xs font-black text-white truncate uppercase italic">{item.name}</p>
-                            <p className="text-[10px] text-emerald-400 font-bold">{currency} {item.price.toLocaleString()}</p>
+                            <p className="text-[10px] text-blue-400 font-bold">{currency} {item.price.toLocaleString()}</p>
                           </div>
                           <span className="text-[9px] font-bold text-slate-400 uppercase bg-slate-800 px-2 py-1 rounded-full border border-slate-700">
                             Stock: {item.stock}
@@ -8628,15 +8628,15 @@ function StoreContent({ shopId }) {
             </div>
           </div>
 
-          {/* Right Cart & User Badges */}
+          {/* Right Cart & User Badges with 3D Shadow (Yellow, Red, Green) */}
           <div className="flex items-center gap-3">
             {canBuy && (
               <button
                 onClick={() => setOrderOpen(true)}
-                className="relative p-2.5 sm:px-4 bg-gradient-to-r from-[#166534] to-[#14532d] hover:from-emerald-500 hover:to-[#166534] text-white rounded-full transition-all duration-300 ease-out border-t border-white/30 hover:border-t-emerald-300 border-b-4 border-b-[#0f3d20] shadow-[0_4px_12px_rgba(0,0,0,0.3)] hover:scale-105 hover:-translate-y-0.5 active:translate-y-[2px] flex items-center justify-center gap-2 cursor-pointer"
+                className="relative p-2.5 sm:px-4 bg-gradient-to-r from-[#1e3a8a] to-[#172554] hover:from-blue-600 hover:to-[#1e3a8a] text-white rounded-full transition-all duration-300 ease-out border-t border-white/30 hover:border-t-amber-300 border-b-4 border-b-[#0f172a] shadow-[0_4px_14px_rgba(234,179,8,0.4),0_6px_18px_rgba(239,68,68,0.3),0_0_14px_rgba(34,197,94,0.3)] hover:shadow-[0_8px_24px_rgba(250,204,21,0.8),0_12px_28px_rgba(239,68,68,0.6),0_0_22px_rgba(34,197,94,0.6)] hover:scale-108 hover:-translate-y-1 active:translate-y-[2px] active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
                 title="View My Orders & Payment Status"
               >
-                <Truck className="w-5 h-5 text-blue-400" />
+                <Truck className="w-5 h-5 text-amber-300" />
                 <span className="text-xs font-black uppercase tracking-wider hidden sm:inline">My Orders</span>
               </button>
             )}
@@ -8644,11 +8644,11 @@ function StoreContent({ shopId }) {
             {canBuy ? (
               <button
                 onClick={() => setCartOpen(true)}
-                className="relative p-3 bg-gradient-to-r from-[#166534] to-[#14532d] hover:from-emerald-500 hover:to-emerald-700 text-white rounded-full transition-all duration-300 ease-out border-t border-white/30 hover:border-t-emerald-200 border-b-4 border-b-[#0f3d20] shadow-[0_4px_12px_rgba(0,0,0,0.3)] hover:scale-105 hover:-translate-y-0.5 active:scale-95 flex items-center justify-center cursor-pointer"
+                className="relative p-3 bg-gradient-to-r from-[#1e3a8a] to-[#172554] hover:from-blue-600 hover:to-blue-800 text-white rounded-full transition-all duration-300 ease-out border-t border-white/30 hover:border-t-amber-300 border-b-4 border-b-[#0f172a] shadow-[0_4px_14px_rgba(234,179,8,0.4),0_6px_18px_rgba(239,68,68,0.3),0_0_14px_rgba(34,197,94,0.3)] hover:shadow-[0_8px_24px_rgba(250,204,21,0.8),0_12px_28px_rgba(239,68,68,0.6),0_0_22px_rgba(34,197,94,0.6)] hover:scale-115 hover:-translate-y-1 active:scale-95 flex items-center justify-center cursor-pointer"
               >
                 <ShoppingCart className="w-5 h-5" />
                 {cartCount > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-yellow-400 text-black text-[10px] font-black h-5.5 w-5.5 rounded-full flex items-center justify-center border-2 border-[#14532d] shadow-[0_3px_8px_rgba(0,0,0,0.5)] animate-bounce">
+                  <span className="absolute -top-2 -right-2 bg-yellow-400 text-black text-[10px] font-black h-5.5 w-5.5 rounded-full flex items-center justify-center border-2 border-[#1e3a8a] shadow-[0_3px_8px_rgba(0,0,0,0.5)] animate-bounce">
                     {cartCount}
                   </span>
                 )}
@@ -8656,12 +8656,12 @@ function StoreContent({ shopId }) {
             ) : isAdminUser ? (
               <button
                 onClick={() => setActiveView('walkin')}
-                className="relative p-3 bg-gradient-to-r from-[#166534] to-[#14532d] hover:from-emerald-500 hover:to-emerald-700 text-white rounded-full transition-all duration-300 ease-out border-t border-white/30 hover:border-t-emerald-200 border-b-4 border-b-[#0f3d20] shadow-[0_4px_12px_rgba(0,0,0,0.3)] hover:scale-105 hover:-translate-y-0.5 active:scale-95 flex items-center justify-center cursor-pointer"
+                className="relative p-3 bg-gradient-to-r from-[#1e3a8a] to-[#172554] hover:from-blue-600 hover:to-blue-800 text-white rounded-full transition-all duration-300 ease-out border-t border-white/30 hover:border-t-amber-300 border-b-4 border-b-[#0f172a] shadow-[0_4px_14px_rgba(234,179,8,0.4),0_6px_18px_rgba(239,68,68,0.3),0_0_14px_rgba(34,197,94,0.3)] hover:shadow-[0_8px_24px_rgba(250,204,21,0.8),0_12px_28px_rgba(239,68,68,0.6),0_0_22px_rgba(34,197,94,0.6)] hover:scale-115 hover:-translate-y-1 active:scale-95 flex items-center justify-center cursor-pointer"
                 title="View Walk-in Customer Bill Cart"
               >
-                <Receipt className="w-5 h-5 text-emerald-400" />
+                <Receipt className="w-5 h-5 text-amber-300" />
                 {walkInCart.reduce((sum, item) => sum + item.quantity, 0) > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-yellow-400 text-black text-[10px] font-black h-5.5 w-5.5 rounded-full flex items-center justify-center border-2 border-[#14532d] shadow-[0_3px_8px_rgba(0,0,0,0.5)] animate-bounce">
+                  <span className="absolute -top-2 -right-2 bg-yellow-400 text-black text-[10px] font-black h-5.5 w-5.5 rounded-full flex items-center justify-center border-2 border-[#1e3a8a] shadow-[0_3px_8px_rgba(0,0,0,0.5)] animate-bounce">
                     {walkInCart.reduce((sum, item) => sum + item.quantity, 0)}
                   </span>
                 )}
@@ -8682,18 +8682,18 @@ function StoreContent({ shopId }) {
           />
         )}
 
-        {/* ─── Light & Vibrant Green Sidebar ─────────────────────── */}
+        {/* ─── Light & Vibrant Royal Blue Sidebar ─────────────────────── */}
         <aside
-          className={`absolute md:relative top-0 h-full flex flex-col bg-gradient-to-b from-[#15803d] via-[#16a34a] to-[#166534] text-white backdrop-blur-xl transition-all duration-300 ease-in-out border-r-2 border-r-emerald-500/40 z-[100] md:z-20 overflow-hidden shadow-[10px_0_30px_rgba(22,101,52,0.35),4px_0_15px_rgba(34,197,94,0.15)] w-56 ${isMobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+          className={`absolute md:relative top-0 h-full flex flex-col bg-gradient-to-b from-[#1e3a8a] via-[#1d4ed8] to-[#1e40af] text-white backdrop-blur-xl transition-all duration-300 ease-in-out border-r-2 border-r-blue-400/50 z-[100] md:z-20 overflow-hidden shadow-[10px_0_30px_rgba(30,58,138,0.35),4px_0_15px_rgba(59,130,246,0.2)] w-56 ${isMobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
             } ${!isDesktopOpen ? 'md:-ml-56' : 'md:ml-0'
             }`}
         >
           {/* User Profile Box - 3D Shape */}
-          <div className="mx-3.5 mb-5 mt-4 rounded-2xl flex items-center px-3.5 py-3 gap-3 bg-gradient-to-b from-[#186337] to-[#0e3f21] border-t-2 border-t-white/40 border-x border-x-emerald-500/40 border-b-4 border-b-[#072513] shadow-[0_6px_14px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.3)] transition-transform duration-200 hover:scale-[1.02]">
+          <div className="mx-3.5 mb-5 mt-4 rounded-2xl flex items-center px-3.5 py-3 gap-3 bg-gradient-to-b from-[#1e40af] to-[#172554] border-t-2 border-t-white/40 border-x border-x-blue-400/40 border-b-4 border-b-[#0f172a] shadow-[0_6px_14px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.3)] transition-transform duration-200 hover:scale-[1.02]">
             <div className="relative flex-shrink-0">
-              <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-400 border-2 border-[#072513] rounded-full shadow-md animate-pulse" />
+              <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-blue-400 border-2 border-[#0f172a] rounded-full shadow-md animate-pulse" />
               <div className="p-1 rounded-xl bg-black/25 border border-white/20 shadow-inner">
-                <UserCircle2 className="w-8 h-8 text-emerald-200 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]" />
+                <UserCircle2 className="w-8 h-8 text-blue-200 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]" />
               </div>
             </div>
             <div className="flex flex-col flex-1 overflow-hidden min-w-0">
@@ -8732,10 +8732,10 @@ function StoreContent({ shopId }) {
                     }}
                     className={`w-full flex items-center gap-3 group px-3.5 py-2.5 mx-3 rounded-xl text-[13.5px] font-black tracking-wide transition-all duration-200 ease-out max-w-[200px] cursor-pointer ${activeView === 'dashboard'
                       ? "bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-400 text-zinc-950 font-black border-t-2 border-t-amber-200 border-x border-x-amber-600 border-b-4 border-b-amber-900 shadow-[0_6px_20px_rgba(245,158,11,0.6),inset_0_1px_0_rgba(255,255,255,0.5)] translate-x-1.5 scale-[1.02]"
-                      : "bg-gradient-to-b from-[#186337] to-[#0e3f21] text-white font-black border-t-2 border-t-white/35 border-x border-x-emerald-600/40 border-b-4 border-b-[#072513] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
+                      : "bg-gradient-to-b from-[#1e40af] to-[#172554] text-white font-black border-t-2 border-t-white/35 border-x border-x-blue-500/40 border-b-4 border-b-[#0f172a] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
                       }`}
                   >
-                    <LayoutDashboard className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${activeView === 'dashboard' ? 'text-zinc-950' : 'text-emerald-300 group-hover:text-zinc-950'}`} />
+                    <LayoutDashboard className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${activeView === 'dashboard' ? 'text-zinc-950' : 'text-blue-300 group-hover:text-zinc-950'}`} />
                     <span className={`truncate ${activeView === 'dashboard' ? 'text-zinc-950 font-black' : 'text-white font-black group-hover:text-zinc-950 drop-shadow-[0_1.5px_2px_rgba(0,0,0,0.95)]'}`}>{isAdminUser ? 'Dashboard' : 'Customer Dashboard'}</span>
                   </button>
 
@@ -8743,17 +8743,17 @@ function StoreContent({ shopId }) {
                     <>
                       <button
                         onClick={() => { setOrderOpen(true); setIsMobileOpen(false); }}
-                        className="w-full flex items-center gap-3 group px-3.5 py-2.5 mx-3 rounded-xl text-[13.5px] font-black tracking-wide transition-all duration-200 ease-out max-w-[200px] cursor-pointer bg-gradient-to-b from-[#186337] to-[#0e3f21] text-white border-t-2 border-t-white/35 border-x border-x-emerald-600/40 border-b-4 border-b-[#072513] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
+                        className="w-full flex items-center gap-3 group px-3.5 py-2.5 mx-3 rounded-xl text-[13.5px] font-black tracking-wide transition-all duration-200 ease-out max-w-[200px] cursor-pointer bg-gradient-to-b from-[#1e40af] to-[#172554] text-white border-t-2 border-t-white/35 border-x border-x-blue-500/40 border-b-4 border-b-[#0f172a] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
                       >
-                        <Truck className="w-4 h-4 shrink-0 transition-transform group-hover:scale-110 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] text-emerald-300 group-hover:text-zinc-950" />
+                        <Truck className="w-4 h-4 shrink-0 transition-transform group-hover:scale-110 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] text-blue-300 group-hover:text-zinc-950" />
                         <span className="truncate text-white font-black group-hover:text-zinc-950 drop-shadow-[0_1.5px_2px_rgba(0,0,0,0.95)]">My Orders</span>
                       </button>
 
                       <button
                         onClick={() => { setCartOpen(true); setIsMobileOpen(false); }}
-                        className="w-full flex items-center gap-3 group px-3.5 py-2.5 mx-3 rounded-xl text-[13.5px] font-black tracking-wide transition-all duration-200 ease-out max-w-[200px] cursor-pointer bg-gradient-to-b from-[#186337] to-[#0e3f21] text-white border-t-2 border-t-white/35 border-x border-x-emerald-600/40 border-b-4 border-b-[#072513] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
+                        className="w-full flex items-center gap-3 group px-3.5 py-2.5 mx-3 rounded-xl text-[13.5px] font-black tracking-wide transition-all duration-200 ease-out max-w-[200px] cursor-pointer bg-gradient-to-b from-[#1e40af] to-[#172554] text-white border-t-2 border-t-white/35 border-x border-x-blue-500/40 border-b-4 border-b-[#0f172a] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
                       >
-                        <ShoppingCart className="w-4 h-4 shrink-0 transition-transform group-hover:scale-110 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] text-emerald-300 group-hover:text-zinc-950" />
+                        <ShoppingCart className="w-4 h-4 shrink-0 transition-transform group-hover:scale-110 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] text-blue-300 group-hover:text-zinc-950" />
                         <span className="truncate text-white font-black group-hover:text-zinc-950 drop-shadow-[0_1.5px_2px_rgba(0,0,0,0.95)]">My Cart ({cartCount})</span>
                       </button>
                     </>
@@ -8772,10 +8772,10 @@ function StoreContent({ shopId }) {
                       onClick={() => { setActiveView('walkin'); setIsMobileOpen(false); }}
                       className={`w-full flex items-center gap-3 group px-3.5 py-2.5 mx-3 rounded-xl text-[13.5px] font-black tracking-wide transition-all duration-200 ease-out max-w-[200px] cursor-pointer ${activeView === 'walkin'
                         ? "bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-400 text-zinc-950 font-black border-t-2 border-t-amber-200 border-x border-x-amber-600 border-b-4 border-b-amber-900 shadow-[0_6px_20px_rgba(245,158,11,0.6),inset_0_1px_0_rgba(255,255,255,0.5)] translate-x-1.5 scale-[1.02]"
-                        : "bg-gradient-to-b from-[#186337] to-[#0e3f21] text-white font-black border-t-2 border-t-white/35 border-x border-x-emerald-600/40 border-b-4 border-b-[#072513] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
+                        : "bg-gradient-to-b from-[#1e40af] to-[#172554] text-white font-black border-t-2 border-t-white/35 border-x border-x-blue-500/40 border-b-4 border-b-[#0f172a] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
                         }`}
                     >
-                      <Receipt className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${activeView === 'walkin' ? 'text-zinc-950' : 'text-emerald-300 group-hover:text-zinc-950'}`} />
+                      <Receipt className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${activeView === 'walkin' ? 'text-zinc-950' : 'text-blue-300 group-hover:text-zinc-950'}`} />
                       <span className={`truncate ${activeView === 'walkin' ? 'text-zinc-950 font-black' : 'text-white font-black group-hover:text-zinc-950 drop-shadow-[0_1.5px_2px_rgba(0,0,0,0.95)]'}`}>POS Bill Sale</span>
                     </button>
                   )}
@@ -8800,7 +8800,7 @@ function StoreContent({ shopId }) {
                       }}
                       className={`w-full flex items-center gap-3 group px-3.5 py-2.5 mx-3 rounded-xl text-[13.5px] font-black tracking-wide transition-all duration-200 ease-out max-w-[200px] cursor-pointer ${activeView === 'today-history'
                         ? "bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-400 text-zinc-950 font-black border-t-2 border-t-amber-200 border-x border-x-amber-600 border-b-4 border-b-amber-900 shadow-[0_6px_20px_rgba(245,158,11,0.6),inset_0_1px_0_rgba(255,255,255,0.5)] translate-x-1.5 scale-[1.02]"
-                        : "bg-gradient-to-b from-[#186337] to-[#0e3f21] text-white font-black border-t-2 border-t-white/35 border-x border-x-emerald-600/40 border-b-4 border-b-[#072513] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
+                        : "bg-gradient-to-b from-[#1e40af] to-[#172554] text-white font-black border-t-2 border-t-white/35 border-x border-x-blue-500/40 border-b-4 border-b-[#0f172a] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
                         }`}
                     >
                       <History className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${activeView === 'today-history' ? 'text-zinc-950' : 'text-amber-300 group-hover:text-zinc-950'}`} />
@@ -8819,7 +8819,7 @@ function StoreContent({ shopId }) {
                       }}
                       className={`w-full flex items-center gap-3 group px-3.5 py-2.5 mx-3 rounded-xl text-[13.5px] font-black tracking-wide transition-all duration-200 ease-out max-w-[200px] cursor-pointer ${activeView === 'sold-products-history'
                         ? "bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-400 text-zinc-950 font-black border-t-2 border-t-amber-200 border-x border-x-amber-600 border-b-4 border-b-amber-900 shadow-[0_6px_20px_rgba(245,158,11,0.6),inset_0_1px_0_rgba(255,255,255,0.5)] translate-x-1.5 scale-[1.02]"
-                        : "bg-gradient-to-b from-[#186337] to-[#0e3f21] text-white font-black border-t-2 border-t-white/35 border-x border-x-emerald-600/40 border-b-4 border-b-[#072513] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
+                        : "bg-gradient-to-b from-[#1e40af] to-[#172554] text-white font-black border-t-2 border-t-white/35 border-x border-x-blue-500/40 border-b-4 border-b-[#0f172a] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
                         }`}
                     >
                       <ShoppingBag className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${activeView === 'sold-products-history' ? 'text-zinc-950' : 'text-yellow-300 group-hover:text-zinc-950'}`} />
@@ -8840,7 +8840,7 @@ function StoreContent({ shopId }) {
                       }}
                       className={`w-full flex items-center gap-3 group px-3.5 py-2.5 mx-3 rounded-xl text-[13.5px] font-black tracking-wide transition-all duration-200 ease-out max-w-[200px] cursor-pointer ${activeView === 'purchases'
                         ? "bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-400 text-zinc-950 font-black border-t-2 border-t-amber-200 border-x border-x-amber-600 border-b-4 border-b-amber-900 shadow-[0_6px_20px_rgba(245,158,11,0.6),inset_0_1px_0_rgba(255,255,255,0.5)] translate-x-1.5 scale-[1.02]"
-                        : "bg-gradient-to-b from-[#186337] to-[#0e3f21] text-white font-black border-t-2 border-t-white/35 border-x border-x-emerald-600/40 border-b-4 border-b-[#072513] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
+                        : "bg-gradient-to-b from-[#1e40af] to-[#172554] text-white font-black border-t-2 border-t-white/35 border-x border-x-blue-500/40 border-b-4 border-b-[#0f172a] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
                         }`}
                     >
                       <Truck className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${activeView === 'purchases' ? 'text-zinc-950' : 'text-teal-300 group-hover:text-zinc-950'}`} />
@@ -8861,7 +8861,7 @@ function StoreContent({ shopId }) {
                       }}
                       className={`w-full flex items-center gap-3 group px-3.5 py-2.5 mx-3 rounded-xl text-[13.5px] font-black tracking-wide transition-all duration-200 ease-out max-w-[200px] cursor-pointer ${activeView === 'vendors'
                         ? "bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-400 text-zinc-950 font-black border-t-2 border-t-amber-200 border-x border-x-amber-600 border-b-4 border-b-amber-900 shadow-[0_6px_20px_rgba(245,158,11,0.6),inset_0_1px_0_rgba(255,255,255,0.5)] translate-x-1.5 scale-[1.02]"
-                        : "bg-gradient-to-b from-[#186337] to-[#0e3f21] text-white font-black border-t-2 border-t-white/35 border-x border-x-emerald-600/40 border-b-4 border-b-[#072513] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
+                        : "bg-gradient-to-b from-[#1e40af] to-[#172554] text-white font-black border-t-2 border-t-white/35 border-x border-x-blue-500/40 border-b-4 border-b-[#0f172a] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
                         }`}
                     >
                       <Building2 className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${activeView === 'vendors' ? 'text-zinc-950' : 'text-amber-300 group-hover:text-zinc-950'}`} />
@@ -8882,10 +8882,10 @@ function StoreContent({ shopId }) {
                       }}
                       className={`w-full flex items-center gap-3 group px-3.5 py-2.5 mx-3 rounded-xl text-[13.5px] font-black tracking-wide transition-all duration-200 ease-out max-w-[200px] cursor-pointer ${activeView === 'customer-payment-ledger'
                         ? "bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-400 text-zinc-950 font-black border-t-2 border-t-amber-200 border-x border-x-amber-600 border-b-4 border-b-amber-900 shadow-[0_6px_20px_rgba(245,158,11,0.6),inset_0_1px_0_rgba(255,255,255,0.5)] translate-x-1.5 scale-[1.02]"
-                        : "bg-gradient-to-b from-[#186337] to-[#0e3f21] text-white font-black border-t-2 border-t-white/35 border-x border-x-emerald-600/40 border-b-4 border-b-[#072513] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
+                        : "bg-gradient-to-b from-[#1e40af] to-[#172554] text-white font-black border-t-2 border-t-white/35 border-x border-x-blue-500/40 border-b-4 border-b-[#0f172a] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
                         }`}
                     >
-                      <Users className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${activeView === 'customer-payment-ledger' ? 'text-zinc-950' : 'text-emerald-300 group-hover:text-zinc-950'}`} />
+                      <Users className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${activeView === 'customer-payment-ledger' ? 'text-zinc-950' : 'text-blue-300 group-hover:text-zinc-950'}`} />
                       <span className={`truncate ${activeView === 'customer-payment-ledger' ? 'text-zinc-950 font-black' : 'text-white font-black group-hover:text-zinc-950 drop-shadow-[0_1.5px_2px_rgba(0,0,0,0.95)]'}`}>Customer Payment Ledger</span>
                     </button>
                   )}
@@ -8903,7 +8903,7 @@ function StoreContent({ shopId }) {
                       }}
                       className={`w-full flex items-center gap-3 group px-3.5 py-2.5 mx-3 rounded-xl text-[13.5px] font-black tracking-wide transition-all duration-200 ease-out max-w-[200px] cursor-pointer ${activeView === 'vendor-payment-ledger'
                         ? "bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-400 text-zinc-950 font-black border-t-2 border-t-amber-200 border-x border-x-amber-600 border-b-4 border-b-amber-900 shadow-[0_6px_20px_rgba(245,158,11,0.6),inset_0_1px_0_rgba(255,255,255,0.5)] translate-x-1.5 scale-[1.02]"
-                        : "bg-gradient-to-b from-[#186337] to-[#0e3f21] text-white font-black border-t-2 border-t-white/35 border-x border-x-emerald-600/40 border-b-4 border-b-[#072513] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
+                        : "bg-gradient-to-b from-[#1e40af] to-[#172554] text-white font-black border-t-2 border-t-white/35 border-x border-x-blue-500/40 border-b-4 border-b-[#0f172a] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
                         }`}
                     >
                       <Truck className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${activeView === 'vendor-payment-ledger' ? 'text-zinc-950' : 'text-amber-300 group-hover:text-zinc-950'}`} />
@@ -8925,7 +8925,7 @@ function StoreContent({ shopId }) {
                       }}
                       className={`w-full flex items-center gap-3 group px-3.5 py-2.5 mx-3 rounded-xl text-[13.5px] font-black tracking-wide transition-all duration-200 ease-out max-w-[200px] cursor-pointer ${activeView === 'registered-customers'
                         ? "bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-400 text-zinc-950 font-black border-t-2 border-t-amber-200 border-x border-x-amber-600 border-b-4 border-b-amber-900 shadow-[0_6px_20px_rgba(245,158,11,0.6),inset_0_1px_0_rgba(255,255,255,0.5)] translate-x-1.5 scale-[1.02]"
-                        : "bg-gradient-to-b from-[#186337] to-[#0e3f21] text-white font-black border-t-2 border-t-white/35 border-x border-x-emerald-600/40 border-b-4 border-b-[#072513] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
+                        : "bg-gradient-to-b from-[#1e40af] to-[#172554] text-white font-black border-t-2 border-t-white/35 border-x border-x-blue-500/40 border-b-4 border-b-[#0f172a] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
                         }`}
                     >
                       <Users className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${activeView === 'registered-customers' ? 'text-zinc-950' : 'text-indigo-300 group-hover:text-zinc-950'}`} />
@@ -8949,10 +8949,10 @@ function StoreContent({ shopId }) {
                       }}
                       className={`w-full flex items-center gap-3 group px-3.5 py-2.5 mx-3 rounded-xl text-[13.5px] font-black tracking-wide transition-all duration-200 ease-out max-w-[200px] cursor-pointer ${activeView === 'report-sales'
                         ? "bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-400 text-zinc-950 font-black border-t-2 border-t-amber-200 border-x border-x-amber-600 border-b-4 border-b-amber-900 shadow-[0_6px_20px_rgba(245,158,11,0.6),inset_0_1px_0_rgba(255,255,255,0.5)] translate-x-1.5 scale-[1.02]"
-                        : "bg-gradient-to-b from-[#186337] to-[#0e3f21] text-white font-black border-t-2 border-t-white/35 border-x border-x-emerald-600/40 border-b-4 border-b-[#072513] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
+                        : "bg-gradient-to-b from-[#1e40af] to-[#172554] text-white font-black border-t-2 border-t-white/35 border-x border-x-blue-500/40 border-b-4 border-b-[#0f172a] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
                         }`}
                     >
-                      <TrendingUp className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${activeView === 'report-sales' ? 'text-zinc-950' : 'text-emerald-300 group-hover:text-zinc-950'}`} />
+                      <TrendingUp className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${activeView === 'report-sales' ? 'text-zinc-950' : 'text-blue-300 group-hover:text-zinc-950'}`} />
                       <span className={`truncate ${activeView === 'report-sales' ? 'text-zinc-950 font-black' : 'text-white font-black group-hover:text-zinc-950 drop-shadow-[0_1.5px_2px_rgba(0,0,0,0.95)]'}`}>Sales Report</span>
                     </button>
                   )}
@@ -8972,10 +8972,10 @@ function StoreContent({ shopId }) {
                       }}
                       className={`w-full flex items-center gap-3 group px-3.5 py-2.5 mx-3 rounded-xl text-[13.5px] font-black tracking-wide transition-all duration-200 ease-out max-w-[200px] cursor-pointer ${activeView === 'customer-credits'
                         ? "bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-400 text-zinc-950 font-black border-t-2 border-t-amber-200 border-x border-x-amber-600 border-b-4 border-b-amber-900 shadow-[0_6px_20px_rgba(245,158,11,0.6),inset_0_1px_0_rgba(255,255,255,0.5)] translate-x-1.5 scale-[1.02]"
-                        : "bg-gradient-to-b from-[#186337] to-[#0e3f21] text-white font-black border-t-2 border-t-white/35 border-x border-x-emerald-600/40 border-b-4 border-b-[#072513] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
+                        : "bg-gradient-to-b from-[#1e40af] to-[#172554] text-white font-black border-t-2 border-t-white/35 border-x border-x-blue-500/40 border-b-4 border-b-[#0f172a] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
                         }`}
                     >
-                      <CreditCard className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${activeView === 'customer-credits' ? 'text-zinc-950' : 'text-emerald-300 group-hover:text-zinc-950'}`} />
+                      <CreditCard className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${activeView === 'customer-credits' ? 'text-zinc-950' : 'text-blue-300 group-hover:text-zinc-950'}`} />
                       <span className={`truncate ${activeView === 'customer-credits' ? 'text-zinc-950 font-black' : 'text-white font-black group-hover:text-zinc-950 drop-shadow-[0_1.5px_2px_rgba(0,0,0,0.95)]'}`}>Customer Credit</span>
                     </button>
                   )}
@@ -8995,7 +8995,7 @@ function StoreContent({ shopId }) {
                       }}
                       className={`w-full flex items-center gap-3 group px-3.5 py-2.5 mx-3 rounded-xl text-[13.5px] font-black tracking-wide transition-all duration-200 ease-out max-w-[200px] cursor-pointer ${activeView === 'purchase-credits'
                         ? "bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-400 text-zinc-950 font-black border-t-2 border-t-amber-200 border-x border-x-amber-600 border-b-4 border-b-amber-900 shadow-[0_6px_20px_rgba(245,158,11,0.6),inset_0_1px_0_rgba(255,255,255,0.5)] translate-x-1.5 scale-[1.02]"
-                        : "bg-gradient-to-b from-[#186337] to-[#0e3f21] text-white font-black border-t-2 border-t-white/35 border-x border-x-emerald-600/40 border-b-4 border-b-[#072513] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
+                        : "bg-gradient-to-b from-[#1e40af] to-[#172554] text-white font-black border-t-2 border-t-white/35 border-x border-x-blue-500/40 border-b-4 border-b-[#0f172a] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
                         }`}
                     >
                       <Truck className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${activeView === 'purchase-credits' ? 'text-zinc-950' : 'text-amber-300 group-hover:text-zinc-950'}`} />
@@ -9020,10 +9020,10 @@ function StoreContent({ shopId }) {
                       }}
                       className={`w-full flex items-center gap-3 group px-3.5 py-2.5 mx-3 rounded-xl text-[13.5px] font-black tracking-wide transition-all duration-200 ease-out max-w-[200px] cursor-pointer ${activeView === 'report-profit'
                         ? "bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-400 text-zinc-950 font-black border-t-2 border-t-amber-200 border-x border-x-amber-600 border-b-4 border-b-amber-900 shadow-[0_6px_20px_rgba(245,158,11,0.6),inset_0_1px_0_rgba(255,255,255,0.5)] translate-x-1.5 scale-[1.02]"
-                        : "bg-gradient-to-b from-[#186337] to-[#0e3f21] text-white font-black border-t-2 border-t-white/35 border-x border-x-emerald-600/40 border-b-4 border-b-[#072513] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
+                        : "bg-gradient-to-b from-[#1e40af] to-[#172554] text-white font-black border-t-2 border-t-white/35 border-x border-x-blue-500/40 border-b-4 border-b-[#0f172a] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
                         }`}
                     >
-                      <DollarSign className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${activeView === 'report-profit' ? 'text-zinc-950' : 'text-green-300 group-hover:text-zinc-950'}`} />
+                      <DollarSign className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${activeView === 'report-profit' ? 'text-zinc-950' : 'text-blue-300 group-hover:text-zinc-950'}`} />
                       <span className={`truncate ${activeView === 'report-profit' ? 'text-zinc-950 font-black' : 'text-white font-black group-hover:text-zinc-950 drop-shadow-[0_1.5px_2px_rgba(0,0,0,0.95)]'}`}>Profit Report</span>
                     </button>
                   )}
@@ -9043,7 +9043,7 @@ function StoreContent({ shopId }) {
                       }}
                       className={`w-full flex items-center gap-3 group px-3.5 py-2.5 mx-3 rounded-xl text-[13.5px] font-black tracking-wide transition-all duration-200 ease-out max-w-[200px] cursor-pointer ${activeView === 'report-expenses'
                         ? "bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-400 text-zinc-950 font-black border-t-2 border-t-amber-200 border-x border-x-amber-600 border-b-4 border-b-amber-900 shadow-[0_6px_20px_rgba(245,158,11,0.6),inset_0_1px_0_rgba(255,255,255,0.5)] translate-x-1.5 scale-[1.02]"
-                        : "bg-gradient-to-b from-[#186337] to-[#0e3f21] text-white font-black border-t-2 border-t-white/35 border-x border-x-emerald-600/40 border-b-4 border-b-[#072513] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
+                        : "bg-gradient-to-b from-[#1e40af] to-[#172554] text-white font-black border-t-2 border-t-white/35 border-x border-x-blue-500/40 border-b-4 border-b-[#0f172a] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
                         }`}
                     >
                       <FileText className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${activeView === 'report-expenses' ? 'text-zinc-950' : 'text-rose-300 group-hover:text-zinc-950'}`} />
@@ -9065,7 +9065,7 @@ function StoreContent({ shopId }) {
                       }}
                       className={`w-full flex items-center gap-3 group px-3.5 py-2.5 mx-3 rounded-xl text-[13.5px] font-black tracking-wide transition-all duration-200 ease-out max-w-[200px] cursor-pointer ${activeView === 'damaged-products'
                         ? "bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-400 text-zinc-950 font-black border-t-2 border-t-amber-200 border-x border-x-amber-600 border-b-4 border-b-amber-900 shadow-[0_6px_20px_rgba(245,158,11,0.6),inset_0_1px_0_rgba(255,255,255,0.5)] translate-x-1.5 scale-[1.02]"
-                        : "bg-gradient-to-b from-[#186337] to-[#0e3f21] text-white font-black border-t-2 border-t-white/35 border-x border-x-emerald-600/40 border-b-4 border-b-[#072513] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
+                        : "bg-gradient-to-b from-[#1e40af] to-[#172554] text-white font-black border-t-2 border-t-white/35 border-x border-x-blue-500/40 border-b-4 border-b-[#0f172a] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
                         }`}
                     >
                       <PackageX className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${activeView === 'damaged-products' ? 'text-zinc-950' : 'text-amber-300 group-hover:text-zinc-950'}`} />
@@ -9087,7 +9087,7 @@ function StoreContent({ shopId }) {
                       }}
                       className={`w-full flex items-center gap-3 group px-3.5 py-2.5 mx-3 rounded-xl text-[13.5px] font-black tracking-wide transition-all duration-200 ease-out max-w-[200px] cursor-pointer ${activeView === 'report-fuel'
                         ? "bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-400 text-zinc-950 font-black border-t-2 border-t-amber-200 border-x border-x-amber-600 border-b-4 border-b-amber-900 shadow-[0_6px_20px_rgba(245,158,11,0.6),inset_0_1px_0_rgba(255,255,255,0.5)] translate-x-1.5 scale-[1.02]"
-                        : "bg-gradient-to-b from-[#186337] to-[#0e3f21] text-white font-black border-t-2 border-t-white/35 border-x border-x-emerald-600/40 border-b-4 border-b-[#072513] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
+                        : "bg-gradient-to-b from-[#1e40af] to-[#172554] text-white font-black border-t-2 border-t-white/35 border-x border-x-blue-500/40 border-b-4 border-b-[#0f172a] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
                         }`}
                     >
                       <Truck className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${activeView === 'report-fuel' ? 'text-zinc-950' : 'text-cyan-300 group-hover:text-zinc-950'}`} />
@@ -9108,10 +9108,10 @@ function StoreContent({ shopId }) {
                       }}
                       className={`w-full flex items-center gap-3 group px-3.5 py-2.5 mx-3 rounded-xl text-[13.5px] font-black tracking-wide transition-all duration-200 ease-out max-w-[200px] cursor-pointer ${activeView === 'analytics-charts'
                         ? "bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-400 text-zinc-950 font-black border-t-2 border-t-amber-200 border-x border-x-amber-600 border-b-4 border-b-amber-900 shadow-[0_6px_20px_rgba(245,158,11,0.6),inset_0_1px_0_rgba(255,255,255,0.5)] translate-x-1.5 scale-[1.02]"
-                        : "bg-gradient-to-b from-[#186337] to-[#0e3f21] text-white font-black border-t-2 border-t-white/35 border-x border-x-emerald-600/40 border-b-4 border-b-[#072513] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
+                        : "bg-gradient-to-b from-[#1e40af] to-[#172554] text-white font-black border-t-2 border-t-white/35 border-x border-x-blue-500/40 border-b-4 border-b-[#0f172a] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
                         }`}
                     >
-                      <BarChart3 className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${activeView === 'analytics-charts' ? 'text-zinc-950' : 'text-emerald-300 group-hover:text-zinc-950'}`} />
+                      <BarChart3 className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${activeView === 'analytics-charts' ? 'text-zinc-950' : 'text-blue-300 group-hover:text-zinc-950'}`} />
                       <span className={`truncate ${activeView === 'analytics-charts' ? 'text-zinc-950 font-black' : 'text-white font-black group-hover:text-zinc-950 drop-shadow-[0_1.5px_2px_rgba(0,0,0,0.95)]'}`}>Charts & Graphs</span>
                     </button>
                   )}
@@ -9128,10 +9128,10 @@ function StoreContent({ shopId }) {
                     onClick={() => { setActiveView('products'); setActiveCategory('All'); setIsMobileOpen(false); }}
                     className={`w-full flex items-center gap-3 group px-3.5 py-2.5 mx-3 rounded-xl text-[13.5px] font-black tracking-wide transition-all duration-200 ease-out max-w-[200px] cursor-pointer ${activeView === 'products' && activeCategory === 'All'
                       ? "bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-400 text-zinc-950 font-black border-t-2 border-t-amber-200 border-x border-x-amber-600 border-b-4 border-b-amber-900 shadow-[0_6px_20px_rgba(245,158,11,0.6),inset_0_1px_0_rgba(255,255,255,0.5)] translate-x-1.5 scale-[1.02]"
-                      : "bg-gradient-to-b from-[#186337] to-[#0e3f21] text-white font-black border-t-2 border-t-white/35 border-x border-x-emerald-600/40 border-b-4 border-b-[#072513] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
+                      : "bg-gradient-to-b from-[#1e40af] to-[#172554] text-white font-black border-t-2 border-t-white/35 border-x border-x-blue-500/40 border-b-4 border-b-[#0f172a] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
                       }`}
                   >
-                    <Store className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${activeView === 'products' && activeCategory === 'All' ? 'text-zinc-950' : 'text-emerald-300 group-hover:text-zinc-950'}`} />
+                    <Store className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${activeView === 'products' && activeCategory === 'All' ? 'text-zinc-950' : 'text-blue-300 group-hover:text-zinc-950'}`} />
                     <span className={`truncate ${activeView === 'products' && activeCategory === 'All' ? 'text-zinc-950 font-black' : 'text-white font-black group-hover:text-zinc-950 drop-shadow-[0_1.5px_2px_rgba(0,0,0,0.95)]'}`}>All Products</span>
                   </button>
                 </div>
@@ -9151,10 +9151,10 @@ function StoreContent({ shopId }) {
                         onClick={() => { setActiveView('products'); setActiveCategory(cat); setIsMobileOpen(false); }}
                         className={`w-full flex items-center gap-2.5 group px-3.5 py-2.5 mx-3 rounded-xl text-[13.5px] font-black tracking-wide transition-all duration-200 ease-out max-w-[200px] cursor-pointer ${activeView === 'products' && active
                           ? "bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-400 text-zinc-950 font-black border-t-2 border-t-amber-200 border-x border-x-amber-600 border-b-4 border-b-amber-900 shadow-[0_6px_20px_rgba(245,158,11,0.6),inset_0_1px_0_rgba(255,255,255,0.5)] translate-x-1.5 scale-[1.02]"
-                          : "bg-gradient-to-b from-[#186337] to-[#0e3f21] text-white font-black border-t-2 border-t-white/35 border-x border-x-emerald-600/40 border-b-4 border-b-[#072513] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
+                          : "bg-gradient-to-b from-[#1e40af] to-[#172554] text-white font-black border-t-2 border-t-white/35 border-x border-x-blue-500/40 border-b-4 border-b-[#0f172a] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-x hover:border-x-amber-600 hover:border-b-4 hover:border-b-amber-900 hover:shadow-[0_8px_22px_rgba(245,158,11,0.65),inset_0_1px_0_rgba(255,255,255,0.5)] hover:translate-x-2 hover:scale-[1.03] active:translate-y-1 active:border-b-2"
                           }`}
                       >
-                        <Package className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${active ? 'text-zinc-950 scale-110' : 'text-emerald-300 group-hover:text-zinc-950'}`} />
+                        <Package className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] ${active ? 'text-zinc-950 scale-110' : 'text-blue-300 group-hover:text-zinc-950'}`} />
                         <span className={`capitalize truncate ${active ? 'text-zinc-950 font-black' : 'text-white font-black group-hover:text-zinc-950 drop-shadow-[0_1.5px_2px_rgba(0,0,0,0.95)]'}`}>{cat}</span>
                       </button>
                     );
@@ -9217,12 +9217,12 @@ function StoreContent({ shopId }) {
               {(activeView === 'dashboard' || activeView === 'products') && (
                 <div className="relative border rounded-xl sm:rounded-2xl px-4 py-3 sm:px-5 sm:py-4 shadow-sm flex items-center justify-between gap-4 overflow-hidden w-full bg-white border-zinc-200 text-zinc-900">
                   <div className="absolute -top-4 -right-4 p-4 opacity-[0.03] pointer-events-none">
-                    <ShoppingBag className="w-24 h-24 sm:w-32 sm:h-32 text-emerald-400" />
+                    <ShoppingBag className="w-24 h-24 sm:w-32 sm:h-32 text-blue-400" />
                   </div>
                   <div className="relative z-10 flex items-center justify-between w-full gap-4 flex-wrap">
                     <div className="flex items-center gap-2 shrink-0">
-                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-700 text-[10px] font-black uppercase tracking-wider shrink-0 shadow-sm">
-                        <Sparkles className="w-3.5 h-3.5 text-emerald-600" /> {user?.fullName || customer?.fullName || 'Shop Admin'}
+                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-700 text-[10px] font-black uppercase tracking-wider shrink-0 shadow-sm">
+                        <Sparkles className="w-3.5 h-3.5 text-blue-600" /> {user?.fullName || customer?.fullName || 'Shop Admin'}
                       </span>
                       <h1 className="text-xs sm:text-sm font-black tracking-tight uppercase text-zinc-900 truncate">
                         {activeView === 'dashboard' ? (isAdminUser ? '📊 Executive Business Dashboard' : '📊 Customer Overview') : (activeView === 'vendors' && isAdminUser) ? '🏢 Vendors & Suppliers Directory' : '📦 Products & Inventory Catalog'}
@@ -9896,12 +9896,12 @@ function StoreContent({ shopId }) {
                       ? 'bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 text-white border-red-500 ring-2 ring-red-400/50 shadow-red-500/20'
                       : (lowStockItems.length > 0
                         ? 'bg-gradient-to-r from-red-50 via-rose-50 to-amber-50 border-red-300 text-slate-900 shadow-sm'
-                        : 'bg-emerald-50/70 border-emerald-200 text-slate-900 shadow-xs')
+                        : 'bg-blue-50/70 border-blue-200 text-slate-900 shadow-xs')
                       }`}>
                       <div className="flex items-center gap-3.5 w-full md:w-auto">
                         <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-md ${showOnlyLowStock
                           ? 'bg-white/20 text-white border border-white/30'
-                          : (lowStockItems.length > 0 ? 'bg-red-600 text-white animate-pulse shadow-red-500/30' : 'bg-emerald-600 text-white')
+                          : (lowStockItems.length > 0 ? 'bg-red-600 text-white animate-pulse shadow-red-500/30' : 'bg-blue-600 text-white')
                           }`}>
                           {lowStockItems.length > 0 ? (
                             <AlertTriangle className="w-6 h-6 text-white" />
@@ -9918,7 +9918,7 @@ function StoreContent({ shopId }) {
                             </h3>
                             <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider ${showOnlyLowStock
                               ? 'bg-white text-red-700 shadow-xs'
-                              : (lowStockItems.length > 0 ? 'bg-red-600 text-white shadow-xs' : 'bg-emerald-600 text-white')
+                              : (lowStockItems.length > 0 ? 'bg-red-600 text-white shadow-xs' : 'bg-blue-600 text-white')
                               }`}>
                               {lowStockItems.length} Products Low / Out
                             </span>
@@ -9956,7 +9956,7 @@ function StoreContent({ shopId }) {
                             )}
                           </button>
                         ) : (
-                          <span className="text-[11px] font-black text-emerald-700 bg-emerald-100 px-3 py-1.5 rounded-xl border border-emerald-300">
+                          <span className="text-[11px] font-black text-blue-700 bg-blue-100 px-3 py-1.5 rounded-xl border border-blue-300">
                             100% Healthy Inventory
                           </span>
                         )}
@@ -9966,7 +9966,7 @@ function StoreContent({ shopId }) {
 
                   {/* Category Pills (Mobile/Quick Filter) */}
                   <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
-                    <div className="flex items-center gap-1.5 text-emerald-700 text-[10px] font-black uppercase tracking-widest pr-2 border-r border-slate-300">
+                    <div className="flex items-center gap-1.5 text-blue-700 text-[10px] font-black uppercase tracking-widest pr-2 border-r border-slate-300">
                       <Filter className="w-3.5 h-3.5" /> Filter
                     </div>
                     {/* Low Stock Filter Tab Pill (Admin Only) */}
@@ -9998,7 +9998,7 @@ function StoreContent({ shopId }) {
                     {isAdminUser && isActionAllowed('store') && (
                       <button
                         onClick={() => setAddProductModal(true)}
-                        className="ml-auto whitespace-nowrap flex items-center gap-1.5 px-4 py-2 rounded-2xl font-black text-[10px] uppercase tracking-widest bg-emerald-600 hover:bg-emerald-500 text-white border border-emerald-500/40 shadow-sm transition-all shrink-0 cursor-pointer active:scale-95"
+                        className="ml-auto whitespace-nowrap flex items-center gap-1.5 px-4 py-2 rounded-2xl font-black text-[10px] uppercase tracking-widest bg-blue-600 hover:bg-blue-500 text-white border border-blue-500/40 shadow-sm transition-all shrink-0 cursor-pointer active:scale-95"
                       >
                         <Plus className="w-3.5 h-3.5" /> Add Product
                       </button>
@@ -10008,7 +10008,7 @@ function StoreContent({ shopId }) {
                   {/* Products Cards Grid */}
                   {loading ? (
                     <div className="flex flex-col items-center justify-center py-20 gap-3">
-                      <div className="w-12 h-12 rounded-full border-4 border-emerald-500 border-t-transparent animate-spin" />
+                      <div className="w-12 h-12 rounded-full border-4 border-blue-500 border-t-transparent animate-spin" />
                       <p className="text-slate-400 font-bold text-xs uppercase tracking-widest">Loading Catalog...</p>
                     </div>
                   ) : displayedCatalogItems.length === 0 ? (
@@ -10020,14 +10020,14 @@ function StoreContent({ shopId }) {
                       {showOnlyLowStock && (
                         <button
                           onClick={() => setShowOnlyLowStock(false)}
-                          className="mt-4 px-5 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs uppercase tracking-wider cursor-pointer shadow-md transition-all active:scale-95"
+                          className="mt-4 px-5 py-2.5 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-black text-xs uppercase tracking-wider cursor-pointer shadow-md transition-all active:scale-95"
                         >
                           Show All Products
                         </button>
                       )}
                     </div>
                   ) : (
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 gap-5 sm:gap-6">
                       {displayedCatalogItems.map(item => {
                         const itemStock = Number(item.stock) || 0;
                         const itemPetiQty = Number(item.petiQuantity) || 0;
@@ -10042,13 +10042,13 @@ function StoreContent({ shopId }) {
                               ? 'bg-gradient-to-b from-white via-rose-50/40 to-rose-100/60 border-t-2 border-t-white border-x border-rose-300 border-b-4 border-b-red-700 shadow-[0_6px_16px_rgba(239,68,68,0.18)]'
                               : (isAdminUser && itemLowStock)
                                 ? 'bg-gradient-to-b from-white via-amber-50/40 to-amber-100/60 border-t-2 border-t-white border-x border-amber-300 border-b-4 border-b-amber-600 shadow-[0_6px_16px_rgba(245,158,11,0.18)]'
-                                : 'bg-gradient-to-b from-white via-slate-50/60 to-slate-100/80 border-t-2 border-t-white border-x border-slate-300 border-b-4 border-b-slate-400 shadow-[0_6px_16px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.95)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.14)] hover:border-b-emerald-600 hover:border-x-emerald-300 active:translate-y-0.5 active:border-b-2'
+                                : 'bg-gradient-to-b from-white via-slate-50/60 to-slate-100/80 border-t-2 border-t-white border-x border-slate-300 border-b-4 border-b-slate-400 shadow-[0_6px_16px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.95)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.14)] hover:border-b-blue-600 hover:border-x-blue-300 active:translate-y-0.5 active:border-b-2'
                               }`}
                           >
-                            {/* Image Container with 3D Bevel & Compact Height */}
+                            {/* Image Container with 3D Bevel & Prominent Size */}
                             <button
                               onClick={() => setSelectedItem(item)}
-                              className="block aspect-[16/11] sm:aspect-[4/3] max-h-40 sm:max-h-44 bg-gradient-to-b from-slate-100 via-slate-50 to-slate-200/90 overflow-hidden relative cursor-pointer text-left w-full rounded-t-2xl sm:rounded-t-3xl border-b border-slate-200 shadow-inner group/img"
+                              className="block aspect-[4/3] max-h-56 sm:max-h-64 bg-gradient-to-b from-slate-100 via-slate-50 to-slate-200/90 overflow-hidden relative cursor-pointer text-left w-full rounded-t-2xl sm:rounded-t-3xl border-b border-slate-200 shadow-inner group/img"
                             >
                               <img
                                 src={getImageUrl((item.images && item.images.length > 0 && item.images[0]) ? item.images[0] : (item.image || '/egg2.png'))}
@@ -10057,26 +10057,26 @@ function StoreContent({ shopId }) {
                                   e.target.onerror = null;
                                   e.target.src = '/egg2.png';
                                 }}
-                                className={`w-full h-full object-contain p-2 sm:p-2.5 group-hover/img:scale-110 transition-transform duration-500 ease-out ${itemOutOfStock ? 'grayscale opacity-60' : ''}`}
+                                className={`w-full h-full object-contain p-3 sm:p-4 group-hover/img:scale-110 transition-transform duration-500 ease-out ${itemOutOfStock ? 'grayscale opacity-60' : ''}`}
                               />
 
                               {/* Category Badge - 3D Styled */}
-                              <div className="absolute top-2 left-2 bg-gradient-to-b from-slate-900 to-slate-800 text-white px-2 sm:px-2.5 py-0.5 rounded-full text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider shadow-md border-t border-t-slate-700 border-b-2 border-b-black backdrop-blur-md">
+                              <div className="absolute top-2.5 left-2.5 bg-gradient-to-b from-slate-900 to-slate-800 text-white px-2.5 sm:px-3 py-1 rounded-full text-[9px] sm:text-[9.5px] font-black uppercase tracking-wider shadow-md border-t border-t-slate-700 border-b-2 border-b-black backdrop-blur-md">
                                 {item.category}
                               </div>
 
                               {/* Stock Badge - Top Right (3D Styled) */}
-                              <div className="absolute top-2 right-2">
+                              <div className="absolute top-2.5 right-2.5">
                                 {itemOutOfStock ? (
-                                  <span className="bg-gradient-to-b from-rose-600 to-red-700 text-white text-[8px] sm:text-[8.5px] font-black uppercase px-2 sm:px-2.5 py-0.5 rounded-full shadow-md border-t border-t-rose-300 border-b-2 border-b-rose-950 flex items-center gap-1 animate-pulse">
+                                  <span className="bg-gradient-to-b from-rose-600 to-red-700 text-white text-[9px] sm:text-[9.5px] font-black uppercase px-2.5 sm:px-3 py-1 rounded-full shadow-md border-t border-t-rose-300 border-b-2 border-b-rose-950 flex items-center gap-1 animate-pulse">
                                     <Lock className="w-2.5 h-2.5 text-white" /> Out of Stock
                                   </span>
                                 ) : (isAdminUser && itemLowStock) ? (
-                                  <span className="bg-gradient-to-b from-amber-500 to-amber-700 text-white text-[8px] sm:text-[8.5px] font-black uppercase px-2 sm:px-2.5 py-0.5 rounded-full border-t border-t-amber-300 border-b-2 border-b-amber-950 shadow-md backdrop-blur-md animate-pulse flex items-center gap-1">
+                                  <span className="bg-gradient-to-b from-amber-500 to-amber-700 text-white text-[9px] sm:text-[9.5px] font-black uppercase px-2.5 sm:px-3 py-1 rounded-full border-t border-t-amber-300 border-b-2 border-b-amber-950 shadow-md backdrop-blur-md animate-pulse flex items-center gap-1">
                                     <AlertTriangle className="w-2.5 h-2.5 text-white" /> Low: {itemStock}
                                   </span>
                                 ) : (
-                                  <span className="bg-gradient-to-b from-emerald-500 to-emerald-700 text-white text-[8px] sm:text-[8.5px] font-black uppercase px-2 sm:px-2.5 py-0.5 rounded-full shadow-md border-t border-t-emerald-300 border-b-2 border-b-emerald-950 backdrop-blur-md">
+                                  <span className="bg-gradient-to-b from-blue-500 to-blue-700 text-white text-[9px] sm:text-[9.5px] font-black uppercase px-2.5 sm:px-3 py-1 rounded-full shadow-md border-t border-t-blue-300 border-b-2 border-b-blue-950 backdrop-blur-md">
                                     Stock: {itemStock}
                                   </span>
                                 )}
@@ -10084,77 +10084,77 @@ function StoreContent({ shopId }) {
                             </button>
 
                             {/* Item Info & Action Buttons */}
-                            <div className="p-2.5 sm:p-3 flex flex-col flex-1 justify-between gap-2 bg-gradient-to-b from-white to-slate-50/70 rounded-b-2xl sm:rounded-b-3xl">
-                              <button onClick={() => setSelectedItem(item)} className="text-left space-y-1 cursor-pointer">
-                                <h3 className="font-black text-slate-900 text-xs sm:text-[13px] leading-snug line-clamp-1 uppercase tracking-tight group-hover:text-emerald-700 transition-colors duration-200">
+                            <div className="p-3.5 sm:p-4.5 flex flex-col flex-1 justify-between gap-3 bg-gradient-to-b from-white to-slate-50/70 rounded-b-2xl sm:rounded-b-3xl">
+                              <button onClick={() => setSelectedItem(item)} className="text-left space-y-1.5 cursor-pointer">
+                                <h3 className="font-black text-slate-900 text-sm sm:text-base leading-snug line-clamp-1 uppercase tracking-tight group-hover:text-blue-700 transition-colors duration-200">
                                   {item.name}
                                 </h3>
-                                <p className="text-emerald-700 group-hover:text-emerald-800 font-black text-base sm:text-lg tracking-tight transition-colors duration-200">
+                                <p className="text-blue-700 group-hover:text-blue-800 font-black text-lg sm:text-xl tracking-tight transition-colors duration-200">
                                   {currency} {Number(item.price || 0).toLocaleString()}
                                 </p>
                               </button>
 
                               {/* Low Stock / Out of Stock Banner */}
                               {itemOutOfStock ? (
-                                <div className="flex items-center gap-1 px-2 py-1 rounded-xl bg-gradient-to-b from-red-500 to-red-600 text-white font-black text-[9px] uppercase justify-center shadow-xs border-t border-t-red-300 border-b-2 border-b-red-950 animate-pulse">
-                                  <Lock className="w-3 h-3 text-white shrink-0" />
+                                <div className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-gradient-to-b from-red-500 to-red-600 text-white font-black text-[9.5px] uppercase justify-center shadow-xs border-t border-t-red-300 border-b-2 border-b-red-950 animate-pulse">
+                                  <Lock className="w-3.5 h-3.5 text-white shrink-0" />
                                   <span>🚫 Out of Stock (0 Available)</span>
                                 </div>
                               ) : (isAdminUser && itemLowStock) ? (
-                                <div className="flex items-center gap-1 px-2 py-1 rounded-xl bg-gradient-to-b from-amber-500 to-amber-600 text-white font-black text-[9px] uppercase justify-center shadow-xs animate-pulse border-t border-t-amber-300 border-b-2 border-b-amber-950">
-                                  <AlertTriangle className="w-3 h-3 text-white shrink-0" />
+                                <div className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-gradient-to-b from-amber-500 to-amber-600 text-white font-black text-[9.5px] uppercase justify-center shadow-xs animate-pulse border-t border-t-amber-300 border-b-2 border-b-amber-950">
+                                  <AlertTriangle className="w-3.5 h-3.5 text-white shrink-0" />
                                   <span>⚠️ Low Stock: Only {itemStock} Left!</span>
                                 </div>
                               ) : null}
 
                               {isAdminUser ? (
-                                <div className="flex flex-col gap-1.5 w-full pt-0.5">
+                                <div className="flex flex-col gap-2 w-full pt-1">
                                   {itemOutOfStock ? (
                                     <button
                                       type="button"
                                       onClick={(e) => { e.stopPropagation(); handleStartRestock(item); setLowStockModalOpen(true); }}
-                                      className="w-full py-1.5 sm:py-2 px-2.5 rounded-xl bg-gradient-to-b from-red-600 via-rose-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white font-black text-[10px] sm:text-[10.5px] uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-[0_4px_10px_rgba(239,68,68,0.35)] border-t border-t-red-300 border-x border-red-500 border-b-3 border-b-red-950 active:translate-y-0.5 active:border-b-2 transition-all cursor-pointer animate-pulse"
+                                      className="w-full py-2 sm:py-2.5 px-3 rounded-xl bg-gradient-to-b from-red-600 via-rose-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white font-black text-[11px] sm:text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-[0_4px_10px_rgba(239,68,68,0.35)] border-t border-t-red-300 border-x border-red-500 border-b-3 border-b-red-950 active:translate-y-0.5 active:border-b-2 transition-all cursor-pointer animate-pulse"
                                       title="Product is sold out. Click to Purchase / Restock again"
                                     >
-                                      <ShoppingCart className="w-3.5 h-3.5 text-white" />
+                                      <ShoppingCart className="w-4 h-4 text-white" />
                                       <span>🔄 Restock Again</span>
                                     </button>
                                   ) : (itemLowStock && isActionAllowed('purchases') && isActionAllowed('store') && !isEditLocked) ? (
                                     <button
                                       onClick={(e) => { e.stopPropagation(); handleStartRestock(item); setLowStockModalOpen(true); }}
-                                      className="w-full py-1.5 sm:py-2 px-2.5 rounded-xl bg-gradient-to-b from-red-500 to-red-700 hover:from-red-400 hover:to-red-600 text-white font-black text-[10px] sm:text-[10.5px] uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-[0_4px_10px_rgba(239,68,68,0.35)] border-t border-t-red-300 border-x border-red-500 border-b-3 border-b-red-950 active:translate-y-0.5 active:border-b-2 transition-all cursor-pointer animate-pulse"
+                                      className="w-full py-2 sm:py-2.5 px-3 rounded-xl bg-gradient-to-b from-red-500 to-red-700 hover:from-red-400 hover:to-red-600 text-white font-black text-[11px] sm:text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-[0_4px_10px_rgba(239,68,68,0.35)] border-t border-t-red-300 border-x border-red-500 border-b-3 border-b-red-950 active:translate-y-0.5 active:border-b-2 transition-all cursor-pointer animate-pulse"
                                       title="Low stock - Click to Restock now"
                                     >
-                                      <AlertTriangle className="w-3.5 h-3.5 text-white" />
+                                      <AlertTriangle className="w-4 h-4 text-white" />
                                       <span>Low Stock (Restock)</span>
                                     </button>
                                   ) : (isActionAllowed('store') && isActionAllowed('walkin')) ? (
                                     <button
                                       onClick={(e) => { e.stopPropagation(); addToWalkInCart(item); }}
-                                      className="w-full py-1.5 sm:py-2 px-2.5 rounded-xl bg-gradient-to-b from-emerald-500 via-teal-600 to-emerald-700 hover:from-emerald-400 hover:to-emerald-600 text-white font-black text-[10px] sm:text-[10.5px] uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-[0_4px_10px_rgba(16,185,129,0.35)] border-t border-t-emerald-200 border-x border-emerald-600 border-b-3 border-b-emerald-950 active:translate-y-0.5 active:border-b-2 transition-all cursor-pointer"
+                                      className="w-full py-2 sm:py-2.5 px-3 rounded-xl bg-gradient-to-b from-blue-500 via-blue-600 to-blue-700 hover:from-blue-400 hover:to-blue-600 text-white font-black text-[11px] sm:text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-[0_4px_10px_rgba(37,99,235,0.35)] border-t border-t-blue-200 border-x border-blue-600 border-b-3 border-b-blue-950 active:translate-y-0.5 active:border-b-2 transition-all cursor-pointer"
                                       title="Add product to Customer Walk-in Bill"
                                     >
-                                      <Receipt className="w-3.5 h-3.5" />
+                                      <Receipt className="w-4 h-4" />
                                       <span>+ Add to Bill</span>
                                     </button>
                                   ) : null}
                                   <div className="flex items-center gap-1.5 w-full">
                                     <button
                                       onClick={(e) => { e.stopPropagation(); setSelectedItem(item); }}
-                                      className="flex-1 py-1 sm:py-1.5 px-1 rounded-lg sm:rounded-xl bg-gradient-to-b from-white to-slate-100 hover:from-slate-50 hover:to-slate-200 text-slate-700 font-black text-[8.5px] sm:text-[9px] uppercase tracking-wider flex items-center justify-center gap-1 border-t border-t-white border-x border-slate-300 border-b-2 border-b-slate-400 shadow-2xs active:translate-y-0.5 active:border-b transition-all cursor-pointer"
+                                      className="flex-1 py-1.5 sm:py-2 px-1 rounded-lg sm:rounded-xl bg-gradient-to-b from-white to-slate-100 hover:from-slate-50 hover:to-slate-200 text-slate-700 font-black text-[9.5px] sm:text-[10px] uppercase tracking-wider flex items-center justify-center gap-1 border-t border-t-white border-x border-slate-300 border-b-2 border-b-slate-400 shadow-2xs active:translate-y-0.5 active:border-b transition-all cursor-pointer"
                                       title="View Product Details"
                                     >
-                                      <Eye className="w-3 h-3 text-cyan-600" />
+                                      <Eye className="w-3.5 h-3.5 text-cyan-600" />
                                       <span>View</span>
                                     </button>
 
                                     {!isEditLocked && (
                                       <button
                                         onClick={(e) => { e.stopPropagation(); setEditModalProduct(item); }}
-                                        className="flex-1 py-1 sm:py-1.5 px-1 rounded-lg sm:rounded-xl bg-gradient-to-b from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 text-blue-700 font-black text-[8.5px] sm:text-[9px] uppercase tracking-wider flex items-center justify-center gap-1 border-t border-t-white border-x border-blue-200 border-b-2 border-b-blue-400 shadow-2xs active:translate-y-0.5 active:border-b transition-all cursor-pointer"
+                                        className="flex-1 py-1.5 sm:py-2 px-1 rounded-lg sm:rounded-xl bg-gradient-to-b from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 text-blue-700 font-black text-[9.5px] sm:text-[10px] uppercase tracking-wider flex items-center justify-center gap-1 border-t border-t-white border-x border-blue-200 border-b-2 border-b-blue-400 shadow-2xs active:translate-y-0.5 active:border-b transition-all cursor-pointer"
                                         title="Edit Product"
                                       >
-                                        <Edit2 className="w-3 h-3" />
+                                        <Edit2 className="w-3.5 h-3.5" />
                                         <span>Edit</span>
                                       </button>
                                     )}
@@ -10162,10 +10162,10 @@ function StoreContent({ shopId }) {
                                     {!isDeleteLocked && (
                                       <button
                                         onClick={(e) => { e.stopPropagation(); handleDirectDeleteProduct(item); }}
-                                        className="flex-1 py-1 sm:py-1.5 px-1 rounded-lg sm:rounded-xl bg-gradient-to-b from-rose-50 to-rose-100 hover:from-rose-100 hover:to-rose-200 text-rose-700 font-black text-[8.5px] sm:text-[9px] uppercase tracking-wider flex items-center justify-center gap-1 border-t border-t-white border-x border-rose-200 border-b-2 border-b-rose-400 shadow-2xs active:translate-y-0.5 active:border-b transition-all cursor-pointer"
+                                        className="flex-1 py-1.5 sm:py-2 px-1 rounded-lg sm:rounded-xl bg-gradient-to-b from-rose-50 to-rose-100 hover:from-rose-100 hover:to-rose-200 text-rose-700 font-black text-[9.5px] sm:text-[10px] uppercase tracking-wider flex items-center justify-center gap-1 border-t border-t-white border-x border-rose-200 border-b-2 border-b-rose-400 shadow-2xs active:translate-y-0.5 active:border-b transition-all cursor-pointer"
                                         title="Delete Product"
                                       >
-                                        <Trash2 className="w-3 h-3" />
+                                        <Trash2 className="w-3.5 h-3.5" />
                                         <span>Delete</span>
                                       </button>
                                     )}
@@ -10175,18 +10175,18 @@ function StoreContent({ shopId }) {
                                 itemOutOfStock ? (
                                   <button
                                     disabled
-                                    className="w-full flex items-center justify-center gap-1.5 py-2 bg-gradient-to-b from-red-600 to-red-700 text-white rounded-xl text-[10px] sm:text-[10.5px] font-black uppercase tracking-wider shadow-sm cursor-not-allowed opacity-90 border-t border-t-red-300 border-b-2 border-b-red-950"
+                                    className="w-full flex items-center justify-center gap-1.5 py-2.5 bg-gradient-to-b from-red-600 to-red-700 text-white rounded-xl text-[11px] sm:text-xs font-black uppercase tracking-wider shadow-sm cursor-not-allowed opacity-90 border-t border-t-red-300 border-b-2 border-b-red-950"
                                     title="Out of Stock - Restock required"
                                   >
-                                    <Lock className="w-3.5 h-3.5 text-red-100" />
+                                    <Lock className="w-4 h-4 text-red-100" />
                                     <span>Out of Stock (Locked)</span>
                                   </button>
                                 ) : itemLowStock ? (
                                   <div
-                                    className="w-full flex items-center justify-center gap-1.5 py-2 bg-gradient-to-b from-red-600 to-red-700 text-white rounded-xl text-[10px] sm:text-[10.5px] font-black uppercase tracking-wider shadow-md border-t border-t-red-300 border-b-2 border-b-red-950 select-none animate-pulse"
+                                    className="w-full flex items-center justify-center gap-1.5 py-2.5 bg-gradient-to-b from-red-600 to-red-700 text-white rounded-xl text-[11px] sm:text-xs font-black uppercase tracking-wider shadow-md border-t border-t-red-300 border-b-2 border-b-red-950 select-none animate-pulse"
                                     title="Low Stock - Ordering is disabled"
                                   >
-                                    <AlertTriangle className="w-3.5 h-3.5 text-white" />
+                                    <AlertTriangle className="w-4 h-4 text-white" />
                                     <span>Low Stock (Disabled)</span>
                                   </div>
                                 ) : (
@@ -10196,9 +10196,9 @@ function StoreContent({ shopId }) {
                                       e.stopPropagation();
                                       handleAddToCart(item);
                                     }}
-                                    className="w-full flex items-center justify-center gap-1.5 py-2 px-2.5 bg-gradient-to-b from-emerald-500 via-teal-600 to-emerald-700 hover:from-emerald-400 hover:to-emerald-600 text-white rounded-xl text-[10px] sm:text-[10.5px] font-black uppercase tracking-wider shadow-[0_4px_10px_rgba(16,185,129,0.35)] border-t border-t-emerald-200 border-x border-emerald-600 border-b-3 border-b-emerald-950 active:translate-y-0.5 active:border-b-2 transition-all cursor-pointer"
+                                    className="w-full flex items-center justify-center gap-1.5 py-2.5 px-3 bg-gradient-to-b from-blue-500 via-blue-600 to-blue-700 hover:from-blue-400 hover:to-blue-600 text-white rounded-xl text-[11px] sm:text-xs font-black uppercase tracking-wider shadow-[0_4px_10px_rgba(37,99,235,0.35)] border-t border-t-blue-200 border-x border-blue-600 border-b-3 border-b-blue-950 active:translate-y-0.5 active:border-b-2 transition-all cursor-pointer"
                                   >
-                                    <Plus className="w-3.5 h-3.5 text-emerald-100" />
+                                    <Plus className="w-4 h-4 text-blue-100" />
                                     <span>+ Add to Cart</span>
                                   </button>
                                 )

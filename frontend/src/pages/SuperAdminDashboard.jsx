@@ -490,8 +490,8 @@ export function SuperAdminDashboard() {
             {/* Header Section */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
                 <div className="flex items-center gap-5">
-                    <div className="p-4 bg-green-500/10 rounded-[1.5rem] border border-green-500/20">
-                        <Building2 className="w-8 h-8 text-[var(--color-primary)]" />
+                    <div className="p-4 bg-blue-500/10 rounded-[1.5rem] border border-blue-500/20 shadow-[0_4px_14px_rgba(234,179,8,0.35),0_6px_16px_rgba(239,68,68,0.25),0_0_12px_rgba(34,197,94,0.3)]">
+                        <Building2 className="w-8 h-8 text-blue-600" />
                     </div>
                     <div>
                         <h1 className="text-4xl font-black text-[var(--color-text-primary)] tracking-tighter leading-none uppercase">
@@ -503,31 +503,31 @@ export function SuperAdminDashboard() {
                     </div>
                 </div>
 
-                {/* Tab Switcher */}
-                <div className="flex items-center gap-2 bg-[var(--color-surface-card)] p-1.5 rounded-[1.5rem] border border-[var(--color-border-subtle)] shadow-sm overflow-x-auto w-full md:w-auto no-scrollbar">
+                {/* Tab Switcher - 3D Blue & Amber Theme */}
+                <div className="flex items-center gap-2.5 bg-gradient-to-r from-[#172554] via-[#1e40af] to-[#1d4ed8] p-2 rounded-2xl border-2 border-amber-400/30 shadow-[0_6px_20px_rgba(234,179,8,0.25),0_10px_28px_rgba(239,68,68,0.18),0_2px_15px_rgba(34,197,94,0.2)] overflow-x-auto w-full md:w-auto no-scrollbar">
                     <button
                         onClick={() => setActiveTab('overview')}
-                        className={`px-6 py-2 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all ${activeTab === 'overview'
-                            ? 'bg-green-600 text-white shadow-lg'
-                            : 'text-zinc-500 hover:text-zinc-900'
+                        className={`px-6 py-2.5 rounded-xl font-black text-[11px] uppercase tracking-wider transition-all duration-300 cursor-pointer ${activeTab === 'overview'
+                            ? 'bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-400 text-zinc-950 border-t-2 border-t-amber-200 border-x border-x-amber-600 border-b-4 border-b-amber-900 shadow-[0_6px_20px_rgba(245,158,11,0.6),inset_0_1px_0_rgba(255,255,255,0.5)] scale-[1.02]'
+                            : 'bg-gradient-to-b from-[#1e40af] to-[#172554] text-white border-t-2 border-t-white/35 border-x border-x-blue-500/40 border-b-4 border-b-[#0f172a] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-b-4 hover:border-b-amber-900 hover:scale-[1.02]'
                             }`}
                     >
                         Overview
                     </button>
                     <button
                         onClick={() => setActiveTab('management')}
-                        className={`px-6 py-2 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all ${activeTab === 'management'
-                            ? 'bg-green-600 text-white shadow-lg'
-                            : 'text-zinc-500 hover:text-zinc-900'
+                        className={`px-6 py-2.5 rounded-xl font-black text-[11px] uppercase tracking-wider transition-all duration-300 cursor-pointer ${activeTab === 'management'
+                            ? 'bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-400 text-zinc-950 border-t-2 border-t-amber-200 border-x border-x-amber-600 border-b-4 border-b-amber-900 shadow-[0_6px_20px_rgba(245,158,11,0.6),inset_0_1px_0_rgba(255,255,255,0.5)] scale-[1.02]'
+                            : 'bg-gradient-to-b from-[#1e40af] to-[#172554] text-white border-t-2 border-t-white/35 border-x border-x-blue-500/40 border-b-4 border-b-[#0f172a] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-b-4 hover:border-b-amber-900 hover:scale-[1.02]'
                             }`}
                     >
                         Manage Shops
                     </button>
                     <button
                         onClick={() => setActiveTab('orders')}
-                        className={`px-6 py-2 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all ${activeTab === 'orders'
-                            ? 'bg-green-600 text-white shadow-lg'
-                            : 'text-zinc-500 hover:text-zinc-900'
+                        className={`px-6 py-2.5 rounded-xl font-black text-[11px] uppercase tracking-wider transition-all duration-300 cursor-pointer ${activeTab === 'orders'
+                            ? 'bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-400 text-zinc-950 border-t-2 border-t-amber-200 border-x border-x-amber-600 border-b-4 border-b-amber-900 shadow-[0_6px_20px_rgba(245,158,11,0.6),inset_0_1px_0_rgba(255,255,255,0.5)] scale-[1.02]'
+                            : 'bg-gradient-to-b from-[#1e40af] to-[#172554] text-white border-t-2 border-t-white/35 border-x border-x-blue-500/40 border-b-4 border-b-[#0f172a] shadow-[0_4px_10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.22)] hover:bg-gradient-to-r hover:from-amber-400 hover:via-amber-500 hover:to-yellow-400 hover:text-zinc-950 hover:border-t-2 hover:border-t-amber-200 hover:border-b-4 hover:border-b-amber-900 hover:scale-[1.02]'
                             }`}
                     >
                         EasyPaisa Receipts & Orders
