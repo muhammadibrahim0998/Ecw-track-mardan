@@ -10027,7 +10027,7 @@ function StoreContent({ shopId }) {
                       )}
                     </div>
                   ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
                       {displayedCatalogItems.map(item => {
                         const itemStock = Number(item.stock) || 0;
                         const itemPetiQty = Number(item.petiQuantity) || 0;
@@ -10038,15 +10038,18 @@ function StoreContent({ shopId }) {
                         return (
                           <div
                             key={item._id}
-                            className={`group border rounded-[26px] overflow-hidden transition-all duration-300 hover:-translate-y-1 flex flex-col shadow-xs hover:shadow-xl ${itemOutOfStock
-                              ? 'border-2 border-red-500 bg-red-50/50 ring-2 ring-red-400/40 shadow-lg shadow-red-500/20'
+                            className={`group rounded-2xl sm:rounded-3xl overflow-hidden transition-all duration-200 hover:-translate-y-1.5 flex flex-col relative select-none ${itemOutOfStock
+                              ? 'bg-gradient-to-b from-white via-rose-50/40 to-rose-100/60 border-t-2 border-t-white border-x border-rose-300 border-b-4 border-b-red-700 shadow-[0_6px_16px_rgba(239,68,68,0.18)]'
                               : (isAdminUser && itemLowStock)
-                                ? 'border-red-400 bg-red-50/20 ring-2 ring-red-300/40 shadow-md'
-                                : 'bg-white border-slate-200/90 hover:border-emerald-500'
+                                ? 'bg-gradient-to-b from-white via-amber-50/40 to-amber-100/60 border-t-2 border-t-white border-x border-amber-300 border-b-4 border-b-amber-600 shadow-[0_6px_16px_rgba(245,158,11,0.18)]'
+                                : 'bg-gradient-to-b from-white via-slate-50/60 to-slate-100/80 border-t-2 border-t-white border-x border-slate-300 border-b-4 border-b-slate-400 shadow-[0_6px_16px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.95)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.14)] hover:border-b-emerald-600 hover:border-x-emerald-300 active:translate-y-0.5 active:border-b-2'
                               }`}
                           >
-                            {/* Image Container with Smooth Rounded Corners & Zoom */}
-                            <button onClick={() => setSelectedItem(item)} className="block aspect-[4/3] sm:aspect-square bg-slate-50 overflow-hidden relative cursor-pointer text-left w-full rounded-t-[25px]">
+                            {/* Image Container with 3D Bevel & Compact Height */}
+                            <button
+                              onClick={() => setSelectedItem(item)}
+                              className="block aspect-[16/11] sm:aspect-[4/3] max-h-40 sm:max-h-44 bg-gradient-to-b from-slate-100 via-slate-50 to-slate-200/90 overflow-hidden relative cursor-pointer text-left w-full rounded-t-2xl sm:rounded-t-3xl border-b border-slate-200 shadow-inner group/img"
+                            >
                               <img
                                 src={getImageUrl((item.images && item.images.length > 0 && item.images[0]) ? item.images[0] : (item.image || '/egg2.png'))}
                                 alt={item.name}
@@ -10054,26 +10057,26 @@ function StoreContent({ shopId }) {
                                   e.target.onerror = null;
                                   e.target.src = '/egg2.png';
                                 }}
-                                className={`w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-500 ease-out ${itemOutOfStock ? 'grayscale opacity-60' : ''}`}
+                                className={`w-full h-full object-contain p-2 sm:p-2.5 group-hover/img:scale-110 transition-transform duration-500 ease-out ${itemOutOfStock ? 'grayscale opacity-60' : ''}`}
                               />
 
-                              {/* Category Badge */}
-                              <div className="absolute top-3 left-3 bg-slate-900/85 text-white px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest shadow-md backdrop-blur-md">
+                              {/* Category Badge - 3D Styled */}
+                              <div className="absolute top-2 left-2 bg-gradient-to-b from-slate-900 to-slate-800 text-white px-2 sm:px-2.5 py-0.5 rounded-full text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider shadow-md border-t border-t-slate-700 border-b-2 border-b-black backdrop-blur-md">
                                 {item.category}
                               </div>
 
-                              {/* Stock Badge - Top Right */}
-                              <div className="absolute top-3 right-3">
+                              {/* Stock Badge - Top Right (3D Styled) */}
+                              <div className="absolute top-2 right-2">
                                 {itemOutOfStock ? (
-                                  <span className="bg-red-600 text-white text-[9.5px] font-black uppercase px-3 py-1 rounded-full shadow-lg border border-red-400 flex items-center gap-1.5 animate-pulse">
-                                    <Lock className="w-3 h-3 text-white" /> 🚫 Out of Stock (0 Petis)
+                                  <span className="bg-gradient-to-b from-rose-600 to-red-700 text-white text-[8px] sm:text-[8.5px] font-black uppercase px-2 sm:px-2.5 py-0.5 rounded-full shadow-md border-t border-t-rose-300 border-b-2 border-b-rose-950 flex items-center gap-1 animate-pulse">
+                                    <Lock className="w-2.5 h-2.5 text-white" /> Out of Stock
                                   </span>
                                 ) : (isAdminUser && itemLowStock) ? (
-                                  <span className="bg-red-600 text-white text-[9px] font-black uppercase px-3 py-1 rounded-full border border-red-400 shadow-lg shadow-red-500/30 backdrop-blur-md animate-pulse flex items-center gap-1">
-                                    <AlertTriangle className="w-2.5 h-2.5 text-white" /> Low Stock: {itemStock}
+                                  <span className="bg-gradient-to-b from-amber-500 to-amber-700 text-white text-[8px] sm:text-[8.5px] font-black uppercase px-2 sm:px-2.5 py-0.5 rounded-full border-t border-t-amber-300 border-b-2 border-b-amber-950 shadow-md backdrop-blur-md animate-pulse flex items-center gap-1">
+                                    <AlertTriangle className="w-2.5 h-2.5 text-white" /> Low: {itemStock}
                                   </span>
                                 ) : (
-                                  <span className="bg-emerald-600 text-white text-[9px] font-black uppercase px-3 py-1 rounded-full shadow-md backdrop-blur-md">
+                                  <span className="bg-gradient-to-b from-emerald-500 to-emerald-700 text-white text-[8px] sm:text-[8.5px] font-black uppercase px-2 sm:px-2.5 py-0.5 rounded-full shadow-md border-t border-t-emerald-300 border-b-2 border-b-emerald-950 backdrop-blur-md">
                                     Stock: {itemStock}
                                   </span>
                                 )}
@@ -10081,45 +10084,45 @@ function StoreContent({ shopId }) {
                             </button>
 
                             {/* Item Info & Action Buttons */}
-                            <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between gap-3 bg-white rounded-b-[25px]">
-                              <button onClick={() => setSelectedItem(item)} className="text-left space-y-1.5 cursor-pointer">
-                                <h3 className="font-black text-slate-900 text-sm sm:text-base leading-snug line-clamp-1 uppercase tracking-tight group-hover:text-emerald-700 transition-colors duration-300">
+                            <div className="p-2.5 sm:p-3 flex flex-col flex-1 justify-between gap-2 bg-gradient-to-b from-white to-slate-50/70 rounded-b-2xl sm:rounded-b-3xl">
+                              <button onClick={() => setSelectedItem(item)} className="text-left space-y-1 cursor-pointer">
+                                <h3 className="font-black text-slate-900 text-xs sm:text-[13px] leading-snug line-clamp-1 uppercase tracking-tight group-hover:text-emerald-700 transition-colors duration-200">
                                   {item.name}
                                 </h3>
-                                <p className="text-emerald-600 group-hover:text-emerald-700 font-black text-xl tracking-tight transition-colors duration-300">
+                                <p className="text-emerald-700 group-hover:text-emerald-800 font-black text-base sm:text-lg tracking-tight transition-colors duration-200">
                                   {currency} {Number(item.price || 0).toLocaleString()}
                                 </p>
                               </button>
 
                               {/* Low Stock / Out of Stock Banner */}
                               {itemOutOfStock ? (
-                                <div className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-red-600 text-white font-black text-[10px] uppercase justify-center shadow-md border border-red-400 animate-pulse">
-                                  <Lock className="w-3.5 h-3.5 text-white shrink-0" />
-                                  <span>🚫 Stock Finished / Sold Out (0 Available)</span>
+                                <div className="flex items-center gap-1 px-2 py-1 rounded-xl bg-gradient-to-b from-red-500 to-red-600 text-white font-black text-[9px] uppercase justify-center shadow-xs border-t border-t-red-300 border-b-2 border-b-red-950 animate-pulse">
+                                  <Lock className="w-3 h-3 text-white shrink-0" />
+                                  <span>🚫 Out of Stock (0 Available)</span>
                                 </div>
                               ) : (isAdminUser && itemLowStock) ? (
-                                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-red-600 text-white font-black text-[10px] uppercase justify-center shadow-sm animate-pulse border border-red-400">
-                                  <AlertTriangle className="w-3.5 h-3.5 text-white" />
+                                <div className="flex items-center gap-1 px-2 py-1 rounded-xl bg-gradient-to-b from-amber-500 to-amber-600 text-white font-black text-[9px] uppercase justify-center shadow-xs animate-pulse border-t border-t-amber-300 border-b-2 border-b-amber-950">
+                                  <AlertTriangle className="w-3 h-3 text-white shrink-0" />
                                   <span>⚠️ Low Stock: Only {itemStock} Left!</span>
                                 </div>
                               ) : null}
 
                               {isAdminUser ? (
-                                <div className="flex flex-col gap-2 w-full pt-1">
+                                <div className="flex flex-col gap-1.5 w-full pt-0.5">
                                   {itemOutOfStock ? (
                                     <button
                                       type="button"
                                       onClick={(e) => { e.stopPropagation(); handleStartRestock(item); setLowStockModalOpen(true); }}
-                                      className="w-full py-2.5 px-3 rounded-2xl bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white font-black text-[11px] uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-red-500/30 border border-red-400 active:scale-95 transition-all cursor-pointer animate-pulse"
+                                      className="w-full py-1.5 sm:py-2 px-2.5 rounded-xl bg-gradient-to-b from-red-600 via-rose-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white font-black text-[10px] sm:text-[10.5px] uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-[0_4px_10px_rgba(239,68,68,0.35)] border-t border-t-red-300 border-x border-red-500 border-b-3 border-b-red-950 active:translate-y-0.5 active:border-b-2 transition-all cursor-pointer animate-pulse"
                                       title="Product is sold out. Click to Purchase / Restock again"
                                     >
-                                      <ShoppingCart className="w-4 h-4 text-white" />
-                                      <span>🔄 + Purchase / Restock Again</span>
+                                      <ShoppingCart className="w-3.5 h-3.5 text-white" />
+                                      <span>🔄 Restock Again</span>
                                     </button>
                                   ) : (itemLowStock && isActionAllowed('purchases') && isActionAllowed('store') && !isEditLocked) ? (
                                     <button
                                       onClick={(e) => { e.stopPropagation(); handleStartRestock(item); setLowStockModalOpen(true); }}
-                                      className="w-full py-2.5 px-3 rounded-2xl bg-red-600 hover:bg-red-700 text-white font-black text-[11px] uppercase tracking-wider flex items-center justify-center gap-2 shadow-md border border-red-400 active:scale-95 transition-all cursor-pointer animate-pulse"
+                                      className="w-full py-1.5 sm:py-2 px-2.5 rounded-xl bg-gradient-to-b from-red-500 to-red-700 hover:from-red-400 hover:to-red-600 text-white font-black text-[10px] sm:text-[10.5px] uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-[0_4px_10px_rgba(239,68,68,0.35)] border-t border-t-red-300 border-x border-red-500 border-b-3 border-b-red-950 active:translate-y-0.5 active:border-b-2 transition-all cursor-pointer animate-pulse"
                                       title="Low stock - Click to Restock now"
                                     >
                                       <AlertTriangle className="w-3.5 h-3.5 text-white" />
@@ -10128,30 +10131,30 @@ function StoreContent({ shopId }) {
                                   ) : (isActionAllowed('store') && isActionAllowed('walkin')) ? (
                                     <button
                                       onClick={(e) => { e.stopPropagation(); addToWalkInCart(item); }}
-                                      className="w-full py-2.5 px-3 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-[11px] uppercase tracking-wider flex items-center justify-center gap-2 shadow-sm hover:shadow-md active:scale-95 transition-all cursor-pointer"
+                                      className="w-full py-1.5 sm:py-2 px-2.5 rounded-xl bg-gradient-to-b from-emerald-500 via-teal-600 to-emerald-700 hover:from-emerald-400 hover:to-emerald-600 text-white font-black text-[10px] sm:text-[10.5px] uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-[0_4px_10px_rgba(16,185,129,0.35)] border-t border-t-emerald-200 border-x border-emerald-600 border-b-3 border-b-emerald-950 active:translate-y-0.5 active:border-b-2 transition-all cursor-pointer"
                                       title="Add product to Customer Walk-in Bill"
                                     >
                                       <Receipt className="w-3.5 h-3.5" />
                                       <span>+ Add to Bill</span>
                                     </button>
                                   ) : null}
-                                  <div className="flex items-center gap-2 w-full">
+                                  <div className="flex items-center gap-1.5 w-full">
                                     <button
                                       onClick={(e) => { e.stopPropagation(); setSelectedItem(item); }}
-                                      className="flex-1 py-2 px-1.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-[10px] uppercase tracking-wider flex items-center justify-center gap-1 border border-slate-200 shadow-xs active:scale-95 transition-all cursor-pointer"
+                                      className="flex-1 py-1 sm:py-1.5 px-1 rounded-lg sm:rounded-xl bg-gradient-to-b from-white to-slate-100 hover:from-slate-50 hover:to-slate-200 text-slate-700 font-black text-[8.5px] sm:text-[9px] uppercase tracking-wider flex items-center justify-center gap-1 border-t border-t-white border-x border-slate-300 border-b-2 border-b-slate-400 shadow-2xs active:translate-y-0.5 active:border-b transition-all cursor-pointer"
                                       title="View Product Details"
                                     >
-                                      <Eye className="w-3.5 h-3.5 text-cyan-600" />
+                                      <Eye className="w-3 h-3 text-cyan-600" />
                                       <span>View</span>
                                     </button>
 
                                     {!isEditLocked && (
                                       <button
                                         onClick={(e) => { e.stopPropagation(); setEditModalProduct(item); }}
-                                        className="flex-1 py-2 px-1.5 rounded-2xl bg-blue-50 hover:bg-blue-100 text-blue-700 font-black text-[10px] uppercase tracking-wider flex items-center justify-center gap-1 border border-blue-200 shadow-xs active:scale-95 transition-all cursor-pointer"
+                                        className="flex-1 py-1 sm:py-1.5 px-1 rounded-lg sm:rounded-xl bg-gradient-to-b from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 text-blue-700 font-black text-[8.5px] sm:text-[9px] uppercase tracking-wider flex items-center justify-center gap-1 border-t border-t-white border-x border-blue-200 border-b-2 border-b-blue-400 shadow-2xs active:translate-y-0.5 active:border-b transition-all cursor-pointer"
                                         title="Edit Product"
                                       >
-                                        <Edit2 className="w-3.5 h-3.5" />
+                                        <Edit2 className="w-3 h-3" />
                                         <span>Edit</span>
                                       </button>
                                     )}
@@ -10159,10 +10162,10 @@ function StoreContent({ shopId }) {
                                     {!isDeleteLocked && (
                                       <button
                                         onClick={(e) => { e.stopPropagation(); handleDirectDeleteProduct(item); }}
-                                        className="flex-1 py-2 px-1.5 rounded-2xl bg-rose-50 hover:bg-rose-100 text-rose-700 font-black text-[10px] uppercase tracking-wider flex items-center justify-center gap-1 border border-rose-200 shadow-xs active:scale-95 transition-all cursor-pointer"
+                                        className="flex-1 py-1 sm:py-1.5 px-1 rounded-lg sm:rounded-xl bg-gradient-to-b from-rose-50 to-rose-100 hover:from-rose-100 hover:to-rose-200 text-rose-700 font-black text-[8.5px] sm:text-[9px] uppercase tracking-wider flex items-center justify-center gap-1 border-t border-t-white border-x border-rose-200 border-b-2 border-b-rose-400 shadow-2xs active:translate-y-0.5 active:border-b transition-all cursor-pointer"
                                         title="Delete Product"
                                       >
-                                        <Trash2 className="w-3.5 h-3.5" />
+                                        <Trash2 className="w-3 h-3" />
                                         <span>Delete</span>
                                       </button>
                                     )}
@@ -10172,19 +10175,19 @@ function StoreContent({ shopId }) {
                                 itemOutOfStock ? (
                                   <button
                                     disabled
-                                    className="w-full flex items-center justify-center gap-2 py-3 bg-red-600/90 text-white rounded-2xl text-xs font-black uppercase tracking-wider shadow-sm cursor-not-allowed opacity-90 border border-red-500"
+                                    className="w-full flex items-center justify-center gap-1.5 py-2 bg-gradient-to-b from-red-600 to-red-700 text-white rounded-xl text-[10px] sm:text-[10.5px] font-black uppercase tracking-wider shadow-sm cursor-not-allowed opacity-90 border-t border-t-red-300 border-b-2 border-b-red-950"
                                     title="Out of Stock - Restock required"
                                   >
-                                    <Lock className="w-4 h-4 text-red-100" />
+                                    <Lock className="w-3.5 h-3.5 text-red-100" />
                                     <span>Out of Stock (Locked)</span>
                                   </button>
                                 ) : itemLowStock ? (
                                   <div
-                                    className="w-full flex items-center justify-center gap-2 py-3 bg-red-600 text-white rounded-2xl text-xs font-black uppercase tracking-wider shadow-md border border-red-400 select-none animate-pulse"
+                                    className="w-full flex items-center justify-center gap-1.5 py-2 bg-gradient-to-b from-red-600 to-red-700 text-white rounded-xl text-[10px] sm:text-[10.5px] font-black uppercase tracking-wider shadow-md border-t border-t-red-300 border-b-2 border-b-red-950 select-none animate-pulse"
                                     title="Low Stock - Ordering is disabled"
                                   >
-                                    <AlertTriangle className="w-4 h-4 text-white" />
-                                    <span>Low Stock (Add to Cart Disabled)</span>
+                                    <AlertTriangle className="w-3.5 h-3.5 text-white" />
+                                    <span>Low Stock (Disabled)</span>
                                   </div>
                                 ) : (
                                   <button
@@ -10193,9 +10196,9 @@ function StoreContent({ shopId }) {
                                       e.stopPropagation();
                                       handleAddToCart(item);
                                     }}
-                                    className="w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-2xl text-xs font-black uppercase tracking-wider shadow-md hover:shadow-lg transition-all active:scale-95 cursor-pointer"
+                                    className="w-full flex items-center justify-center gap-1.5 py-2 px-2.5 bg-gradient-to-b from-emerald-500 via-teal-600 to-emerald-700 hover:from-emerald-400 hover:to-emerald-600 text-white rounded-xl text-[10px] sm:text-[10.5px] font-black uppercase tracking-wider shadow-[0_4px_10px_rgba(16,185,129,0.35)] border-t border-t-emerald-200 border-x border-emerald-600 border-b-3 border-b-emerald-950 active:translate-y-0.5 active:border-b-2 transition-all cursor-pointer"
                                   >
-                                    <Plus className="w-4 h-4 text-emerald-100" />
+                                    <Plus className="w-3.5 h-3.5 text-emerald-100" />
                                     <span>+ Add to Cart</span>
                                   </button>
                                 )
